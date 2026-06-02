@@ -1,0 +1,16 @@
+fastapi==0.115.6
+uvicorn[standard]
+pydantic-settings
+lxml
+rdflib
+faiss-cpu
+rank-bm25
+sentence-transformers
+pandas
+pyarrow
+numpy
+python-dotenv
+click
+pytest
+httpx==0.27.2
+anyio==4.6.2.post1

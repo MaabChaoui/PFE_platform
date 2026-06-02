@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "name": "AKN-RLM S1 fixture"
+  },
+  "document_registry": {
+    "94-03_1994-04-11": {
+      "title": "مرسوم تشريعي رقم 94-03 يتمم القانون رقم 90-11 والمتعلق بعلاقات العمل",
+      "formats_available": {
+        "akn": true,
+        "txt": true,
+        "rdf": false,
+        "pdf": false
+      }
+    }
+  },
+  "questions": [
+    {
+      "id": "fixture-q1",
+      "version": "fixture",
+      "source": "fixture",
+      "split": "test",
+      "language": "ar",
+      "category": "labor_law",
+      "query_type": "exact_article",
+      "difficulty": "easy",
+      "question": "ما مضمون المادة الأولى؟",
+      "answerable": true,
+      "partially_answerable": false,
+      "temporal_note": null,
+      "expected_documents": [
+        "94-03_1994-04-11"
+      ],
+      "expected_articles": [
+        {
+          "document_id": "94-03_1994-04-11",
+          "article_ref": "1",
+          "law_name_ar": "مرسوم تشريعي رقم 94-03",
+          "in_dataset": true,
+          "article_ref_disambig": "1"
+        }
+      ],
+      "ground_truth_answer": "",
+      "reasoning_chain": [],
+      "annotation": {}
+    }
+  ]
+}

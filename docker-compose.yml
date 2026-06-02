@@ -1,0 +1,55 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Read-only data mounts (all data is on the host, never modified by the container)
+      - ./latest_dataset:/data/latest_dataset:ro
+      - ./akn_rlm/data/indices:/data/indices:ro
+      - ./akn_rlm/eval_results:/data/eval_results:ro
+      - ./akn_rlm:/app/akn_rlm:ro
+    environment:
+      PYTHONPATH: /app/akn_rlm
+      AKN_RLM_AKN_DIR: /data/latest_dataset/akn
+      AKN_RLM_TXT_DIR: /data/latest_dataset/txt
+      AKN_RLM_RDF_DIR: /data/latest_dataset/rdf
+      AKN_RLM_PDF_DIR: /data/latest_dataset/pdf
+      AKN_RLM_KG_PATH: /data/latest_dataset/rdf/algerian_legal_kg.ttl
+      AKN_RLM_EXTRACTION_REPORT_PATH: /data/latest_dataset/rdf/extraction_report.json
+      AKN_RLM_BENCHMARK_PATH: /data/latest_dataset/AlgerianLegalBench_v3.0_final.json
+      INDICES_DIR: /data/indices
+      EVAL_RESULTS_DIR: /data/eval_results
+      OFFLINE_MODE: "true"
+      CORS_ORIGINS: "http://localhost:3000"
+    healthcheck:
+      # Python one-liner avoids adding curl to the slim image
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - demo
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Browser makes this call from the HOST, not from inside the compose network
+        NEXT_PUBLIC_API_BASE: http://localhost:8000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - demo
+
+networks:
+  demo:
+    driver: bridge
