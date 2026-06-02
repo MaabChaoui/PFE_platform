@@ -7,6 +7,7 @@ from .settings import settings
 from .routers import benchmark as benchmark_router
 from .routers import corpus as corpus_router
 from .routers import health as health_router
+from .routers import kg as kg_router
 from .routers import results as results_router
 
 
@@ -35,3 +36,4 @@ app.include_router(health_router.router, prefix="/api")
 app.include_router(corpus_router.router, prefix="/api")
 app.include_router(benchmark_router.router, prefix="/api")
 app.include_router(results_router.router, prefix="/api")
+app.include_router(kg_router.router, prefix="/api")

@@ -9,6 +9,7 @@ services:
       - ./akn_rlm/data/indices:/data/indices:ro
       - ./akn_rlm/eval_results:/data/eval_results:ro
       - ./akn_rlm:/app/akn_rlm:ro
+      - kg_index:/app/data
     environment:
       PYTHONPATH: /app/akn_rlm
       AKN_RLM_AKN_DIR: /data/latest_dataset/akn
@@ -20,6 +21,8 @@ services:
       AKN_RLM_BENCHMARK_PATH: /data/latest_dataset/AlgerianLegalBench_v3.0_final.json
       INDICES_DIR: /data/indices
       EVAL_RESULTS_DIR: /data/eval_results
+      KG_INDEX_PATH: /app/data/kg_index.sqlite
+      KG_BUILD_ON_START: "true"
       OFFLINE_MODE: "true"
       CORS_ORIGINS: "http://localhost:3000"
     healthcheck:
@@ -32,7 +35,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 180s
     networks:
       - demo
 
@@ -53,3 +56,6 @@ services:
 networks:
   demo:
     driver: bridge
+
+volumes:
+  kg_index:

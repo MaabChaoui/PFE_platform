@@ -4,6 +4,7 @@ import threading
 
 from .services.corpus import CorpusService
 from .services.benchmark import BenchmarkService
+from .services.kg import KGService
 from .services.pipeline import PipelineService
 from .services.results import ResultsService
 from .settings import settings
@@ -13,6 +14,7 @@ _PIPELINE: PipelineService | None = None
 _CORPUS: CorpusService | None = None
 _BENCHMARK: BenchmarkService | None = None
 _RESULTS: ResultsService | None = None
+_KG: KGService | None = None
 
 
 def get_pipeline() -> PipelineService:
@@ -55,6 +57,16 @@ def get_results() -> ResultsService:
         return _RESULTS
 
 
+def get_kg() -> KGService:
+    global _KG
+    if _KG is not None:
+        return _KG
+    with _LOCK:
+        if _KG is None:
+            _KG = KGService(get_corpus(), settings)
+        return _KG
+
+
 def warm_services() -> None:
     get_pipeline().load()
     get_corpus()
@@ -65,9 +77,10 @@ def corpus_ready() -> bool:
 
 
 def reset_services_for_tests() -> None:
-    global _PIPELINE, _CORPUS, _BENCHMARK, _RESULTS
+    global _PIPELINE, _CORPUS, _BENCHMARK, _RESULTS, _KG
     with _LOCK:
         _PIPELINE = None
         _CORPUS = None
         _BENCHMARK = None
         _RESULTS = None
+        _KG = None

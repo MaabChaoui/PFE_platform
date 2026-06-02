@@ -23,6 +23,8 @@ os.environ.update(
         "AKN_RLM_BENCHMARK_PATH": str(
             FIXTURES / "benchmark" / "AlgerianLegalBench_v3.0_final.json"
         ),
+        "KG_INDEX_PATH": str(FIXTURES / "rdf" / "kg_index.sqlite"),
+        "KG_BUILD_ON_START": "false",
         "INDICES_DIR": str(REPO_ROOT / "akn_rlm" / "data" / "indices"),
         "EVAL_RESULTS_DIR": str(FIXTURES / "eval"),
         "OFFLINE_MODE": "true",

@@ -23,6 +23,20 @@ from .results import (
     MetricsResponse,
     RunSummary,
 )
+from .kg import (
+    CorpusLink,
+    KGDocumentCount,
+    KGEdge,
+    KGMeta,
+    KGNode,
+    KGPredicateCount,
+    KGSearchHit,
+    KGTypeCount,
+    KGTotals,
+    NodeDegree,
+    NodeDetail,
+    Subgraph,
+)
 
 __all__ = [
     "ArticleModel",
@@ -38,10 +52,22 @@ __all__ = [
     "DocumentSummary",
     "ExpectedArticle",
     "FormatsAvailable",
+    "CorpusLink",
+    "KGDocumentCount",
+    "KGEdge",
+    "KGMeta",
+    "KGNode",
+    "KGPredicateCount",
+    "KGSearchHit",
+    "KGTypeCount",
+    "KGTotals",
     "HierarchyNode",
     "MetricsResponse",
     "MetaResponse",
+    "NodeDegree",
+    "NodeDetail",
     "PredictionView",
     "RunSummary",
     "SearchHit",
+    "Subgraph",
 ]

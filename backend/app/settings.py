@@ -19,6 +19,8 @@ class Settings(BaseSettings):
         REPO_ROOT / "latest_dataset/rdf/extraction_report.json"
     )
     AKN_RLM_BENCHMARK_PATH: Path = REPO_ROOT / "latest_dataset/AlgerianLegalBench_v3.0_final.json"
+    KG_INDEX_PATH: Path = REPO_ROOT / "backend/data/kg_index.sqlite"
+    KG_BUILD_ON_START: bool = True
     INDICES_DIR: Path = REPO_ROOT / "akn_rlm/data/indices"
     EVAL_RESULTS_DIR: Path = REPO_ROOT / "akn_rlm/eval_results"
 
