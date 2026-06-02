@@ -1,0 +1,17 @@
+{
+  "rule_application": {
+    "rule_application": 1
+  },
+  "exact_article": {
+    "exact_article": 1
+  },
+  "unanswerable": {
+    "rule_application": 1,
+    "unanswerable": 1
+  },
+  "multi_hop": {},
+  "long_context": {},
+  "layman": {},
+  "conceptual_definitional": {},
+  "temporal_factual": {}
+}

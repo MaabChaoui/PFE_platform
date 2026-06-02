@@ -42,6 +42,25 @@
       "ground_truth_answer": "",
       "reasoning_chain": [],
       "annotation": {}
+    },
+    {
+      "id": "fixture-q2",
+      "version": "fixture",
+      "source": "fixture",
+      "split": "test",
+      "language": "ar",
+      "category": "labor_law",
+      "query_type": "unanswerable",
+      "difficulty": "hard",
+      "question": "ما هو الحكم في قانون غير موجود؟",
+      "answerable": false,
+      "partially_answerable": false,
+      "temporal_note": null,
+      "expected_documents": [],
+      "expected_articles": [],
+      "ground_truth_answer": "لا يمكن الإجابة من النصوص المتاحة.",
+      "reasoning_chain": [],
+      "annotation": {}
     }
   ]
 }

@@ -1,0 +1,270 @@
+{
+  "improvement_factors": {
+    "vs_strongest_direct_llm": 1.64,
+    "vs_strongest_deterministic": 2.9,
+    "vs_strongest_minimal_rag": 1.74
+  },
+  "tier1_direct_llm": [
+    {
+      "model": "Gemini 2.5 Flash",
+      "params": "\u2014",
+      "citation_f1": 0.186,
+      "p_at_1": 0.254,
+      "mrr": 0.254,
+      "hcr": 0.008,
+      "jir": 0.375
+    },
+    {
+      "model": "Llama 3.2",
+      "params": "3B",
+      "citation_f1": 0.129,
+      "p_at_1": 0.385,
+      "mrr": 0.393,
+      "hcr": 0.492,
+      "jir": 0.4
+    },
+    {
+      "model": "Gemma 2",
+      "params": "9B",
+      "citation_f1": 0.12,
+      "p_at_1": 0.389,
+      "mrr": 0.408,
+      "hcr": 0.725,
+      "jir": 0.175
+    },
+    {
+      "model": "Llama 3.3",
+      "params": "70B",
+      "citation_f1": 0.1,
+      "p_at_1": 0.627,
+      "mrr": 0.656,
+      "hcr": 0.803,
+      "jir": 0.35
+    },
+    {
+      "model": "Qwen 2",
+      "params": "7B",
+      "citation_f1": 0.085,
+      "p_at_1": 0.361,
+      "mrr": 0.383,
+      "hcr": 0.701,
+      "jir": 0.675
+    },
+    {
+      "model": "Llama 3.1",
+      "params": "8B",
+      "citation_f1": 0.068,
+      "p_at_1": 0.43,
+      "mrr": 0.446,
+      "hcr": 0.775,
+      "jir": 0.5
+    },
+    {
+      "model": "Aya Expanse",
+      "params": "8B",
+      "citation_f1": 0.03,
+      "p_at_1": 0.557,
+      "mrr": 0.592,
+      "hcr": 0.811,
+      "jir": 0.325
+    },
+    {
+      "model": "AKN-RLM",
+      "params": "\u2014",
+      "citation_f1": 0.305,
+      "p_at_1": null,
+      "mrr": 0.579,
+      "hcr": 0.0,
+      "jir": 0.0
+    }
+  ],
+  "tier2_deterministic_rag": [
+    {
+      "system": "BM25 only",
+      "citation_f1": 0.093,
+      "mrr_article": 0.197,
+      "hcr": 0.0,
+      "jir": 0.016
+    },
+    {
+      "system": "Dense (e5-small)",
+      "citation_f1": 0.063,
+      "mrr_article": 0.142,
+      "hcr": 0.0,
+      "jir": 0.008
+    },
+    {
+      "system": "Hybrid RRF",
+      "citation_f1": 0.094,
+      "mrr_article": 0.213,
+      "hcr": 0.0,
+      "jir": 0.008
+    },
+    {
+      "system": "Hybrid + cross-encoder",
+      "citation_f1": 0.105,
+      "mrr_article": 0.242,
+      "hcr": 0.0,
+      "jir": 0.029
+    },
+    {
+      "system": "KG SPARQL only",
+      "citation_f1": 0.022,
+      "mrr_article": 0.035,
+      "hcr": 0.0,
+      "jir": 0.008
+    },
+    {
+      "system": "KG + Hybrid",
+      "citation_f1": 0.083,
+      "mrr_article": 0.18,
+      "hcr": 0.0,
+      "jir": 0.012
+    },
+    {
+      "system": "gpt-oss-120b raw",
+      "citation_f1": 0.056,
+      "mrr_article": 0.034,
+      "hcr": 0.0,
+      "jir": 0.02
+    },
+    {
+      "system": "Qwen3 raw",
+      "citation_f1": 0.034,
+      "mrr_article": 0.058,
+      "hcr": 0.0,
+      "jir": 0.004
+    },
+    {
+      "system": "gpt-oss + dense top-5",
+      "citation_f1": 0.175,
+      "mrr_article": 0.166,
+      "hcr": 0.0,
+      "jir": 0.012
+    },
+    {
+      "system": "gpt-oss + dense + KG amendment",
+      "citation_f1": 0.173,
+      "mrr_article": 0.152,
+      "hcr": 0.0,
+      "jir": 0.008
+    },
+    {
+      "system": "AKN-RLM (locked)",
+      "citation_f1": 0.305,
+      "mrr_article": 0.31,
+      "hcr": 0.0,
+      "jir": 0.0
+    }
+  ],
+  "phase_progression": [
+    {
+      "phase": "A raw LLM",
+      "citation_f1": 0.056,
+      "hcr": 0.0,
+      "jir": 0.02,
+      "abstention_f1": null,
+      "am_faithfulness": null,
+      "latency_s": 4.1
+    },
+    {
+      "phase": "A best RAG",
+      "citation_f1": 0.175,
+      "hcr": 0.0,
+      "jir": 0.012,
+      "abstention_f1": null,
+      "am_faithfulness": null,
+      "latency_s": 6.8
+    },
+    {
+      "phase": "B typed dispatch",
+      "citation_f1": 0.298,
+      "hcr": 0.0,
+      "jir": 0.0,
+      "abstention_f1": 0.676,
+      "am_faithfulness": null,
+      "latency_s": 5.8
+    },
+    {
+      "phase": "C +ADU",
+      "citation_f1": 0.301,
+      "hcr": 0.0,
+      "jir": 0.0,
+      "abstention_f1": 0.676,
+      "am_faithfulness": 0.49,
+      "latency_s": 6.9
+    },
+    {
+      "phase": "D +recursion+retry",
+      "citation_f1": 0.302,
+      "hcr": 0.0,
+      "jir": 0.0,
+      "abstention_f1": 0.685,
+      "am_faithfulness": 0.498,
+      "latency_s": 10.0
+    },
+    {
+      "phase": "E locked",
+      "citation_f1": 0.305,
+      "hcr": 0.0,
+      "jir": 0.0,
+      "abstention_f1": 0.703,
+      "am_faithfulness": 0.471,
+      "latency_s": 9.7
+    }
+  ],
+  "ablation": [
+    {
+      "config": "Locked",
+      "citation_f1": 0.305,
+      "delta_vs_locked": null,
+      "abstention_f1": 0.703,
+      "am_faithfulness": 0.471,
+      "latency_s": 9.7
+    },
+    {
+      "config": "\u2212Pervasive Toulmin ADU",
+      "citation_f1": 0.288,
+      "delta_vs_locked": -0.017,
+      "abstention_f1": 0.676,
+      "am_faithfulness": null,
+      "latency_s": 5.8
+    },
+    {
+      "config": "\u2212Recursion+retry",
+      "citation_f1": 0.301,
+      "delta_vs_locked": -0.004,
+      "abstention_f1": 0.676,
+      "am_faithfulness": 0.49,
+      "latency_s": 6.9
+    },
+    {
+      "config": "\u2212Typed dispatcher (minimal RAG)",
+      "citation_f1": 0.175,
+      "delta_vs_locked": -0.13,
+      "abstention_f1": null,
+      "am_faithfulness": null,
+      "latency_s": 6.8
+    },
+    {
+      "config": "\u2212Retrieval (raw LLM)",
+      "citation_f1": 0.056,
+      "delta_vs_locked": -0.249,
+      "abstention_f1": null,
+      "am_faithfulness": null,
+      "latency_s": 4.1
+    }
+  ],
+  "notes": "locked deployable CitF1 = 0.3045 (classifier-typed); gold-typed = 0.313",
+  "metric_definitions": {
+    "citation_f1": "harmonic mean of citation precision/recall over expected vs cited articles (article-level, primary metric)",
+    "hcr": "hallucinated-citation rate = fraction of cited articles not in the registry (0 by construction of the citation-existence gate)",
+    "jir": "jurisdictional-infection rate = fraction of unanswerable questions emitting a foreign-law canary concept",
+    "abstention_f1": "harmonic mean of abstention precision/recall over the unanswerable set",
+    "am_faithfulness_score": "avg per-claim NLI entailment against the Toulmin *ground* span of cited articles",
+    "answer_faithfulness": "fraction of answer claims entailed by \u22651 cited article",
+    "citation_groundedness": "fraction of cited articles that actually participate in the answer",
+    "recall_article@10 / mrr_article / ndcg_article": "retrieval quality at article level",
+    "reasoning_chain_score": "avg ROUGE-L over the 4 reasoning steps"
+  }
+}

@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     # Derived from EVAL_RESULTS_DIR when not explicitly set (handles Docker override)
     PREDICTIONS_PATH: Optional[Path] = None
     METRICS_PATH: Optional[Path] = None
+    CLASSIFIER_DIR: Optional[Path] = None
 
     OFFLINE_MODE: bool = True
     CORS_ORIGINS: str = "http://localhost:3000"
@@ -36,6 +37,8 @@ class Settings(BaseSettings):
             self.PREDICTIONS_PATH = run_dir / "predictions.jsonl"
         if self.METRICS_PATH is None:
             self.METRICS_PATH = run_dir / "metrics.json"
+        if self.CLASSIFIER_DIR is None:
+            self.CLASSIFIER_DIR = self.EVAL_RESULTS_DIR / "classifier_accuracy_llm_final"
         return self
 
 

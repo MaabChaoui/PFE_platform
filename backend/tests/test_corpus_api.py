@@ -22,7 +22,7 @@ os.environ.update(
             FIXTURES / "benchmark" / "AlgerianLegalBench_v3.0_final.json"
         ),
         "INDICES_DIR": str(REPO_ROOT / "akn_rlm" / "data" / "indices"),
-        "EVAL_RESULTS_DIR": str(REPO_ROOT / "akn_rlm" / "eval_results"),
+        "EVAL_RESULTS_DIR": str(FIXTURES / "eval"),
         "OFFLINE_MODE": "true",
     }
 )
@@ -39,7 +39,7 @@ def test_meta_uses_fixture_counts() -> None:
     payload = response.json()
     assert payload["documents"] == 2
     assert payload["articles"] == 11
-    assert payload["benchmark_questions"] == 1
+    assert payload["benchmark_questions"] == 2
     assert payload["kg_triples"] == 123
 
 

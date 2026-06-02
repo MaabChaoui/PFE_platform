@@ -1,0 +1,4 @@
+{"id":"fixture-q1","query":"ما مضمون المادة الأولى؟","gold_query_type":"exact_article","pred_query_type":"exact_article","confidence":0.9,"correct":true}
+{"id":"fixture-q2","query":"ما هو الحكم في قانون غير موجود؟","gold_query_type":"unanswerable","pred_query_type":"unanswerable","confidence":0.8,"correct":true}
+{"id":"fixture-q3","query":"اشرح قاعدة عامة.","gold_query_type":"rule_application","pred_query_type":"rule_application","confidence":0.7,"correct":true}
+{"id":"fixture-q4","query":"سؤال غير قابل للإجابة.","gold_query_type":"unanswerable","pred_query_type":"rule_application","confidence":0.6,"correct":false}

@@ -1,0 +1,26 @@
+{
+  "overall": {
+    "citation_f1": 0.5,
+    "abstention_f1": 1.0,
+    "hcr": 0.0,
+    "jir": 0.0,
+    "am_faithfulness_score": 0.4,
+    "mean_latency_s": 0.875
+  },
+  "by_query_type": {
+    "exact_article": {
+      "citation_f1": 0.5
+    },
+    "unanswerable": {
+      "abstention_f1": 1.0
+    }
+  },
+  "by_category": {},
+  "by_difficulty": {},
+  "by_language": {},
+  "by_split": {},
+  "temporal": {},
+  "counts": {
+    "questions": 2
+  }
+}
