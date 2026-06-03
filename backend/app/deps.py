@@ -6,6 +6,7 @@ from .services.corpus import CorpusService
 from .services.benchmark import BenchmarkService
 from .services.kg import KGService
 from .services.pipeline import PipelineService
+from .services.retrieval_lab import RetrievalLabService
 from .services.results import ResultsService
 from .settings import settings
 
@@ -15,6 +16,7 @@ _CORPUS: CorpusService | None = None
 _BENCHMARK: BenchmarkService | None = None
 _RESULTS: ResultsService | None = None
 _KG: KGService | None = None
+_RETRIEVAL_LAB: RetrievalLabService | None = None
 
 
 def get_pipeline() -> PipelineService:
@@ -67,6 +69,20 @@ def get_kg() -> KGService:
         return _KG
 
 
+def get_retrieval_lab() -> RetrievalLabService:
+    global _RETRIEVAL_LAB
+    if _RETRIEVAL_LAB is not None:
+        return _RETRIEVAL_LAB
+    with _LOCK:
+        if _RETRIEVAL_LAB is None:
+            _RETRIEVAL_LAB = RetrievalLabService(
+                get_pipeline(),
+                get_corpus(),
+                get_benchmark(),
+            )
+        return _RETRIEVAL_LAB
+
+
 def warm_services() -> None:
     get_pipeline().load()
     get_corpus()
@@ -77,10 +93,11 @@ def corpus_ready() -> bool:
 
 
 def reset_services_for_tests() -> None:
-    global _PIPELINE, _CORPUS, _BENCHMARK, _RESULTS, _KG
+    global _PIPELINE, _CORPUS, _BENCHMARK, _RESULTS, _KG, _RETRIEVAL_LAB
     with _LOCK:
         _PIPELINE = None
         _CORPUS = None
         _BENCHMARK = None
         _RESULTS = None
         _KG = None
+        _RETRIEVAL_LAB = None

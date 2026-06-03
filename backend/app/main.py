@@ -4,10 +4,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .deps import warm_services
 from .settings import settings
+from .routers import answer as answer_router
 from .routers import benchmark as benchmark_router
 from .routers import corpus as corpus_router
 from .routers import health as health_router
 from .routers import kg as kg_router
+from .routers import retrieval as retrieval_router
 from .routers import results as results_router
 
 
@@ -37,3 +39,5 @@ app.include_router(corpus_router.router, prefix="/api")
 app.include_router(benchmark_router.router, prefix="/api")
 app.include_router(results_router.router, prefix="/api")
 app.include_router(kg_router.router, prefix="/api")
+app.include_router(answer_router.router, prefix="/api")
+app.include_router(retrieval_router.router, prefix="/api")
