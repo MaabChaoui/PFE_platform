@@ -1,39 +1,49 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import './globals.css'
+import { fontSans, fontArabic } from './fonts'
+import { Providers } from '@/components/providers'
+import { Nav } from '@/components/shared/nav'
+import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'LexAlgeria — AKN-RLM Viva Demo',
-  description: 'Interactive demo of the AKN-RLM citation-faithful Algerian legal QA system (ENSIA thesis)',
+  description:
+    'Interactive demo of the AKN-RLM citation-faithful Algerian legal QA system (ENSIA thesis)',
 }
 
-const NAV_LINKS = [
-  { href: '/', label: 'Home' },
-  { href: '/architecture', label: 'Architecture' },
-  { href: '/corpus', label: 'Corpus' },
-  { href: '/kg', label: 'Knowledge Graph' },
-  { href: '/benchmark', label: 'Benchmark' },
-  { href: '/results', label: 'Results' },
-  { href: '/about', label: 'About' },
-]
+// Pre-paint: set data-presenter from localStorage before first paint so the
+// projector scale never flashes in. Mirrors next-themes' own inline script.
+const PRESENTER_SCRIPT = `(function(){try{if(localStorage.getItem('presenter-mode')==='true'){document.documentElement.dataset.presenter='true';}}catch(e){}})();`
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-gray-50 text-gray-900">
-        <nav className="bg-indigo-900 text-white px-6 py-3 flex gap-x-6 flex-wrap items-center shadow">
-          <span className="font-bold text-base tracking-tight mr-2">LexAlgeria</span>
-          {NAV_LINKS.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className="text-sm text-indigo-200 hover:text-white transition-colors"
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
-        <main className="px-6 py-8 max-w-7xl mx-auto">{children}</main>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn(fontSans.variable, fontArabic.variable)}
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: PRESENTER_SCRIPT }} />
+      </head>
+      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
+        <Providers>
+          <div className="relative flex min-h-screen flex-col">
+            <Nav />
+            <main className="flex-1">{children}</main>
+            <footer className="border-t border-border px-6 py-6 text-xs text-muted-foreground">
+              <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-2">
+                <span>
+                  AKN-RLM — citation-faithful Algerian legal QA · ENSIA thesis
+                </span>
+                <span>Attia &amp; Chaoui · viva 13/06/2026</span>
+              </div>
+            </footer>
+          </div>
+        </Providers>
       </body>
     </html>
   )

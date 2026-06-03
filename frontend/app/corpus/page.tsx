@@ -1,10 +1,14 @@
+import { PageContainer, PageHeader, ComingSoon } from '@/components/shared/page-shell'
+
 export default function CorpusPage() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-indigo-900 mb-2">AKN dataset explorer</h1>
-      <p className="text-gray-500">
-        This page will become the Akoma Ntoso corpus explorer with side-by-side text/XML view (S12).
-      </p>
-    </div>
+    <PageContainer>
+      <PageHeader
+        eyebrow="Dataset"
+        title="Corpus explorer"
+        description="Browse the 45 Algerian laws as Akoma Ntoso: a document list with metadata and filters, side-by-side plain text ⟷ AKN XML, an eId structure tree with status badges, FRBR metadata, and in-document + cross-corpus search."
+      />
+      <ComingSoon session="S12" note="synced text/XML, eId tree, metadata, search" />
+    </PageContainer>
   )
 }

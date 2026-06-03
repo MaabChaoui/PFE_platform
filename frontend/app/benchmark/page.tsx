@@ -1,10 +1,14 @@
+import { PageContainer, PageHeader, ComingSoon } from '@/components/shared/page-shell'
+
 export default function BenchmarkPage() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-indigo-900 mb-2">Benchmark</h1>
-      <p className="text-gray-500">
-        This page will become the AlgerianLegalBench explorer with filterable questions and precomputed predictions (S9).
-      </p>
-    </div>
+    <PageContainer>
+      <PageHeader
+        eyebrow="Evaluation"
+        title="Benchmark"
+        description="Explore all 244 AlgerianLegalBench questions — filter by type, difficulty, category, answerability, language and split, each with an AKN-RLM hit badge. Open a question for its gold target articles (with full text), reasoning chain, and the precomputed prediction with a gold-vs-pred diff."
+      />
+      <ComingSoon session="S9" note="filter table + gold text + precomputed run + diff" />
+    </PageContainer>
   )
 }
