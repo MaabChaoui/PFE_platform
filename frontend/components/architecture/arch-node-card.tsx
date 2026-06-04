@@ -82,7 +82,7 @@ export function ArchNodeCard({
       aria-pressed={selected}
       data-node={node.id}
       className={cn(
-        'group relative block w-full rounded-2xl p-[3px] text-left outline-none',
+        'group relative block h-full w-full rounded-2xl p-[3px] text-left outline-none',
         'ring-1 transition-all duration-500 will-change-transform',
         EASE,
         'hover:-translate-y-1 active:scale-[0.985]',
@@ -95,7 +95,7 @@ export function ArchNodeCard({
     >
       <span
         className={cn(
-          'relative block overflow-hidden rounded-[13px] p-3.5',
+          'relative flex h-full flex-col justify-between overflow-hidden rounded-[13px] p-3.5',
           'bg-card/90 backdrop-blur-sm',
           'shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.07)]',
           selected && 'bg-primary/[0.07]',

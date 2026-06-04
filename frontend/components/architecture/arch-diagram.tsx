@@ -136,7 +136,7 @@ export function ArchDiagram({
   }, [measure])
 
   const Card = (id: string) => (
-    <div ref={(el) => setNodeRef(id, el)} className="min-w-0 flex-1">
+    <div key={id} ref={(el) => setNodeRef(id, el)} className="flex min-w-0 flex-1">
       <ArchNodeCard
         node={node(id)}
         selected={selectedId === id}
@@ -180,7 +180,7 @@ export function ArchDiagram({
               <div
                 key={id}
                 ref={(el) => setNodeRef(id, el)}
-                className={cn('min-w-0', place)}
+                className={cn('flex min-w-0', place)}
               >
                 <ArchNodeCard
                   node={node(id)}
