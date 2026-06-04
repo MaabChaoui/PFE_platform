@@ -127,6 +127,10 @@ const config: Config = {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.4' },
         },
+        // Architecture diagram — flowing dash travelling an SVG connector path.
+        'arch-dash': {
+          to: { 'stroke-dashoffset': '-16' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -134,6 +138,7 @@ const config: Config = {
         'fade-in': 'fade-in 0.25s ease-out',
         'fade-up': 'fade-up 0.3s ease-out',
         'pulse-ring': 'pulse-ring 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'arch-dash': 'arch-dash 1s linear infinite',
       },
     },
   },
