@@ -23,9 +23,12 @@ export interface CitationChipProps {
 }
 
 /**
- * Compact, deep-linking citation pill. Primary link → the article in the corpus
- * explorer (`/corpus?doc=&article=`); optional secondary link → the KG explorer.
- * Tooltip surfaces the full law title + version. Reused by Main + Benchmark.
+ * Compact, deep-linking citation pill — a mono "[n] art. 53 · 84-11" token with
+ * a hairline border. Primary link → the article in the corpus explorer
+ * (`/corpus?doc=&article=`); optional secondary link → the KG explorer. Tooltip
+ * surfaces the full law title + version. Reused by Main + Benchmark.
+ *
+ * Props/exports are stable (S7–S14 depend on them) — only the visuals changed.
  */
 export function CitationChip({
   docId,
@@ -46,7 +49,7 @@ export function CitationChip({
   return (
     <span
       className={cn(
-        'group inline-flex max-w-full items-center overflow-hidden rounded-md border border-border bg-secondary/60 text-xs font-medium text-secondary-foreground transition-colors hover:border-gold/60',
+        'group inline-flex max-w-full items-center overflow-hidden rounded-full border border-foreground/10 bg-foreground/[0.04] align-middle font-mono text-[11px] text-foreground/90 transition-colors hover:border-primary/45 hover:bg-foreground/[0.07]',
         className,
       )}
     >
@@ -54,14 +57,16 @@ export function CitationChip({
         <TooltipTrigger asChild>
           <Link
             href={corpusHref}
-            className="inline-flex min-w-0 items-center gap-1 px-2 py-0.5 hover:bg-secondary"
+            className="inline-flex min-w-0 items-center gap-1.5 px-2.5 py-0.5"
           >
-            <Scale className="h-3 w-3 shrink-0 text-gold" />
             {index != null ? (
-              <span className="text-muted-foreground">[{index}]</span>
-            ) : null}
+              <span className="font-semibold text-primary">[{index}]</span>
+            ) : (
+              <Scale className="h-3 w-3 shrink-0 text-primary" />
+            )}
             <span className="nums whitespace-nowrap">art. {articleRef}</span>
-            <span className="truncate text-muted-foreground">· {lawNum}</span>
+            <span className="text-muted-foreground">·</span>
+            <span className="truncate text-muted-foreground">{lawNum}</span>
           </Link>
         </TooltipTrigger>
         <TooltipContent>
@@ -78,7 +83,7 @@ export function CitationChip({
         <Link
           href={kgHref}
           aria-label="View in knowledge graph"
-          className="flex items-center border-l border-border/70 px-1.5 py-0.5 text-muted-foreground hover:bg-secondary hover:text-gold"
+          className="flex items-center border-l border-foreground/10 px-1.5 py-0.5 text-muted-foreground hover:bg-foreground/[0.06] hover:text-primary"
         >
           <Network className="h-3 w-3" />
         </Link>

@@ -47,11 +47,11 @@ export function PageHeader({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           {eyebrow ? (
-            <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+            <div className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               {eyebrow}
             </div>
           ) : null}
-          <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          <h1 className="font-display text-4xl tracking-tight text-foreground md:text-5xl">
             {title}
           </h1>
           {description ? (
@@ -73,7 +73,7 @@ export function PageHeader({
 export function ComingSoon({ session, note }: { session: string; note?: string }) {
   return (
     <div className="mt-6 inline-flex items-center gap-2 rounded-lg border border-dashed border-border bg-muted/40 px-4 py-2.5 text-sm text-muted-foreground">
-      <span className="inline-block h-2 w-2 animate-pulse-ring rounded-full bg-gold" />
+      <span className="inline-block h-2 w-2 animate-pulse-ring rounded-full bg-primary" />
       <span>
         Built in <span className="font-semibold text-foreground">{session}</span>
         {note ? ` — ${note}` : ''}

@@ -3,109 +3,142 @@
 @tailwind utilities;
 
 /*
- * AKN-RLM design tokens — scholarly-modern.
- * Palette: warm parchment surfaces · deep-indigo primary · ONE gold accent.
- * Values are HSL *channels* ("H S% L%") so Tailwind can compose
+ * AKN-RLM design tokens — "Ink & Orange" (S6.5 visual overhaul).
+ * Dark is the hero theme and the DEFAULT; a tasteful light theme follows.
+ * Palette → HSL *channels* ("H S% L%") so Tailwind composes
  * `hsl(var(--token) / <alpha-value>)` and the `/opacity` modifier works.
- * Standard shadcn names keep their conventional meaning (--accent is the
- * subtle neutral hover, NOT the brand accent — that is --gold).
+ *   Ink Black   #000814 → 216 100% 4%   (dark bg)
+ *   Prussian    #14213d → 221 51% 16%   (dark surfaces)
+ *   Orange      #fca311 → 37 98% 53%    (--primary / --ring / active)
+ *   Gold        #ffd008 → 48 100% 52%   (--gold accent; gradients)
+ *   Alabaster   #e5e5e5 → 0 0% 90%      (secondary text)
+ *   White       #ffffff → 0 0% 100%     (foreground)
+ * Token NAMES are unchanged from S6 — only values changed (plus new --sidebar-*).
+ * Standard shadcn names keep their meaning (--accent = neutral hover, NOT brand;
+ * the brand accent is --gold).
  */
 
 @layer base {
   :root {
-    /* Surfaces & ink — parchment / navy */
-    --background: 40 33% 96%;
-    --foreground: 226 38% 15%;
-    --card: 40 44% 98%;
-    --card-foreground: 226 38% 15%;
-    --popover: 40 44% 98%;
-    --popover-foreground: 226 38% 15%;
+    /* Surfaces & ink — alabaster / white over ink */
+    --background: 0 0% 100%;
+    --foreground: 216 100% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 216 100% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 100% 4%;
 
-    /* Brand primary — deep indigo */
-    --primary: 232 44% 31%;
-    --primary-foreground: 40 44% 97%;
+    /* Brand primary — Orange (ink text sits on it) */
+    --primary: 37 96% 49%;
+    --primary-foreground: 216 100% 4%;
 
-    /* Neutrals */
-    --secondary: 38 26% 90%;
-    --secondary-foreground: 232 38% 26%;
-    --muted: 40 22% 91%;
-    --muted-foreground: 226 14% 42%;
-    --accent: 38 30% 89%;
-    --accent-foreground: 232 40% 24%;
+    /* Neutrals — light alabaster steps, prussian ink */
+    --secondary: 220 18% 95%;
+    --secondary-foreground: 221 51% 16%;
+    --muted: 220 18% 95%;
+    --muted-foreground: 221 16% 38%;
+    --accent: 220 20% 92%;
+    --accent-foreground: 221 51% 16%;
 
     /* Feedback */
-    --destructive: 0 70% 45%;
-    --destructive-foreground: 40 44% 97%;
+    --destructive: 0 72% 47%;
+    --destructive-foreground: 0 0% 100%;
 
     /* Lines & focus */
-    --border: 38 22% 84%;
-    --input: 38 22% 84%;
-    --ring: 232 44% 40%;
+    --border: 220 16% 87%;
+    --input: 220 16% 87%;
+    --ring: 37 96% 49%;
 
     /* The ONE accent + status semantics */
-    --gold: 36 74% 46%;
-    --gold-foreground: 232 45% 14%;
-    --success: 152 46% 36%;
-    --success-foreground: 40 44% 97%;
-    --warning: 32 80% 46%;
-    --warning-foreground: 232 45% 14%;
-    --info: 210 68% 44%;
-    --info-foreground: 40 44% 97%;
+    --gold: 45 92% 44%;
+    --gold-foreground: 216 100% 4%;
+    --success: 152 52% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 46%;
+    --warning-foreground: 216 100% 4%;
+    --info: 205 78% 44%;
+    --info-foreground: 0 0% 100%;
 
-    --radius: 0.6rem;
+    /* Sidebar shell */
+    --sidebar: 0 0% 98%;
+    --sidebar-foreground: 221 51% 16%;
+    --sidebar-primary: 37 96% 49%;
+    --sidebar-primary-foreground: 216 100% 4%;
+    --sidebar-accent: 220 20% 92%;
+    --sidebar-accent-foreground: 221 51% 16%;
+    --sidebar-border: 220 16% 87%;
+    --sidebar-ring: 37 96% 49%;
+
+    --radius: 0.75rem;
     color-scheme: light;
   }
 
   .dark {
-    --background: 226 36% 9%;
-    --foreground: 40 30% 92%;
-    --card: 226 32% 12%;
-    --card-foreground: 40 30% 92%;
-    --popover: 226 32% 12%;
-    --popover-foreground: 40 30% 92%;
+    /* Surfaces & ink — Ink Black bg, Prussian panels (base vs raised step) */
+    --background: 216 100% 4%;
+    --foreground: 0 0% 98%;
+    --card: 221 45% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 221 51% 16%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 230 64% 68%;
-    --primary-foreground: 226 40% 11%;
+    /* Brand primary — Orange */
+    --primary: 37 98% 53%;
+    --primary-foreground: 216 100% 4%;
 
-    --secondary: 226 24% 18%;
-    --secondary-foreground: 40 30% 90%;
-    --muted: 226 22% 16%;
-    --muted-foreground: 226 16% 64%;
-    --accent: 226 24% 20%;
-    --accent-foreground: 40 30% 92%;
+    /* Neutrals — prussian steps, alabaster text */
+    --secondary: 221 51% 16%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 221 40% 13%;
+    --muted-foreground: 0 0% 72%;
+    --accent: 221 44% 19%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 60% 50%;
-    --destructive-foreground: 40 30% 95%;
+    /* Feedback */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 226 22% 20%;
-    --input: 226 22% 22%;
-    --ring: 230 64% 68%;
+    /* Lines & focus — lightened prussian hairline */
+    --border: 221 32% 22%;
+    --input: 221 32% 24%;
+    --ring: 37 98% 53%;
 
-    --gold: 40 82% 60%;
-    --gold-foreground: 226 45% 11%;
-    --success: 152 48% 48%;
-    --success-foreground: 226 40% 11%;
-    --warning: 38 84% 58%;
-    --warning-foreground: 226 45% 11%;
-    --info: 205 78% 62%;
-    --info-foreground: 226 40% 11%;
+    /* The ONE accent + status semantics */
+    --gold: 48 100% 52%;
+    --gold-foreground: 216 100% 4%;
+    --success: 152 56% 50%;
+    --success-foreground: 216 100% 4%;
+    --warning: 40 96% 56%;
+    --warning-foreground: 216 100% 4%;
+    --info: 205 84% 60%;
+    --info-foreground: 216 100% 4%;
+
+    /* Sidebar shell — a hair off the ink bg, hairline divider */
+    --sidebar: 218 70% 5%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 37 98% 53%;
+    --sidebar-primary-foreground: 216 100% 4%;
+    --sidebar-accent: 221 44% 16%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 221 30% 18%;
+    --sidebar-ring: 37 98% 53%;
 
     color-scheme: dark;
   }
 
-  /* Presenter mode — projector legibility. Bumping the root font-size cascades
-   * through every rem-based size (type AND spacing grow together). Contrast of
-   * the muted ink is nudged up per theme. Toggled via data-presenter on <html>. */
-  html[data-presenter="true"] {
+  /* Presenter mode — projector legibility. Bumping root font-size cascades
+   * through every rem-based size (type AND spacing grow together). Muted ink
+   * contrast is nudged up per theme. Toggled via data-presenter on <html>. */
+  html[data-presenter='true'] {
     font-size: 112.5%;
   }
-  html[data-presenter="true"]:not(.dark) {
-    --muted-foreground: 226 18% 35%;
-    --border: 38 24% 78%;
+  html[data-presenter='true']:not(.dark) {
+    --muted-foreground: 221 22% 30%;
+    --border: 220 18% 80%;
   }
-  html[data-presenter="true"].dark {
-    --muted-foreground: 226 20% 72%;
-    --border: 226 24% 26%;
+  html[data-presenter='true'].dark {
+    --muted-foreground: 0 0% 80%;
+    --border: 221 32% 28%;
   }
 }
 
@@ -115,11 +148,11 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "cv11", "ss01";
+    font-feature-settings: 'cv11', 'ss01';
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   ::selection {
-    background-color: hsl(var(--gold) / 0.25);
+    background-color: hsl(var(--primary) / 0.28);
   }
   /* Arabic legal text — generous line-height, comfortable measure. */
   .arabic {
@@ -130,12 +163,65 @@
   /* Tabular figures for metrics & scores. */
   .nums {
     font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum";
+    font-feature-settings: 'tnum';
   }
 }
 
-/* Thin, theme-aware scrollbars (chrome stays LTR). */
 @layer utilities {
+  /* Display serif — used on hero + page headings. Single-weight face: do NOT
+   * pair with font-bold/semibold (it would synthesise faux-bold). Carry
+   * hierarchy with size + tracking instead. */
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+
+  /* Orange → Gold brand gradient (replaces the reference's violet). */
+  .text-gradient-brand {
+    background-image: linear-gradient(
+      100deg,
+      hsl(var(--primary)),
+      hsl(var(--gold))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-gradient-brand {
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(var(--gold))
+    );
+  }
+
+  /* Subtle aurora backdrop — very restrained on the dark bg. */
+  .aurora {
+    position: absolute;
+    inset: -25%;
+    background:
+      radial-gradient(
+        40% 38% at 28% 30%,
+        hsl(var(--primary) / 0.5) 0%,
+        transparent 70%
+      ),
+      radial-gradient(
+        36% 34% at 70% 50%,
+        hsl(var(--gold) / 0.4) 0%,
+        transparent 70%
+      );
+    filter: blur(90px) saturate(120%);
+    opacity: 0.4;
+    animation: aurora-drift 24s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  .aurora-soft {
+    opacity: 0.22;
+    filter: blur(120px) saturate(110%);
+  }
+
+  /* Thin, theme-aware scrollbars (chrome stays LTR). */
   .scrollbar-thin {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;
@@ -150,5 +236,14 @@
   }
   .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
+  }
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(2%, -3%, 0) scale(1.06);
   }
 }

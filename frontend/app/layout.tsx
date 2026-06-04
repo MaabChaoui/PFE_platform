@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { fontSans, fontArabic } from './fonts'
+import { fontSans, fontDisplay, fontArabic } from './fonts'
 import { Providers } from '@/components/providers'
-import { Nav } from '@/components/shared/nav'
+import { AppSidebar } from '@/components/shared/app-sidebar'
+import { TopBar } from '@/components/shared/top-bar'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = {
@@ -24,25 +26,32 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(fontSans.variable, fontArabic.variable)}
+      className={cn(
+        fontSans.variable,
+        fontDisplay.variable,
+        fontArabic.variable,
+      )}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: PRESENTER_SCRIPT }} />
       </head>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <Providers>
-          <div className="relative flex min-h-screen flex-col">
-            <Nav />
-            <main className="flex-1">{children}</main>
-            <footer className="border-t border-border px-6 py-6 text-xs text-muted-foreground">
-              <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-2">
-                <span>
-                  AKN-RLM — citation-faithful Algerian legal QA · ENSIA thesis
-                </span>
-                <span>Attia &amp; Chaoui · viva 13/06/2026</span>
-              </div>
-            </footer>
-          </div>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              <TopBar />
+              <div className="flex-1">{children}</div>
+              <footer className="border-t border-border px-6 py-6 text-xs text-muted-foreground">
+                <div className="mx-auto flex max-w-[1400px] flex-wrap items-center justify-between gap-2">
+                  <span>
+                    AKN-RLM — citation-faithful Algerian legal QA · ENSIA thesis
+                  </span>
+                  <span>Attia &amp; Chaoui · viva 13/06/2026</span>
+                </div>
+              </footer>
+            </SidebarInset>
+          </SidebarProvider>
         </Providers>
       </body>
     </html>

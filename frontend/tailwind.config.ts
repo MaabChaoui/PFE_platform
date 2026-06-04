@@ -67,6 +67,22 @@ const config: Config = {
           DEFAULT: 'hsl(var(--info) / <alpha-value>)',
           foreground: 'hsl(var(--info-foreground) / <alpha-value>)',
         },
+        // Sidebar shell tokens (S6.5) — its own surface/ink so the rail can read
+        // a touch distinct from the content column. Consumed by components/ui/sidebar.tsx.
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar) / <alpha-value>)',
+          foreground: 'hsl(var(--sidebar-foreground) / <alpha-value>)',
+          primary: {
+            DEFAULT: 'hsl(var(--sidebar-primary) / <alpha-value>)',
+            foreground: 'hsl(var(--sidebar-primary-foreground) / <alpha-value>)',
+          },
+          accent: {
+            DEFAULT: 'hsl(var(--sidebar-accent) / <alpha-value>)',
+            foreground: 'hsl(var(--sidebar-accent-foreground) / <alpha-value>)',
+          },
+          border: 'hsl(var(--sidebar-border) / <alpha-value>)',
+          ring: 'hsl(var(--sidebar-ring) / <alpha-value>)',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -75,6 +91,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        // Display serif (Instrument Serif, vendored) for hero + page headings.
+        display: ['var(--font-display)', 'ui-serif', 'Georgia', 'serif'],
         arabic: ['var(--font-arabic)', 'system-ui', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
