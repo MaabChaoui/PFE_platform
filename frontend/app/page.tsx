@@ -101,11 +101,6 @@ export default function HomePage() {
 
       {/* Hero + command bar */}
       <section className="relative mx-auto flex max-w-3xl flex-col items-center px-6 pb-10 pt-20 text-center md:pt-24">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.04] px-3 py-1 text-xs text-muted-foreground backdrop-blur">
-          <Sparkles className="h-3 w-3 text-primary" />
-          AKN-RLM · citation-faithful retrieval
-        </div>
-
         <h1 className="font-display text-5xl leading-[1.05] tracking-tight md:text-6xl">
           Ask <span className="text-gradient-brand">Algerian law.</span>
         </h1>

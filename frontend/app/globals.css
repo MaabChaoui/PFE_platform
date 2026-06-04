@@ -76,16 +76,16 @@
   .dark {
     /* Surfaces & ink — near-black ink throughout. Blues pushed down toward
      * #000814 so panels read as "darker ink", not prussian. Subtle L steps
-     * preserve elevation: bg 4% → card 7% → popover 9% → accent/hover 12%. */
-    --background: 216 100% 4%;
+     * preserve elevation: bg 1% → card 6% → popover 9% → accent/hover 12%. */
+    --background: 255 100% 1%;
     --foreground: 0 0% 98%;
-    --card: 217 62% 7%;
+    --card: 217 62% 6%;
     --card-foreground: 0 0% 98%;
     --popover: 217 56% 9%;
     --popover-foreground: 0 0% 98%;
 
     /* Brand primary — Orange */
-    --primary: 37 98% 53%;
+    --primary: 35 98% 45%;
     --primary-foreground: 216 100% 4%;
 
     /* Neutrals — near-ink blue steps, alabaster text */
@@ -106,7 +106,7 @@
     --ring: 37 98% 53%;
 
     /* The ONE accent + status semantics */
-    --gold: 48 100% 52%;
+    --gold: 48 100% 55%;
     --gold-foreground: 216 100% 4%;
     --success: 152 56% 50%;
     --success-foreground: 216 100% 4%;
@@ -116,8 +116,8 @@
     --info-foreground: 216 100% 4%;
 
     /* Sidebar shell — a hair darker than the bg so the rail reads, hairline divider */
-    --sidebar: 216 100% 3%;
-    --sidebar-foreground: 0 0% 90%;
+    --sidebar: 255 100% 1.5%;
+    --sidebar-foreground: 0 0% 95%;
     --sidebar-primary: 37 98% 53%;
     --sidebar-primary-foreground: 216 100% 4%;
     --sidebar-accent: 217 46% 11%;
@@ -186,6 +186,7 @@
       hsl(var(--primary)),
       hsl(var(--gold))
     );
+
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
