@@ -74,33 +74,35 @@
   }
 
   .dark {
-    /* Surfaces & ink — Ink Black bg, Prussian panels (base vs raised step) */
+    /* Surfaces & ink — near-black ink throughout. Blues pushed down toward
+     * #000814 so panels read as "darker ink", not prussian. Subtle L steps
+     * preserve elevation: bg 4% → card 7% → popover 9% → accent/hover 12%. */
     --background: 216 100% 4%;
     --foreground: 0 0% 98%;
-    --card: 221 45% 12%;
+    --card: 217 62% 7%;
     --card-foreground: 0 0% 98%;
-    --popover: 221 51% 16%;
+    --popover: 217 56% 9%;
     --popover-foreground: 0 0% 98%;
 
     /* Brand primary — Orange */
     --primary: 37 98% 53%;
     --primary-foreground: 216 100% 4%;
 
-    /* Neutrals — prussian steps, alabaster text */
-    --secondary: 221 51% 16%;
+    /* Neutrals — near-ink blue steps, alabaster text */
+    --secondary: 217 50% 9%;
     --secondary-foreground: 0 0% 90%;
-    --muted: 221 40% 13%;
+    --muted: 217 46% 7%;
     --muted-foreground: 0 0% 72%;
-    --accent: 221 44% 19%;
+    --accent: 217 46% 12%;
     --accent-foreground: 0 0% 98%;
 
     /* Feedback */
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Lines & focus — lightened prussian hairline */
-    --border: 221 32% 22%;
-    --input: 221 32% 24%;
+    /* Lines & focus — dark ink hairline (still visible on near-black) */
+    --border: 216 46% 14%;
+    --input: 216 46% 16%;
     --ring: 37 98% 53%;
 
     /* The ONE accent + status semantics */
@@ -113,14 +115,14 @@
     --info: 205 84% 60%;
     --info-foreground: 216 100% 4%;
 
-    /* Sidebar shell — a hair off the ink bg, hairline divider */
-    --sidebar: 218 70% 5%;
+    /* Sidebar shell — a hair darker than the bg so the rail reads, hairline divider */
+    --sidebar: 216 100% 3%;
     --sidebar-foreground: 0 0% 90%;
     --sidebar-primary: 37 98% 53%;
     --sidebar-primary-foreground: 216 100% 4%;
-    --sidebar-accent: 221 44% 16%;
+    --sidebar-accent: 217 46% 11%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 221 30% 18%;
+    --sidebar-border: 216 46% 13%;
     --sidebar-ring: 37 98% 53%;
 
     color-scheme: dark;
@@ -138,7 +140,7 @@
   }
   html[data-presenter='true'].dark {
     --muted-foreground: 0 0% 80%;
-    --border: 221 32% 28%;
+    --border: 216 46% 20%;
   }
 }
 
