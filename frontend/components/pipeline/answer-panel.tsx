@@ -217,6 +217,12 @@ export function AnswerPanel({
           <AbstentionNotice reason={answer.abstention_reason} />
         ) : (
           <>
+            <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Answer
+              <span className="font-arabic text-[12px] normal-case tracking-normal text-muted-foreground/80">
+                الإجابة
+              </span>
+            </div>
             {answer.answer_text ? (
               <ArabicText className="text-[17px] leading-[1.95] text-foreground/95">
                 {answer.answer_text}
@@ -229,8 +235,12 @@ export function AnswerPanel({
 
             {answer.citations.length > 0 ? (
               <div className="mt-6">
-                <div className="mb-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  Citations · {answer.citations.length}
+                <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Sources
+                  <span className="font-arabic text-[12px] normal-case tracking-normal text-muted-foreground/80">
+                    المصادر
+                  </span>
+                  <span className="font-mono normal-case tracking-normal">· {answer.citations.length}</span>
                 </div>
                 <div className="space-y-2">
                   {answer.citations.map((c, i) => (
