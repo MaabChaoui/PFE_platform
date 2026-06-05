@@ -99,6 +99,12 @@ const config: Config = {
       maxWidth: {
         prose: '68ch',
       },
+      transitionTimingFunction: {
+        // Shared "machined" spring curve (Results + Architecture idiom). Named to
+        // avoid the ambiguous `ease-[cubic-bezier(...)]` arbitrary value, which
+        // Tailwind drops with a warning.
+        spring: 'cubic-bezier(0.32, 0.72, 0, 1)',
+      },
       boxShadow: {
         card: '0 1px 2px 0 hsl(226 40% 12% / 0.04), 0 1px 3px 0 hsl(226 40% 12% / 0.06)',
         'card-hover': '0 4px 12px -2px hsl(226 40% 12% / 0.10), 0 2px 6px -2px hsl(226 40% 12% / 0.08)',
