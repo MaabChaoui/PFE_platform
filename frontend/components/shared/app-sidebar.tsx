@@ -7,6 +7,7 @@ import {
   Library,
   Network,
   FlaskConical,
+  SearchCheck,
   BarChart3,
   Boxes,
   Info,
@@ -39,6 +40,7 @@ const WORKSPACE: NavItem[] = [
   { title: 'Corpus', href: '/corpus', icon: Library },
   { title: 'Knowledge Graph', href: '/kg', icon: Network },
   { title: 'Benchmark', href: '/benchmark', icon: FlaskConical },
+  { title: 'Retrieval Lab', href: '/retrieval-lab', icon: SearchCheck },
   { title: 'Results', href: '/results', icon: BarChart3 },
 ]
 const SYSTEM: NavItem[] = [
