@@ -3,13 +3,15 @@ from __future__ import annotations
 import os
 from unittest.mock import Mock
 
+import akn_rlm.rlm.classifier as classifier_mod
 import akn_rlm.rlm.dispatcher as dispatcher_mod
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
 from app.models.answer import AnswerOptions, EnhancerFlags
-from app.services.pipeline import PipelineService
-from app.settings import settings
+from app.services.pipeline import PipelineLiveError, PipelineService, _options_key
+from app.settings import Settings, settings
 
 # Env keys PipelineService mutates at dispatcher-build time.
 MANAGED_KEYS = [
@@ -24,11 +26,17 @@ MANAGED_KEYS = [
     "AKN_NO_CITATION_GATE",
 ]
 
+MODEL_CHOICE_ENV_KEYS = [
+    "ROOT_LLM_MODEL",
+    "SUB_LLM_MODEL",
+    "FALLBACK_MODEL",
+]
 
-def _stubbed_service() -> PipelineService:
+
+def _stubbed_service(config=settings) -> PipelineService:
     """A PipelineService with every heavy singleton stubbed so get_dispatcher
     never loads BM25/Dense/LLM/registry (hermetic, no model download)."""
-    service = PipelineService(settings)
+    service = PipelineService(config)
     service._loaded = True
     service._registry = Mock(name="registry")
     service._bm25 = Mock(name="bm25")
@@ -47,19 +55,53 @@ def _patch_build(monkeypatch) -> dict:
     def fake_build(**kwargs):
         captured["calls"] += 1
         captured["kwargs"] = kwargs
-        captured["env"] = {key: os.environ.get(key) for key in MANAGED_KEYS}
+        captured["env"] = {
+            key: os.environ.get(key)
+            for key in [*MANAGED_KEYS, *MODEL_CHOICE_ENV_KEYS]
+        }
         return Mock(name="dispatcher")
 
     monkeypatch.setattr(dispatcher_mod, "build_dispatcher", fake_build)
     return captured
 
 
+def _patch_classifier(monkeypatch) -> dict:
+    captured: dict = {}
+
+    def fake_make_llm_classifier_fn(pool, *, model, max_tokens=32):
+        captured["pool"] = pool
+        captured["model"] = model
+        captured["max_tokens"] = max_tokens
+
+        def _fn(query: str) -> str:
+            captured["query"] = query
+            return "multi_hop"
+
+        return _fn
+
+    monkeypatch.setattr(
+        classifier_mod, "make_llm_classifier_fn", fake_make_llm_classifier_fn
+    )
+    return captured
+
+
 def test_default_options_reproduce_locked_config(monkeypatch) -> None:
     captured = _patch_build(monkeypatch)
     pre = {key: os.environ.get(key) for key in MANAGED_KEYS}
+    pre_model_env = {key: os.environ.get(key) for key in MODEL_CHOICE_ENV_KEYS}
     service = _stubbed_service()
 
-    service.get_dispatcher(AnswerOptions())
+    defaults = AnswerOptions()
+    assert defaults.classifier_model is None
+    assert defaults.sub_model is None
+    assert defaults.supervisor_model is None
+    key = dict(_options_key(defaults))
+    assert key["classifier_model"] is None
+    assert key["sub_model"] is None
+    assert key["supervisor_model"] is None
+    assert "root_model" not in key
+
+    service.get_dispatcher(defaults)
 
     kwargs = captured["kwargs"]
     assert kwargs["enable_recursion"] is True
@@ -84,12 +126,17 @@ def test_default_options_reproduce_locked_config(monkeypatch) -> None:
         assert env[key] == "0"
     # kg on → a kg_loader is supplied (TF/CD can resolve).
     assert kwargs["kg_loader"] is not None
+    assert "sub_model" not in kwargs
+    assert "supervisor_model" not in kwargs
     # Env fully restored after the build (finally block).
     assert {key: os.environ.get(key) for key in MANAGED_KEYS} == pre
+    assert {key: os.environ.get(key) for key in MODEL_CHOICE_ENV_KEYS} == pre_model_env
 
 
 def test_custom_options_map_to_kwargs_and_env(monkeypatch) -> None:
     captured = _patch_build(monkeypatch)
+    classifier_capture = _patch_classifier(monkeypatch)
+    pre_model_env = {key: os.environ.get(key) for key in MODEL_CHOICE_ENV_KEYS}
     service = _stubbed_service()
 
     options = AnswerOptions(
@@ -99,7 +146,9 @@ def test_custom_options_map_to_kwargs_and_env(monkeypatch) -> None:
         enable_recursion=False,
         mh_ra_coverage_min=6,
         adu_extract_top_n=8,
+        classifier_model="gpt-oss-120b",
         sub_model="custom/model",
+        supervisor_model="google/gemma-4-31B",
         use_kg=False,
         enhancers=EnhancerFlags(e2=True, e6=True),
     )
@@ -110,6 +159,10 @@ def test_custom_options_map_to_kwargs_and_env(monkeypatch) -> None:
     assert kwargs["enable_ceiling_breakers"] is True
     assert kwargs["adu_extract_top_n"] == 8
     assert kwargs["sub_model"] == "custom/model"
+    assert kwargs["supervisor_model"] == "google/gemma-4-31B"
+    assert classifier_capture["model"] == "gpt-oss-120b"
+    assert kwargs["classifier_fn"]("probe") == "multi_hop"
+    assert classifier_capture["query"] == "probe"
     assert kwargs["recursion_coverage_min_overrides"] == {
         "multi_hop": 6,
         "rule_application": 6,
@@ -122,6 +175,42 @@ def test_custom_options_map_to_kwargs_and_env(monkeypatch) -> None:
     assert env["AKN_E2_NLI_REVERSE"] == "1"
     assert env["AKN_E6_CONCEPT_KG"] == "1"
     assert env["AKN_E1_CONCEPT_AMENDMENT"] == "0"
+    assert {key: os.environ.get(key) for key in MODEL_CHOICE_ENV_KEYS} == pre_model_env
+
+
+def test_model_override_flag_ignores_model_fields(monkeypatch) -> None:
+    captured = _patch_build(monkeypatch)
+    classifier_capture = _patch_classifier(monkeypatch)
+    config = Settings(ALLOW_MODEL_OVERRIDE=False)
+    service = _stubbed_service(config)
+
+    options = AnswerOptions(
+        classifier_model="gpt-oss-120b",
+        sub_model="custom/model",
+        supervisor_model="google/gemma-4-31B",
+    )
+    assert dict(_options_key(options, allow_model_override=False))["sub_model"] is None
+
+    service.get_dispatcher(options)
+
+    kwargs = captured["kwargs"]
+    assert "sub_model" not in kwargs
+    assert "supervisor_model" not in kwargs
+    assert classifier_capture["model"] == "google/gemma-4-31B"
+
+
+def test_live_model_failure_becomes_pipeline_live_error(monkeypatch) -> None:
+    class FailingDispatcher:
+        def run(self, query: str, query_type=None):
+            raise ValueError("unsupported model id")
+
+    monkeypatch.setattr(
+        dispatcher_mod, "build_dispatcher", lambda **_kwargs: FailingDispatcher()
+    )
+    service = _stubbed_service()
+
+    with pytest.raises(PipelineLiveError, match="live pipeline error"):
+        service.answer("ما هي شروط الزواج؟", AnswerOptions(sub_model="bad/model"))
 
 
 def test_memoization_and_reset(monkeypatch) -> None:
@@ -208,8 +297,6 @@ def test_stream_replay_unknown_question_404() -> None:
 # They assert *graceful* behaviour (never a 500), so they pass whether the
 # endpoint is up (200 answer) or down (clean 503), per the S4 brief.
 # ---------------------------------------------------------------------------
-
-import pytest  # noqa: E402
 
 LIVE_QUERY = "ما هي شروط الزواج في قانون الأسرة؟"
 

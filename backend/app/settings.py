@@ -31,6 +31,8 @@ class Settings(BaseSettings):
 
     OFFLINE_MODE: bool = True
     CORS_ORIGINS: str = "http://localhost:3000"
+    ALLOW_MODEL_OVERRIDE: bool = True
+    MODEL_CATALOG_JSON: Optional[str] = None
 
     @model_validator(mode="after")
     def derive_paths(self) -> "Settings":

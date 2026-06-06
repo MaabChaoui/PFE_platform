@@ -311,7 +311,10 @@ class PipelineService:
         env enhancer flags are process-global; they are set, the dispatcher is
         built (reading them), then restored.
         """
-        key = _options_key(options)
+        key = _options_key(
+            options,
+            allow_model_override=self.settings.ALLOW_MODEL_OVERRIDE,
+        )
         disp = self._dispatchers.get(key)
         if disp is not None:
             return disp
@@ -333,9 +336,12 @@ class PipelineService:
             pool = self.llm_pool()
             router = self.router()
 
-            classifier_fn = make_llm_classifier_fn(
-                pool, model=DEFAULT_LLM_CLASSIFIER_MODEL,
+            allow_models = self.settings.ALLOW_MODEL_OVERRIDE
+            classifier_model = (
+                options.classifier_model if allow_models and options.classifier_model
+                else DEFAULT_LLM_CLASSIFIER_MODEL
             )
+            classifier_fn = make_llm_classifier_fn(pool, model=classifier_model)
             # kg on → lazy loader (74 MB rdflib parse on first TF/CD dispatch);
             # kg off → None so TF/CD abstain (plan §5).
             kg_loader = (lambda: self.kg()) if options.use_kg else None
@@ -359,8 +365,10 @@ class PipelineService:
                     "rule_application": options.mh_ra_coverage_min,
                 },
             )
-            if options.sub_model:
+            if allow_models and options.sub_model:
                 kwargs["sub_model"] = options.sub_model
+            if allow_models and options.supervisor_model:
+                kwargs["supervisor_model"] = options.supervisor_model
 
             with self._scoped_env(_env_for_options(options)):
                 disp = _disp_mod.build_dispatcher(
@@ -531,10 +539,17 @@ class PipelineService:
         return registry if isinstance(registry, dict) else {}
 
 
-def _options_key(options: "AnswerOptions") -> tuple[tuple[str, Any], ...]:
+def _options_key(
+    options: "AnswerOptions",
+    *,
+    allow_model_override: bool = True,
+) -> tuple[tuple[str, Any], ...]:
     """Hashable, normalized build key. Excludes ``query_type`` — manual routing
     is a run-time ``run(query, query_type=...)`` arg, not a build input."""
     enh = options.enhancers
+    classifier_model = options.classifier_model if allow_model_override else None
+    sub_model = options.sub_model if allow_model_override else None
+    supervisor_model = options.supervisor_model if allow_model_override else None
     return (
         ("enable_recursion", options.enable_recursion),
         ("recursion_max_depth", options.recursion_max_depth),
@@ -546,7 +561,9 @@ def _options_key(options: "AnswerOptions") -> tuple[tuple[str, Any], ...]:
         ("ceiling_breakers", options.ceiling_breakers),
         ("use_kg", options.use_kg),
         ("citation_gate", options.citation_gate),
-        ("sub_model", options.sub_model),
+        ("classifier_model", classifier_model),
+        ("sub_model", sub_model),
+        ("supervisor_model", supervisor_model),
         ("long_context_timeout_s", options.long_context_timeout_s),
         ("e1", enh.e1), ("e2", enh.e2), ("e3", enh.e3),
         ("e5", enh.e5), ("e6", enh.e6), ("e7", enh.e7),

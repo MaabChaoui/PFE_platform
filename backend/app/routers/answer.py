@@ -29,9 +29,14 @@ from ..models.answer import (
     ResetResponse,
     StreamRequest,
 )
-from ..services.answer_runtime import pipeline_config_options, replay_response
+from ..services.answer_runtime import (
+    pipeline_config_options,
+    pipeline_model_catalog,
+    replay_response,
+)
 from ..services.benchmark import BenchmarkService
 from ..services.pipeline import PipelineLiveError, PipelineService
+from ..settings import settings
 
 router = APIRouter()
 
@@ -182,6 +187,8 @@ def pipeline_config() -> PipelineConfig:
         options=options,
         query_types=list(QUERY_TYPES),
         defaults=defaults,
+        models=pipeline_model_catalog(),
+        model_overrides_enabled=settings.ALLOW_MODEL_OVERRIDE,
     )
 
 

@@ -73,8 +73,13 @@ class AnswerOptions(BaseModel):
     use_kg: bool = True
     # Citation gate — presence-based env AKN_NO_CITATION_GATE ("1" when OFF).
     citation_gate: bool = True
-    # Sub-LM override + long-context summariser timeout.
+    # Model overrides. None = locked deployable defaults from akn_rlm.config /
+    # classifier / supervisor modules. Applied only when ALLOW_MODEL_OVERRIDE is
+    # enabled; never via process-global env.
+    classifier_model: Optional[str] = None
     sub_model: Optional[str] = None
+    supervisor_model: Optional[str] = None
+    # Long-context summariser timeout.
     long_context_timeout_s: float = Field(60.0, gt=0, le=600)
 
 
@@ -163,10 +168,18 @@ class PipelineOption(BaseModel):
     help: str = ""
 
 
+class PipelineModelOption(BaseModel):
+    id: str
+    label: str
+    default: bool = False
+
+
 class PipelineConfig(BaseModel):
     options: list[PipelineOption]
     query_types: list[str]
     defaults: dict[str, Any]
+    models: dict[str, list[PipelineModelOption]] = Field(default_factory=dict)
+    model_overrides_enabled: bool = True
 
 
 class ResetResponse(BaseModel):

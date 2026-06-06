@@ -16,6 +16,7 @@ replay adapter that maps a precomputed predictions.jsonl record onto the live
 """
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from akn_rlm.api.answer import (
@@ -27,7 +28,13 @@ from akn_rlm.api.answer import (
     _to_citation,
 )
 
-from ..models.answer import QUERY_TYPES, AnswerOptions, PipelineOption
+from ..models.answer import (
+    QUERY_TYPES,
+    AnswerOptions,
+    PipelineModelOption,
+    PipelineOption,
+)
+from ..settings import Settings, settings
 
 #: Dispatcher abstain reasons that signal an *infrastructure* failure (LLM /
 #: transport / build) rather than a genuine domain abstention. ``run`` swallows
@@ -171,6 +178,100 @@ def replay_response(record: dict[str, Any]) -> tuple[AnswerResponse, dict[str, A
 # Pipeline config catalog (GET /api/pipeline/config)
 # ---------------------------------------------------------------------------
 
+_DEFAULT_MODEL_CATALOG: dict[str, list[PipelineModelOption]] = {
+    # Live generator knob in the dispatched path: AnswerOptions.sub_model.
+    "generator": [
+        PipelineModelOption(
+            id="Qwen3-30B-A3B-Thinking",
+            label="Qwen3-30B-A3B-Thinking — locked sub-LM generator",
+            default=True,
+        ),
+        PipelineModelOption(id="gpt-oss-120b", label="gpt-oss-120b — AI Grid"),
+        PipelineModelOption(
+            id="google/gemma-4-31B",
+            label="google/gemma-4-31B — AI Grid",
+        ),
+    ],
+    # Live classifier knob: make_llm_classifier_fn(model=...).
+    "classifier": [
+        PipelineModelOption(
+            id="google/gemma-4-31B",
+            label="google/gemma-4-31B — locked query classifier",
+            default=True,
+        ),
+        PipelineModelOption(id="gpt-oss-120b", label="gpt-oss-120b — AI Grid"),
+        PipelineModelOption(
+            id="Qwen3-30B-A3B-Thinking",
+            label="Qwen3-30B-A3B-Thinking — AI Grid",
+        ),
+    ],
+    # Real optional dispatched-path knob already accepted by RLMDispatcher.
+    "supervisor": [
+        PipelineModelOption(
+            id="gpt-oss-120b",
+            label="gpt-oss-120b — locked citation supervisor",
+            default=True,
+        ),
+        PipelineModelOption(
+            id="Qwen3-30B-A3B-Thinking",
+            label="Qwen3-30B-A3B-Thinking — AI Grid",
+        ),
+        PipelineModelOption(
+            id="google/gemma-4-31B",
+            label="google/gemma-4-31B — AI Grid",
+        ),
+    ],
+    # Honest Table 3.6 context: fixed local components, not live answer knobs.
+    "fixed": [
+        PipelineModelOption(
+            id="intfloat/multilingual-e5-small",
+            label="Dense encoder (fixed FAISS index; no live answer knob)",
+            default=True,
+        ),
+        PipelineModelOption(
+            id="MoritzLaurer/mDeBERTa-v3-base-mnli-xnli",
+            label="Faithfulness NLI gate (fixed local model; no live answer knob)",
+            default=True,
+        ),
+    ],
+}
+
+
+def pipeline_model_catalog(config: Settings = settings) -> dict[str, list[PipelineModelOption]]:
+    """Return the offline-safe, config-editable model catalog.
+
+    ``MODEL_CATALOG_JSON`` may override the default with a JSON object shaped
+    like ``{"classifier": [{"id": "...", "label": "...", "default": true}]}``.
+    Invalid JSON falls back to the curated locked-demo catalog so
+    ``/pipeline/config`` remains offline and robust.
+    """
+    raw = (config.MODEL_CATALOG_JSON or "").strip()
+    if not raw:
+        return _clone_model_catalog(_DEFAULT_MODEL_CATALOG)
+    try:
+        payload = json.loads(raw)
+        if not isinstance(payload, dict):
+            raise ValueError("catalog root must be an object")
+        catalog: dict[str, list[PipelineModelOption]] = {}
+        for role, items in payload.items():
+            if not isinstance(role, str) or not isinstance(items, list):
+                continue
+            parsed = [PipelineModelOption.model_validate(item) for item in items]
+            if parsed:
+                catalog[role] = parsed
+        return catalog or _clone_model_catalog(_DEFAULT_MODEL_CATALOG)
+    except Exception:
+        return _clone_model_catalog(_DEFAULT_MODEL_CATALOG)
+
+
+def _clone_model_catalog(
+    catalog: dict[str, list[PipelineModelOption]],
+) -> dict[str, list[PipelineModelOption]]:
+    return {
+        role: [PipelineModelOption.model_validate(item.model_dump()) for item in items]
+        for role, items in catalog.items()
+    }
+
 
 def pipeline_config_options() -> list[PipelineOption]:
     """The control catalog the frontend renders the panel from. Defaults here
@@ -237,9 +338,19 @@ def pipeline_config_options() -> list[PipelineOption]:
             help="env AKN_NO_CITATION_GATE (bypass when off). Consumed by the freeform RootController path.",
         ),
         PipelineOption(
+            key="classifier_model", type="string", default=d.classifier_model,
+            advanced=True, requires_live=True, label="Classifier model",
+            help="Override the LLM query classifier model. None = locked google/gemma-4-31B.",
+        ),
+        PipelineOption(
             key="sub_model", type="string", default=d.sub_model,
-            advanced=True, requires_live=True, label="Sub-LM override",
+            advanced=True, requires_live=True, label="Generator / sub-LM model",
             help="Override the sub-LM model id (default = SUB_LLM_MODEL).",
+        ),
+        PipelineOption(
+            key="supervisor_model", type="string", default=d.supervisor_model,
+            advanced=True, requires_live=True, label="Supervisor model",
+            help="Override the citation supervisor model. None = locked gpt-oss-120b.",
         ),
         PipelineOption(
             key="long_context_timeout_s", type="float",
