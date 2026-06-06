@@ -15,7 +15,7 @@ import { ReasoningTrace } from '@/components/pipeline/reasoning-trace'
 import { SessionsRail, SessionsSheet } from '@/components/pipeline/sessions-rail'
 import { Telemetry } from '@/components/pipeline/telemetry'
 import { buildAnswerOptions, isArabic, isLlmReachable } from '@/components/pipeline/utils'
-import { getHealth } from '@/lib/api'
+import { getHealth, getQuestion } from '@/lib/api'
 import {
   usePipelineStream,
   usePrefersReducedMotion,
@@ -358,6 +358,48 @@ export default function PipelinePage() {
       })
     }
   }, [stream.runId, reducedMotion])
+
+  // One-shot deep-link: `/?replay=<question_id>` auto-starts that benchmark
+  // replay on load (linked from the Benchmark page). Additive + fully guarded —
+  // it only fires when the param is present AND the question resolves; absent or
+  // invalid id (or backend down) silently leaves the normal empty hero, so S10
+  // replay/live/history never regress. Reads window.location directly (not
+  // useSearchParams) so this page stays out of a Suspense boundary. Runs once.
+  const deepLinkHandled = React.useRef(false)
+  React.useEffect(() => {
+    if (deepLinkHandled.current) return
+    deepLinkHandled.current = true
+    const replayId = new URLSearchParams(window.location.search).get('replay')
+    if (!replayId) return
+    // Strip the param so a refresh or a fresh pick doesn't re-trigger it.
+    const url = new URL(window.location.href)
+    url.searchParams.delete('replay')
+    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
+    void (async () => {
+      try {
+        const q = await getQuestion(replayId)
+        setMode('replay')
+        const s = createOrTouch({
+          mode: 'replay',
+          questionId: q.id,
+          label: q.question,
+          queryType: q.query_type,
+          handler: q.prediction?.dispatched_handler ?? undefined,
+        })
+        runningRef.current = {
+          id: s.id,
+          mode: 'replay',
+          label: q.question,
+          questionId: q.id,
+        }
+        setSelected({ id: q.id, question: q.question, query_type: q.query_type })
+        stream.run({ mode: 'replay', question_id: q.id })
+      } catch {
+        // invalid id / backend down → leave the empty hero, no crash.
+      }
+    })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const active = stream.status !== 'idle' || liveBlocked !== null
   const hasHistory = sessions.sessions.length > 0

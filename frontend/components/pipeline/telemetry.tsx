@@ -87,7 +87,7 @@ function ScoreTile({ spec, value }: { spec: ScoreSpec; value: number | null }) {
  * tooltip carries the fuller definition, and the link points at the corpus-level
  * value on Results.
  */
-function MetricCaveat() {
+export function MetricCaveat() {
   return (
     <div className="mb-3 flex items-start gap-2 rounded-lg border border-foreground/[0.1] bg-foreground/[0.04] px-3 py-2 dark:border-foreground/[0.07] dark:bg-foreground/[0.02]">
       <Tooltip>
