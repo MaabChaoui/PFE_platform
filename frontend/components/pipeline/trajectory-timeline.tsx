@@ -242,7 +242,7 @@ function ControlButton({
       aria-label={label}
       title={label}
       className={cn(
-        'grid place-items-center rounded-lg transition-all duration-300 ease-spring active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40',
+        'grid place-items-center rounded-lg transition-all duration-300 ease-spring active:scale-[0.94] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-40',
         primary
           ? 'h-9 w-9 bg-gradient-brand text-primary-foreground shadow-lg shadow-primary/20 hover:brightness-110'
           : 'h-9 w-9 border border-foreground/10 bg-foreground/[0.03] text-muted-foreground hover:border-foreground/25 hover:text-foreground',
@@ -341,7 +341,7 @@ export function TrajectoryTimeline({
         className,
       )}
     >
-      <div className="rounded-[1.4rem] bg-card/60 shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.06)]">
+      <div className="rounded-[1.4rem] bg-card/60 shadow-card dark:shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.06)]">
         {/* controls header */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-foreground/[0.07] px-4 py-3 md:px-5">
           <div className="min-w-0">

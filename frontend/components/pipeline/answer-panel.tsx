@@ -55,7 +55,7 @@ function CitationItem({ citation, index }: { citation: Citation; index: number }
           {hasBody ? (
             <ChevronDown
               className={cn(
-                'h-4 w-4 text-muted-foreground transition-transform duration-500 ease-spring',
+                'h-4 w-4 text-muted-foreground transition-transform duration-500 ease-spring motion-reduce:transition-none',
                 open && 'rotate-180',
               )}
             />
@@ -143,11 +143,11 @@ export function AnswerPanel({
   return (
     <section
       className={cn(
-        'rounded-[1.75rem] bg-foreground/[0.025] p-1.5 ring-1 ring-foreground/[0.06]',
+        'rounded-[1.75rem] bg-foreground/[0.04] p-1.5 ring-1 ring-foreground/[0.09] dark:bg-foreground/[0.025] dark:ring-foreground/[0.06]',
         className,
       )}
     >
-      <div className="rounded-[1.4rem] bg-card/60 p-5 shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.06)] md:p-6">
+      <div className="rounded-[1.4rem] bg-card/60 p-5 shadow-card dark:shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.06)] md:p-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
             <span className="font-mono text-primary">01</span>

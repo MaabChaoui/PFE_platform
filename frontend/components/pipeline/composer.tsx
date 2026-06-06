@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { ArrowUp, Radio, Sparkles } from 'lucide-react'
+import { ArrowUp, Loader2, Lock, Radio, Sparkles, Zap } from 'lucide-react'
 
 import { HealthBadge } from '@/components/shared/health-badge'
 import {
@@ -20,28 +20,65 @@ import {
 import { BenchmarkPicker } from '@/components/pipeline/benchmark-picker'
 import { RunConfig } from '@/components/pipeline/run-config'
 import { cn } from '@/lib/utils'
+import { isArabic } from '@/components/pipeline/utils'
 import type { QuestionSummary } from '@/lib/types'
+
+export type Mode = 'replay' | 'live'
 
 // ───────────────────────── replay / live mode toggle ─────────────────────────
 
-function ModeToggle() {
+function ModeToggle({
+  mode,
+  onModeChange,
+  reachable,
+  checking,
+  onRecheck,
+}: {
+  mode: Mode
+  onModeChange: (m: Mode) => void
+  reachable: boolean
+  checking: boolean
+  onRecheck: () => void
+}) {
+  const segment = (active: boolean) =>
+    cn(
+      'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-medium transition-all duration-300 ease-spring',
+      active
+        ? 'bg-gradient-brand text-primary-foreground shadow-sm'
+        : 'text-muted-foreground hover:text-foreground',
+    )
+
   return (
     <div className="inline-flex items-center rounded-full border border-foreground/10 bg-foreground/[0.03] p-0.5 text-xs">
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-brand px-2.5 py-1 font-medium text-primary-foreground shadow-sm">
+      <button type="button" onClick={() => onModeChange('replay')} className={segment(mode === 'replay')}>
         <Radio className="h-3 w-3" />
         Replay
-      </span>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span
-            aria-disabled
-            className="cursor-not-allowed select-none px-2.5 py-1 font-medium text-muted-foreground/55"
-          >
-            Live
-          </span>
-        </TooltipTrigger>
-        <TooltipContent>Live answering — arriving soon</TooltipContent>
-      </Tooltip>
+      </button>
+      {reachable ? (
+        <button type="button" onClick={() => onModeChange('live')} className={segment(mode === 'live')}>
+          <Zap className="h-3 w-3" />
+          Live
+        </button>
+      ) : (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              onClick={onRecheck}
+              aria-disabled
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-medium text-muted-foreground/55 transition-colors hover:text-muted-foreground/80"
+            >
+              {checking ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <Lock className="h-3 w-3" />
+              )}
+              Live
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>Live LLM unavailable — replaying precomputed runs. Click to re-check.</TooltipContent>
+        </Tooltip>
+      )}
     </div>
   )
 }
@@ -98,45 +135,87 @@ function ExamplePicker({
 
 export interface ComposerProps {
   variant: 'hero' | 'docked'
+  mode: Mode
+  onModeChange: (m: Mode) => void
+  reachable: boolean
+  checkingHealth: boolean
+  onRecheck: () => void
+  /** Run-config state (lifted to the page so it survives the hero↔active swap). */
+  liveActive: boolean
+  overrides: Record<string, unknown>
+  onOverrideChange: (key: string, value: unknown) => void
+  /** Replay path (the example picker). */
   selectedId: string | null
   onPick: (q: QuestionSummary) => void
+  /** Live path — submit the typed query. */
+  onSubmitLive: (query: string) => void
   className?: string
 }
 
 /**
- * The command bar. ChatGPT/Claude-style: a query field with the run-config and
- * mode controls attached to it, plus a "Try an example" affordance that opens
- * the benchmark picker for replay. In the empty state it is the centered hero;
- * once a run starts the page docks it to the bottom (`variant='docked'`).
- *
- * The typed input is the FUTURE live path — present, but its send action stays
- * gated (live answering ships later). Replay is the only path that runs now.
+ * The command bar. In LIVE mode the typed query + Send/Enter run the real
+ * pipeline over SSE; in REPLAY mode the "Try an example" picker streams a
+ * precomputed run (the typed field is inert — replay needs a question id). The
+ * mode toggle is health-gated: Live is disabled (re-checkable) until the backend
+ * reports a reachable LLM.
  */
-export function Composer({ variant, selectedId, onPick, className }: ComposerProps) {
+export function Composer({
+  variant,
+  mode,
+  onModeChange,
+  reachable,
+  checkingHealth,
+  onRecheck,
+  liveActive,
+  overrides,
+  onOverrideChange,
+  selectedId,
+  onPick,
+  onSubmitLive,
+  className,
+}: ComposerProps) {
   const [query, setQuery] = React.useState('')
   const hero = variant === 'hero'
+  const live = mode === 'live'
+  const canSend = live && reachable && query.trim().length > 0
+  const rtl = isArabic(query)
+
+  const submit = () => {
+    if (!canSend) return
+    const q = query.trim()
+    onSubmitLive(q)
+    setQuery('')
+  }
+
+  const placeholder = live
+    ? 'Ask a question about Algerian law…  (Enter to run live)'
+    : 'Replaying precomputed runs — “Try an example”, or switch to Live to ask your own.'
 
   return (
     <div
       className={cn(
-        'rounded-[1.75rem] bg-foreground/[0.04] p-1.5 ring-1 ring-foreground/[0.06]',
+        'rounded-[1.75rem] bg-foreground/[0.04] p-1.5 ring-1 ring-foreground/[0.09] dark:ring-foreground/[0.06]',
         className,
       )}
     >
-      <div className="rounded-[1.4rem] border border-foreground/[0.06] bg-card/80 shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.06)] backdrop-blur-xl">
+      <div className="rounded-[1.4rem] border border-foreground/[0.1] bg-card/80 shadow-card dark:border-foreground/[0.06] dark:shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.06)] backdrop-blur-xl">
         <div className={cn('px-4', hero ? 'pt-4' : 'pt-3')}>
           <textarea
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => {
-              // Send is gated this session — never submit.
-              if (e.key === 'Enter' && !e.shiftKey) e.preventDefault()
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                if (live) submit()
+              }
             }}
+            dir={rtl ? 'rtl' : undefined}
             rows={hero ? 2 : 1}
-            placeholder="Ask a question about Algerian law…  (live answering arrives soon — try an example to replay)"
+            placeholder={placeholder}
             className={cn(
               'w-full resize-none bg-transparent leading-relaxed text-foreground placeholder:text-muted-foreground/60 focus:outline-none',
               hero ? 'min-h-[3.25rem] text-[15px]' : 'min-h-[1.75rem] text-sm',
+              rtl && 'text-right font-arabic',
             )}
           />
         </div>
@@ -148,12 +227,22 @@ export function Composer({ variant, selectedId, onPick, className }: ComposerPro
           )}
         >
           <div className="flex flex-wrap items-center gap-2">
-            <ModeToggle />
-            <RunConfig />
+            <ModeToggle
+              mode={mode}
+              onModeChange={onModeChange}
+              reachable={reachable}
+              checking={checkingHealth}
+              onRecheck={onRecheck}
+            />
+            <RunConfig
+              liveActive={liveActive}
+              overrides={overrides}
+              onChange={onOverrideChange}
+            />
           </div>
 
           <div className="flex items-center gap-2">
-            <ExamplePicker selectedId={selectedId} onPick={onPick} />
+            {!live ? <ExamplePicker selectedId={selectedId} onPick={onPick} /> : null}
             <span className="hidden sm:inline-flex">
               <HealthBadge />
             </span>
@@ -161,15 +250,25 @@ export function Composer({ variant, selectedId, onPick, className }: ComposerPro
               <TooltipTrigger asChild>
                 <button
                   type="button"
-                  disabled
-                  aria-label="Send (live answering arrives soon)"
-                  className="grid h-9 w-9 place-items-center rounded-full bg-gradient-brand text-primary-foreground opacity-45 shadow-sm transition-transform disabled:pointer-events-none"
+                  onClick={submit}
+                  disabled={!canSend}
+                  aria-label={live ? 'Run live answer' : 'Switch to Live to ask your own question'}
+                  className={cn(
+                    'grid h-9 w-9 place-items-center rounded-full bg-gradient-brand text-primary-foreground shadow-sm transition-all duration-300 ease-spring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                    canSend
+                      ? 'hover:brightness-110 active:scale-95'
+                      : 'opacity-45 disabled:pointer-events-none',
+                  )}
                 >
                   <ArrowUp className="h-4 w-4" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>
-                Live answering arrives soon — use “Try an example” to replay
+                {live
+                  ? query.trim()
+                    ? 'Run the live pipeline'
+                    : 'Type a question to run it live'
+                  : 'Switch to Live to ask your own question'}
               </TooltipContent>
             </Tooltip>
           </div>

@@ -223,6 +223,12 @@
     opacity: 0.22;
     filter: blur(120px) saturate(110%);
   }
+  /* Reduced motion: the aurora drift is continuous/ambient — freeze it. */
+  @media (prefers-reduced-motion: reduce) {
+    .aurora {
+      animation: none;
+    }
+  }
 
   /* Thin, theme-aware scrollbars (chrome stays LTR). */
   .scrollbar-thin {

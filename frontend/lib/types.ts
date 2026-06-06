@@ -375,7 +375,12 @@ export interface AnswerOptions {
   ceiling_breakers: boolean
   use_kg: boolean
   citation_gate: boolean
+  /** Generator / sub-LM model id. null = locked default (SUB_LLM_MODEL). */
   sub_model: string | null
+  /** Query-classifier model id. null = locked default (google/gemma-4-31B). */
+  classifier_model: string | null
+  /** Citation-supervisor model id. null = locked default (gpt-oss-120b). */
+  supervisor_model: string | null
   long_context_timeout_s: number
 }
 
@@ -444,10 +449,27 @@ export interface PipelineOption {
   help: string
 }
 
+/** One swappable model in the catalog (`config.models[role]`). The item flagged
+ *  `default` is the locked Phase E choice; selecting it = leave the field null. */
+export interface PipelineModelOption {
+  id: string
+  label: string
+  default: boolean
+}
+
+/** Catalog roles → AnswerOptions field:
+ *  generator→sub_model · classifier→classifier_model · supervisor→supervisor_model.
+ *  `fixed` (e5 embedder + mDeBERTa NLI gate) is read-only — not a live knob. */
+export type ModelCatalog = Record<string, PipelineModelOption[]>
+
 export interface PipelineConfig {
   options: PipelineOption[]
   query_types: string[]
   defaults: Record<string, unknown>
+  /** Per-role swappable model lists (generator/classifier/supervisor/fixed). */
+  models: ModelCatalog
+  /** settings.ALLOW_MODEL_OVERRIDE — when false the dropdowns are read-only. */
+  model_overrides_enabled: boolean
 }
 
 export interface ResetResponse {

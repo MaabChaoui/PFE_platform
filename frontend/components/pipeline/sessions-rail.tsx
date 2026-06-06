@@ -131,7 +131,7 @@ function SessionRow({
         onClick={onSelect}
         aria-current={active ? 'true' : undefined}
         className={cn(
-          'w-full rounded-xl border px-3 py-2.5 pr-9 text-left transition-all duration-300 ease-spring motion-reduce:transition-none',
+          'w-full rounded-xl border px-3 py-2.5 pr-9 text-left transition-all duration-300 ease-spring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none',
           active
             ? 'border-primary/50 bg-primary/[0.07] shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.05)]'
             : 'border-foreground/[0.08] bg-card/40 hover:-translate-y-px hover:border-foreground/20',
@@ -310,7 +310,7 @@ export function SessionsRail(props: SessionsViewProps) {
         collapsed ? 'w-[3.25rem]' : 'w-[252px]',
       )}
     >
-      <div className="sticky top-20 flex max-h-[calc(100dvh-6rem)] flex-col overflow-hidden rounded-[1.4rem] border border-foreground/[0.08] bg-card/50 p-3">
+      <div className="sticky top-20 flex max-h-[calc(100dvh-6rem)] flex-col overflow-hidden rounded-[1.4rem] border border-foreground/[0.12] bg-card/50 p-3 shadow-card dark:border-foreground/[0.08] dark:shadow-none">
         {collapsed ? (
           <CollapsedRail
             count={props.sessions.length}

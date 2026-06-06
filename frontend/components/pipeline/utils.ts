@@ -26,6 +26,58 @@ import {
 } from 'lucide-react'
 
 import { humanize } from '@/lib/format'
+import type { AnswerOptions, Health } from '@/lib/types'
+
+// ───────────────────────── live health gate ─────────────────────────
+
+/** Affirmative `health.llm` values that mean the live LLM is reachable. The
+ *  backend currently reports `"unchecked"` (it does not probe the endpoint yet —
+ *  real probing is deferred to S15), which is NOT in this set, so Live stays
+ *  cleanly disabled until a reachable signal arrives. Binary, default-closed. */
+const LLM_REACHABLE = new Set([
+  'ok',
+  'reachable',
+  'up',
+  'available',
+  'ready',
+  'online',
+  'live',
+  'connected',
+  'healthy',
+])
+
+/** True only on an affirmative `health.llm`. Unknown / unchecked / negative /
+ *  missing health → false (Live disabled, replay-only). */
+export function isLlmReachable(health: Health | null | undefined): boolean {
+  if (!health || typeof health.llm !== 'string') return false
+  return LLM_REACHABLE.has(health.llm.trim().toLowerCase())
+}
+
+// ───────────────────────── run-config → AnswerOptions ─────────────────────────
+
+const ENHANCER_PREFIX = 'enhancers.'
+
+/** Translate the flat run-config `overrides` (keyed by `/pipeline/config` option
+ *  keys, including dotted `enhancers.eN`) into the nested `Partial<AnswerOptions>`
+ *  the live SSE run expects. null/undefined values are dropped — every field's
+ *  "null/default" maps to the backend's locked default anyway, so an empty
+ *  overrides map == the locked Phase E config. Nothing is hardcoded. */
+export function buildAnswerOptions(
+  overrides: Record<string, unknown>,
+): Partial<AnswerOptions> {
+  const opts: Record<string, unknown> = {}
+  const enhancers: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(overrides)) {
+    if (value === null || value === undefined) continue
+    if (key.startsWith(ENHANCER_PREFIX)) {
+      enhancers[key.slice(ENHANCER_PREFIX.length)] = value
+    } else {
+      opts[key] = value
+    }
+  }
+  if (Object.keys(enhancers).length > 0) opts.enhancers = enhancers
+  return opts as Partial<AnswerOptions>
+}
 
 // ───────────────────────── phases ─────────────────────────
 

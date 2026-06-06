@@ -127,7 +127,7 @@ function RankRow({
           {hasSnippet ? (
             <ChevronDown
               className={cn(
-                'h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform duration-500 ease-spring',
+                'h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform duration-500 ease-spring motion-reduce:transition-none',
                 open && 'rotate-180',
               )}
             />
@@ -223,13 +223,13 @@ function ChannelCard({
       className={cn(
         'rounded-[1.1rem] p-1 ring-1',
         tone === 'live'
-          ? 'bg-primary/[0.04] ring-primary/20'
+          ? 'bg-primary/[0.04] ring-primary/25 dark:ring-primary/20'
           : tone === 'baseline'
-            ? 'bg-foreground/[0.02] ring-foreground/[0.07]'
-            : 'bg-foreground/[0.02] ring-foreground/[0.06]',
+            ? 'bg-foreground/[0.02] ring-foreground/[0.1] dark:ring-foreground/[0.07]'
+            : 'bg-foreground/[0.02] ring-foreground/[0.09] dark:ring-foreground/[0.06]',
       )}
     >
-      <div className="rounded-[0.8rem] bg-card/60 p-2.5 shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.05)]">
+      <div className="rounded-[0.8rem] bg-card/60 p-2.5 shadow-card dark:shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.05)]">
         <div className="mb-2 flex items-center gap-2">
           <span
             className={cn(
@@ -436,7 +436,7 @@ export function RetrievalChannels({
             </span>
             <ChevronDown
               className={cn(
-                'h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-500 ease-spring',
+                'h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-500 ease-spring motion-reduce:transition-none',
                 baselineOpen && 'rotate-180',
               )}
             />

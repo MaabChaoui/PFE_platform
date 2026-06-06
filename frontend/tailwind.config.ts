@@ -137,6 +137,11 @@ const config: Config = {
         'arch-dash': {
           to: { 'stroke-dashoffset': '-16' },
         },
+        // Live-run indeterminate progress sweep (GPU-safe: transform only).
+        'live-sweep': {
+          '0%': { transform: 'translateX(-110%)' },
+          '100%': { transform: 'translateX(320%)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -145,6 +150,7 @@ const config: Config = {
         'fade-up': 'fade-up 0.3s ease-out',
         'pulse-ring': 'pulse-ring 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'arch-dash': 'arch-dash 1s linear infinite',
+        'live-sweep': 'live-sweep 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },

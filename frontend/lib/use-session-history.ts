@@ -150,12 +150,15 @@ export function useSessionHistory(): SessionHistory {
     (input: SessionInput): Session => {
       const now = Date.now()
       const prev = ref.current
-      const idx =
-        input.questionId != null
-          ? prev.findIndex(
-              (s) => s.mode === input.mode && s.questionId === input.questionId,
-            )
-          : -1
+      // Match an existing session by explicit id first (live runs reuse their id
+      // for the post-answer enrichment), then fall back to mode+questionId
+      // de-dupe (replay re-runs of the same benchmark question).
+      let idx = input.id != null ? prev.findIndex((s) => s.id === input.id) : -1
+      if (idx < 0 && input.questionId != null) {
+        idx = prev.findIndex(
+          (s) => s.mode === input.mode && s.questionId === input.questionId,
+        )
+      }
 
       let session: Session
       let next: Session[]

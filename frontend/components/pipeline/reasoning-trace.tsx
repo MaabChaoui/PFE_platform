@@ -82,11 +82,11 @@ export function ReasoningTrace({
   return (
     <section
       className={cn(
-        'rounded-[1.75rem] bg-foreground/[0.025] p-1.5 ring-1 ring-foreground/[0.06]',
+        'rounded-[1.75rem] bg-foreground/[0.04] p-1.5 ring-1 ring-foreground/[0.09] dark:bg-foreground/[0.025] dark:ring-foreground/[0.06]',
         className,
       )}
     >
-      <div className="overflow-hidden rounded-[1.4rem] bg-card/60 shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.06)]">
+      <div className="overflow-hidden rounded-[1.4rem] bg-card/60 shadow-card dark:shadow-[inset_0_1px_0_0_hsl(var(--foreground)/0.06)]">
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
@@ -113,7 +113,7 @@ export function ReasoningTrace({
           </span>
           <ChevronDown
             className={cn(
-              'h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-500 ease-spring',
+              'h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-500 ease-spring motion-reduce:transition-none',
               open && 'rotate-180',
             )}
           />

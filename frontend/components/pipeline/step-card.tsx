@@ -444,7 +444,7 @@ export function StepCard({
 
         <ChevronDown
           className={cn(
-            'h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-500 ease-spring',
+            'h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-500 ease-spring motion-reduce:transition-none',
             open && 'rotate-180',
           )}
         />
