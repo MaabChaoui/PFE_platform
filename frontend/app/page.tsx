@@ -21,6 +21,7 @@ import {
   usePrefersReducedMotion,
   useTrajectoryPlayback,
 } from '@/lib/use-pipeline-stream'
+import { useRetrievalCompare } from '@/lib/use-retrieval-compare'
 import { cn } from '@/lib/utils'
 import { humanize } from '@/lib/format'
 import type { QuestionSummary } from '@/lib/types'
@@ -157,6 +158,13 @@ export default function PipelinePage() {
     reducedMotion,
   })
 
+  // ONE offline retrieval-compare per replayed question (cached, abortable) →
+  // feeds the trace's retrieve station with the REAL ranked articles. Non-blocking:
+  // the trace renders immediately and fills in when this resolves.
+  const retrieval = useRetrievalCompare(
+    stream.mode === 'replay' ? (selected?.id ?? null) : null,
+  )
+
   const onPick = React.useCallback(
     (q: QuestionSummary) => {
       setSelected(q)
@@ -251,10 +259,14 @@ export default function PipelinePage() {
                       onRestart={playback.restart}
                       onJumpEnd={playback.jumpToEnd}
                       answer={stream.answer}
+                      compare={retrieval.compare}
+                      compareStatus={retrieval.status}
                     />
 
                     {showAnswer && stream.answer ? (
-                      <AnswerPanel answer={stream.answer} />
+                      <div id="grounded-answer" className="scroll-mt-20">
+                        <AnswerPanel answer={stream.answer} />
+                      </div>
                     ) : (
                       <PendingAnswer cursor={playback.cursor} total={playback.total} />
                     )}

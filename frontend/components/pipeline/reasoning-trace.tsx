@@ -6,7 +6,10 @@ import { Brain, ChevronDown, Loader2 } from 'lucide-react'
 import { TrajectoryTimeline } from '@/components/pipeline/trajectory-timeline'
 import { fmtLatency } from '@/lib/format'
 import { cn } from '@/lib/utils'
-import type { AnswerResponse, StepEvent } from '@/lib/types'
+import type { AnswerResponse, CompareResponse, StepEvent } from '@/lib/types'
+
+import type { CompareStatus } from './retrieval-channels'
+import { TraceEnrichmentProvider, retrievalHostIndex } from './trace-context'
 
 export interface ReasoningTraceProps {
   steps: StepEvent[]
@@ -20,8 +23,12 @@ export interface ReasoningTraceProps {
   onStep: () => void
   onRestart: () => void
   onJumpEnd: () => void
-  /** Final answer (for the collapsed one-line summary); null while streaming. */
+  /** Final answer (for the collapsed one-line summary + verify/argue/route
+   *  station enrichment); null while streaming. */
   answer: AnswerResponse | null
+  /** Real retrieved articles for the retrieve station (POST /retrieval/compare). */
+  compare: CompareResponse | null
+  compareStatus: CompareStatus
   className?: string
 }
 
@@ -43,9 +50,25 @@ function summarize(answer: AnswerResponse | null, total: number): string {
  * the hero, this is the secondary trace. Re-expands on the next run; manual
  * toggles persist between runs.
  */
-export function ReasoningTrace({ answer, className, ...timeline }: ReasoningTraceProps) {
+export function ReasoningTrace({
+  answer,
+  compare,
+  compareStatus,
+  className,
+  ...timeline
+}: ReasoningTraceProps) {
   const { total, cursor, isComplete } = timeline
   const [open, setOpen] = React.useState(true)
+
+  const enrichment = React.useMemo(
+    () => ({
+      answer,
+      compare,
+      compareStatus,
+      retrievalHostIndex: retrievalHostIndex(timeline.steps),
+    }),
+    [answer, compare, compareStatus, timeline.steps],
+  )
 
   // Expand during the walk; collapse once (on the isComplete transition).
   React.useEffect(() => {
@@ -104,10 +127,12 @@ export function ReasoningTrace({ answer, className, ...timeline }: ReasoningTrac
         >
           <div className="overflow-hidden">
             <div className="border-t border-foreground/[0.07] p-1.5">
-              <TrajectoryTimeline
-                {...timeline}
-                className="!bg-transparent p-0 ring-0"
-              />
+              <TraceEnrichmentProvider value={enrichment}>
+                <TrajectoryTimeline
+                  {...timeline}
+                  className="!bg-transparent p-0 ring-0"
+                />
+              </TraceEnrichmentProvider>
             </div>
           </div>
         </div>

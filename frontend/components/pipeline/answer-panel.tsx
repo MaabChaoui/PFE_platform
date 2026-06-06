@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { BadgeCheck, ChevronDown, Quote, ShieldAlert } from 'lucide-react'
+import { BadgeCheck, ChevronDown, ShieldAlert } from 'lucide-react'
 
 import { ArabicText } from '@/components/shared/arabic-text'
 import { CitationChip } from '@/components/shared/citation-chip'
@@ -10,65 +10,16 @@ import { fmtPct, humanize } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import type { AnswerResponse, Citation } from '@/lib/types'
 
-// ───────────────────────── Toulmin argumentation ─────────────────────────
-
-const TOULMIN_FIELDS: Array<{ key: keyof ToulminLike; label: string }> = [
-  { key: 'claim', label: 'Claim' },
-  { key: 'ground', label: 'Ground' },
-  { key: 'warrant', label: 'Warrant' },
-  { key: 'backing', label: 'Backing' },
-  { key: 'rebuttal', label: 'Rebuttal' },
-]
-
-interface ToulminLike {
-  claim?: unknown
-  ground?: unknown
-  warrant?: unknown
-  backing?: unknown
-  rebuttal?: unknown
-}
-
-function Argumentation({ arg }: { arg: Record<string, unknown> }) {
-  const rows = TOULMIN_FIELDS.map((f) => ({
-    label: f.label,
-    value: typeof arg[f.key] === 'string' ? (arg[f.key] as string).trim() : '',
-  })).filter((r) => r.value.length > 0)
-
-  if (rows.length === 0) return null
-
-  return (
-    <div className="mt-3 rounded-lg border border-foreground/[0.08] bg-background/40 p-3">
-      <div className="mb-2 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-        <Quote className="h-3 w-3" />
-        Toulmin structure
-      </div>
-      <dl className="space-y-2">
-        {rows.map((r) => (
-          <div key={r.label} className="grid grid-cols-[68px_1fr] gap-2">
-            <dt className="pt-0.5 text-[11px] font-medium uppercase tracking-wide text-primary/90">
-              {r.label}
-            </dt>
-            <dd>
-              <ArabicText className="text-[13px] leading-relaxed text-foreground/85">
-                {r.value}
-              </ArabicText>
-            </dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-  )
-}
+import { ToulminBlock, hasToulmin } from './toulmin'
 
 // ───────────────────────── one citation ─────────────────────────
 
 function CitationItem({ citation, index }: { citation: Citation; index: number }) {
   const [open, setOpen] = React.useState(false)
-  const arg = citation.argumentation
-  const hasArg =
-    arg && typeof arg === 'object' && Object.values(arg).some((v) => v)
+  const arg = citation.argumentation as Record<string, unknown> | null | undefined
+  const hasArg = hasToulmin(arg)
   const hasBody =
-    !!citation.supporting_span || !!citation.text || !!hasArg
+    !!citation.supporting_span || !!citation.text || hasArg
 
   return (
     <div className="rounded-xl border border-foreground/[0.08] bg-card/50 transition-colors duration-300 ease-spring hover:border-foreground/15">
@@ -143,7 +94,7 @@ function CitationItem({ citation, index }: { citation: Citation; index: number }
                 </ArabicText>
               </div>
             ) : null}
-            {hasArg ? <Argumentation arg={arg as Record<string, unknown>} /> : null}
+            {hasArg ? <ToulminBlock arg={arg} className="mt-3" /> : null}
           </div>
         </div>
       </div>
