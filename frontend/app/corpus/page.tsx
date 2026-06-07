@@ -1,4 +1,8 @@
-import { PageContainer, PageHeader, ComingSoon } from '@/components/shared/page-shell'
+import * as React from 'react'
+
+import { CorpusExplorer } from '@/components/corpus/corpus-explorer'
+import { PageContainer, PageHeader } from '@/components/shared/page-shell'
+import { RowsSkeleton } from '@/components/shared/states'
 
 export default function CorpusPage() {
   return (
@@ -6,9 +10,13 @@ export default function CorpusPage() {
       <PageHeader
         eyebrow="Dataset"
         title="Corpus explorer"
-        description="Browse the 45 Algerian laws as Akoma Ntoso: a document list with metadata and filters, side-by-side plain text ⟷ AKN XML, an eId structure tree with status badges, FRBR metadata, and in-document + cross-corpus search."
+        description="Browse the 45 official Algerian legal documents as Akoma Ntoso — read each article in Arabic beside its raw AKN XML, navigate the eId structure, follow citations here, and search the corpus full-text. Fully offline."
       />
-      <ComingSoon session="S12" note="synced text/XML, eId tree, metadata, search" />
+      {/* The explorer reads ?doc=&article= (the citation deep-link contract) via
+          useSearchParams → wrap in Suspense so the route still prerenders. */}
+      <React.Suspense fallback={<RowsSkeleton rows={10} />}>
+        <CorpusExplorer />
+      </React.Suspense>
     </PageContainer>
   )
 }
