@@ -19,6 +19,7 @@ import type {
   KGSearchHit,
   Meta,
   Metrics,
+  NearestExample,
   NodeDetail,
   PipelineConfig,
   QuestionDetail,
@@ -341,6 +342,19 @@ export function answer(
   return apiFetch<AnswerResponse>('/answer', {
     method: 'POST',
     body: { query, options: options ?? {} },
+    signal,
+  })
+}
+
+/** Nearest precomputed example to replay as a RELEVANT offline fallback (S15) —
+ *  powers the live-error surface's "Replay a relevant example". OFFLINE. */
+export function getNearest(
+  query?: string | null,
+  queryType?: string | null,
+  signal?: AbortSignal,
+): Promise<NearestExample> {
+  return apiFetch<NearestExample>('/answer/nearest', {
+    params: { query: query ?? undefined, query_type: queryType ?? undefined },
     signal,
   })
 }

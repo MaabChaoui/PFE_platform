@@ -15,7 +15,7 @@ import { ReasoningTrace } from '@/components/pipeline/reasoning-trace'
 import { SessionsRail, SessionsSheet } from '@/components/pipeline/sessions-rail'
 import { Telemetry } from '@/components/pipeline/telemetry'
 import { buildAnswerOptions, isArabic, isLlmReachable } from '@/components/pipeline/utils'
-import { getHealth, getQuestion } from '@/lib/api'
+import { getHealth, getNearest, getQuestion } from '@/lib/api'
 import {
   usePipelineStream,
   usePrefersReducedMotion,
@@ -135,10 +135,27 @@ function LiveUnavailable({
   )
 }
 
+/** Honest in-panel banner shown when a live run was served a precomputed example
+ *  instead (TF/CD routed to replay, or a live-failure fallback). Persistent —
+ *  not just a transient toast — so the demo never implies a live run happened. */
+function FallbackBanner({ note }: { note: string }) {
+  return (
+    <div className="flex items-start gap-2.5 rounded-2xl border border-warning/25 bg-warning/[0.06] px-4 py-3 text-sm text-foreground/85 motion-safe:animate-fade-up motion-reduce:animate-none">
+      <CloudOff className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+      <p className="text-balance leading-relaxed">{note}</p>
+    </div>
+  )
+}
+
 // ───────────────────────── page ─────────────────────────
 
 export default function PipelinePage() {
-  const stream = usePipelineStream()
+  const stream = usePipelineStream({
+    onReconnect: (attempt) =>
+      toast.message('Reconnecting…', {
+        description: `The stream dropped — retrying (attempt ${attempt}).`,
+      }),
+  })
   const reducedMotion = usePrefersReducedMotion()
   const sessions = useSessionHistory()
   const { createOrTouch, select, remove, clear, newSession, activeId } = sessions
@@ -292,14 +309,45 @@ export default function PipelinePage() {
     }
   }, [stream, overrides])
 
-  // Fall back to the offline replay path (from a live error / unavailable state).
+  // Fall back to the offline replay path from a live error / unavailable state —
+  // replaying the RELEVANT nearest precomputed example (S15), not just an empty
+  // composer. Reads the failing live query to find the closest benchmark Q.
   const onReplayInstead = React.useCallback(() => {
-    stream.reset()
-    setMode('replay')
-    setSelected(null)
-    setLiveBlocked(null)
-    runningRef.current = null
-  }, [stream])
+    const failingQuery =
+      runningRef.current?.query ?? liveBlocked?.question ?? selected?.question ?? null
+    void (async () => {
+      try {
+        const near = await getNearest(failingQuery)
+        setLiveBlocked(null)
+        setMode('replay')
+        const s = createOrTouch({
+          mode: 'replay',
+          questionId: near.question_id,
+          label: near.query,
+          queryType: near.query_type,
+          handler: near.dispatched_handler ?? undefined,
+        })
+        runningRef.current = {
+          id: s.id,
+          mode: 'replay',
+          label: near.query,
+          questionId: near.question_id,
+        }
+        setSelected({ id: near.question_id, question: near.query, query_type: near.query_type })
+        stream.run({ mode: 'replay', question_id: near.question_id })
+        toast.message('Showing a relevant precomputed example', {
+          description: 'The live run was unavailable — replaying the nearest benchmark question.',
+        })
+      } catch {
+        // No precomputed match / backend down → reset to the empty replay hero.
+        stream.reset()
+        setMode('replay')
+        setSelected(null)
+        setLiveBlocked(null)
+        runningRef.current = null
+      }
+    })()
+  }, [stream, createOrTouch, liveBlocked, selected])
 
   const handleNewSession = React.useCallback(() => {
     stream.reset()
@@ -348,6 +396,17 @@ export default function PipelinePage() {
       }
     }
   }, [stream.status, stream.runId, stream.answer, createOrTouch])
+
+  // Toast once when a live run is auto-served a precomputed example (TF/CD
+  // routed to replay under LIVE_TF_CD). The honest note also shows in-panel.
+  const fallbackToastRef = React.useRef(0)
+  React.useEffect(() => {
+    const fb = stream.answer?.fallback
+    if (fb && stream.runId !== fallbackToastRef.current) {
+      fallbackToastRef.current = stream.runId
+      toast.message('Showing a precomputed example', { description: fb.note })
+    }
+  }, [stream.answer, stream.runId])
 
   // Keep the newest turn (its query) in view when a run starts.
   React.useEffect(() => {
@@ -528,7 +587,10 @@ export default function PipelinePage() {
                         />
 
                         {showAnswer && stream.answer ? (
-                          <div id="grounded-answer" className="scroll-mt-20">
+                          <div id="grounded-answer" className="space-y-3 scroll-mt-20">
+                            {stream.answer.fallback ? (
+                              <FallbackBanner note={stream.answer.fallback.note} />
+                            ) : null}
                             <AnswerPanel answer={stream.answer} />
                           </div>
                         ) : (

@@ -55,6 +55,7 @@ type StreamAction =
   | { type: 'ANSWER'; answer: AnswerResponse; scores: ReplayScores | null }
   | { type: 'DONE' }
   | { type: 'ERROR'; detail: string }
+  | { type: 'RECONNECT' }
   | { type: 'RESET' }
 
 const IDLE: StreamState = {
@@ -92,6 +93,10 @@ function reducer(state: StreamState, action: StreamAction): StreamState {
       return state.status === 'running' ? { ...state, status: 'done' } : state
     case 'ERROR':
       return { ...state, status: 'error', error: action.detail }
+    case 'RECONNECT':
+      // A transient transport drop is being retried: drop the partially-streamed
+      // steps so the re-stream renders cleanly, keep the same run (runId/mode).
+      return { ...state, steps: [], elapsedS: 0, status: 'running' }
     case 'RESET':
       return { ...IDLE, runId: state.runId }
     default:
@@ -105,10 +110,21 @@ export interface UsePipelineStream extends StreamState {
   cancel: () => void
 }
 
-export function usePipelineStream(): UsePipelineStream {
+export interface UsePipelineStreamOptions {
+  /** Notified when a transient transport drop is being retried (1-based attempt)
+   *  so the page can toast "Reconnecting…". */
+  onReconnect?: (attempt: number) => void
+}
+
+export function usePipelineStream(
+  opts: UsePipelineStreamOptions = {},
+): UsePipelineStream {
   const [state, dispatch] = React.useReducer(reducer, IDLE)
   const abortRef = React.useRef<AbortController | null>(null)
   const runCounter = React.useRef(0)
+  // Keep the latest onReconnect in a ref so `run` stays stable (identity-safe).
+  const onReconnectRef = React.useRef(opts.onReconnect)
+  onReconnectRef.current = opts.onReconnect
 
   const run = React.useCallback((request: StreamRequest) => {
     abortRef.current?.abort()
@@ -135,6 +151,12 @@ export function usePipelineStream(): UsePipelineStream {
       },
       onDone: () => {
         if (fresh()) dispatch({ type: 'DONE' })
+      },
+      onReconnect: (attempt) => {
+        if (fresh()) {
+          dispatch({ type: 'RECONNECT' })
+          onReconnectRef.current?.(attempt)
+        }
       },
     })
   }, [])

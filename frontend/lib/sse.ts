@@ -95,6 +95,11 @@ export interface StreamCallbacks {
   onAnswer?: (event: AnswerResponse) => void
   onError?: (event: ErrorEvent) => void
   onDone?: (event: DoneEvent) => void
+  /** Fired when a transient TRANSPORT drop is being retried (network blip mid-
+   *  run), BEFORE re-issuing the request. `attempt` is 1-based. Consumers reset
+   *  accumulated steps so the re-stream renders cleanly. NOT fired for a server
+   *  `error` event (that is terminal). */
+  onReconnect?: (attempt: number) => void
   signal?: AbortSignal
 }
 
@@ -129,38 +134,57 @@ function dispatch(frame: SSEFrame, cb: StreamCallbacks): void {
   }
 }
 
-/**
- * Open the trajectory stream and dispatch frames to callbacks. Resolves when the
- * stream closes (or is aborted). Transport failures are reported via `onError`,
- * never thrown — the caller's UI stays alive offline.
- */
-export async function streamAnswer(
+/** Outcome of a single connect+read attempt. Only `transport-error` is retried
+ *  (a network blip); `http-error` (4xx/5xx, e.g. 422/404) and `server-error`
+ *  (an SSE `error` frame) are deterministic + terminal; `done`/`aborted` end. */
+type AttemptResult =
+  | { kind: 'done' }
+  | { kind: 'aborted' }
+  | { kind: 'server-error' } // an SSE `error` frame already went to onError
+  | { kind: 'http-error'; detail: string }
+  | { kind: 'transport-error'; detail: string }
+
+const isAbort = (err: unknown): boolean =>
+  err instanceof DOMException && err.name === 'AbortError'
+
+/** One connect+read pass. Does NOT call `onError` for transport/http failures —
+ *  the retry wrapper owns that decision so a retried blip doesn't surface an
+ *  error. A server `error` frame is dispatched here (terminal). */
+async function streamOnce(
   body: StreamRequest,
-  cb: StreamCallbacks = {},
-): Promise<void> {
+  cb: StreamCallbacks,
+): Promise<AttemptResult> {
+  let sawServerError = false
+  const frameCb: StreamCallbacks = {
+    ...cb,
+    onError: (event) => {
+      sawServerError = true
+      cb.onError?.(event)
+    },
+  }
+
   let res: Response
   try {
     res = await fetch(`${API_BASE}/answer/stream`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'text/event-stream',
-      },
+      headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
       body: JSON.stringify(body),
       signal: cb.signal,
     })
   } catch (err) {
-    if (err instanceof DOMException && err.name === 'AbortError') return
-    cb.onError?.({
+    if (isAbort(err)) return { kind: 'aborted' }
+    return {
+      kind: 'transport-error',
       detail:
         err instanceof Error
           ? `stream connection failed: ${err.message}`
           : 'stream connection failed',
-    })
-    return
+    }
   }
 
   if (!res.ok || !res.body) {
+    // Deterministic HTTP error (422 bad request, 404 unknown replay, …) — not a
+    // transient blip, so don't retry; report it.
     let detail = `stream failed (${res.status})`
     try {
       const data = (await res.json()) as { detail?: unknown }
@@ -168,13 +192,12 @@ export async function streamAnswer(
     } catch {
       /* keep status detail */
     }
-    cb.onError?.({ detail })
-    return
+    return { kind: 'http-error', detail }
   }
 
   const reader = res.body.getReader()
   const decoder = new TextDecoder()
-  const parser = createSSEParser((frame) => dispatch(frame, cb))
+  const parser = createSSEParser((frame) => dispatch(frame, frameCb))
 
   try {
     for (;;) {
@@ -186,10 +209,65 @@ export async function streamAnswer(
     parser.push(decoder.decode())
     parser.flush()
   } catch (err) {
-    if (err instanceof DOMException && err.name === 'AbortError') return
-    cb.onError?.({
+    if (isAbort(err)) return { kind: 'aborted' }
+    // A mid-run read failure (network drop) — retryable transport error.
+    return {
+      kind: 'transport-error',
       detail:
         err instanceof Error ? `stream read error: ${err.message}` : 'stream read error',
-    })
+    }
+  }
+
+  return sawServerError ? { kind: 'server-error' } : { kind: 'done' }
+}
+
+/** Max TRANSPORT retries. Live re-runs the (billed) pipeline, so cap at 1;
+ *  replay is idempotent + cheap, so allow 2. */
+function maxRetriesFor(mode: StreamRequest['mode']): number {
+  return mode === 'live' ? 1 : 2
+}
+
+const delay = (ms: number, signal?: AbortSignal): Promise<void> =>
+  new Promise((resolve) => {
+    if (signal?.aborted) return resolve()
+    const id = setTimeout(resolve, ms)
+    signal?.addEventListener('abort', () => {
+      clearTimeout(id)
+      resolve()
+    }, { once: true })
+  })
+
+/**
+ * Open the trajectory stream and dispatch frames to callbacks. Resolves when the
+ * stream closes (or is aborted). Transport failures are NEVER thrown — they are
+ * retried a bounded number of times (a transient SSE drop mid-run reconnects),
+ * then surfaced via `onError`. A server `error` frame and deterministic HTTP
+ * errors are terminal (no retry). The caller's UI stays alive offline.
+ */
+export async function streamAnswer(
+  body: StreamRequest,
+  cb: StreamCallbacks = {},
+): Promise<void> {
+  const maxRetries = maxRetriesFor(body.mode)
+  for (let attempt = 0; ; attempt++) {
+    const result = await streamOnce(body, cb)
+    if (
+      result.kind === 'transport-error' &&
+      attempt < maxRetries &&
+      !cb.signal?.aborted
+    ) {
+      const next = attempt + 1
+      cb.onReconnect?.(next)
+      await delay(300 * next, cb.signal) // 300ms, 600ms backoff
+      if (cb.signal?.aborted) return
+      continue
+    }
+    if (result.kind === 'transport-error') {
+      cb.onError?.({ detail: result.detail }) // retries exhausted
+    } else if (result.kind === 'http-error') {
+      cb.onError?.({ detail: result.detail })
+    }
+    // 'done' | 'server-error' | 'aborted' → nothing more to do.
+    return
   }
 }

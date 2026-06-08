@@ -9,6 +9,11 @@
 
 // ───────────────────────── health & meta ─────────────────────────
 
+/** Backend live-LLM probe contract (S15 `health_probe`). `"ok"` is the ONLY
+ *  value that un-gates Live (see `isLlmReachable`). The trailing `(string & {})`
+ *  keeps the union open for forward-compat without losing autocomplete. */
+export type LlmStatus = 'ok' | 'unreachable' | 'disabled' | 'unchecked' | (string & {})
+
 export interface Health {
   status: string
   offline_mode: boolean
@@ -16,7 +21,7 @@ export interface Health {
   dataset_present: boolean
   predictions_present: boolean
   corpus_ready: boolean
-  llm: string
+  llm: LlmStatus
 }
 
 export interface Meta {
@@ -413,6 +418,17 @@ export interface ReplayScores {
   am_faithfulness_score: number | null
 }
 
+/** S15 — set when a live run is served a precomputed example instead (a live
+ *  TF/CD query routed to replay under LIVE_TF_CD, or a live failure fallback).
+ *  `note` is an honest, user-visible banner string. */
+export interface ReplayFallback {
+  reason: string
+  query_type: string | null
+  note: string
+  example_question_id: string
+  example_query: string
+}
+
 export interface AnswerResponse {
   query: string
   query_type_predicted: string
@@ -430,6 +446,17 @@ export interface AnswerResponse {
   corrective_retry_fired: boolean
   /** present only on replay responses */
   scores?: ReplayScores | null
+  /** present only when a live run fell back to a precomputed example (S15) */
+  fallback?: ReplayFallback | null
+}
+
+/** Nearest precomputed example (GET /api/answer/nearest) — replayed as a
+ *  relevant offline fallback from the live-error surface. */
+export interface NearestExample {
+  question_id: string
+  query: string
+  query_type: string
+  dispatched_handler: string | null
 }
 
 export interface ClassifyResponse {
@@ -500,6 +527,8 @@ export interface DoneEvent {
   ok: boolean
   mode: string
   n_steps: number
+  /** present when a live run fell back to a precomputed replay (S15) */
+  fallback?: ReplayFallback | null
 }
 
 export interface StreamRequest {

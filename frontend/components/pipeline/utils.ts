@@ -30,27 +30,14 @@ import type { AnswerOptions, Health } from '@/lib/types'
 
 // ───────────────────────── live health gate ─────────────────────────
 
-/** Affirmative `health.llm` values that mean the live LLM is reachable. The
- *  backend currently reports `"unchecked"` (it does not probe the endpoint yet —
- *  real probing is deferred to S15), which is NOT in this set, so Live stays
- *  cleanly disabled until a reachable signal arrives. Binary, default-closed. */
-const LLM_REACHABLE = new Set([
-  'ok',
-  'reachable',
-  'up',
-  'available',
-  'ready',
-  'online',
-  'live',
-  'connected',
-  'healthy',
-])
-
-/** True only on an affirmative `health.llm`. Unknown / unchecked / negative /
- *  missing health → false (Live disabled, replay-only). */
+/** True only when the backend's real probe reports the live LLM endpoint as
+ *  reachable AND usable. As of S15 `health.llm` is a small contract enum
+ *  (`"ok" | "unreachable" | "disabled" | "unchecked"`) produced by a real,
+ *  cached reachability probe — ONLY `"ok"` un-gates Live. Every other value
+ *  (`unreachable` / `disabled` / `unchecked` / missing) → false (replay-only).
+ *  Binary, default-closed; must agree with the backend `health_probe` contract. */
 export function isLlmReachable(health: Health | null | undefined): boolean {
-  if (!health || typeof health.llm !== 'string') return false
-  return LLM_REACHABLE.has(health.llm.trim().toLowerCase())
+  return health?.llm === 'ok'
 }
 
 // ───────────────────────── run-config → AnswerOptions ─────────────────────────
