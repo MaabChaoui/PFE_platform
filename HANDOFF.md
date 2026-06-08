@@ -345,3 +345,10 @@ Demo for the ENSIA viva on **13/06/2026**. Goal: a polished, interactive web dem
 - **Verify:** `/home/maab/Documents/pfe/methodology/PFE_locally/.venv/bin/python -m pytest backend/tests/test_health_probe.py -m "not live" -q` ⇒ `12 passed`. Current running backend still correctly returns `"llm":"disabled"` because it is the offline-mode instance. Direct key probes: `/models` ⇒ 400 `expired_key`; `/chat/completions` ⇒ 400.
 - **Live run command (host, after replacing `.env` with a valid key):** `cd /home/maab/Documents/pfe/methodology/PFE_locally && set -a && source .env && set +a && cd backend && OFFLINE_MODE=false AI_GRID_BASE_URL="${AI_GRID_BASE_URL:-http://app.ai-grid.io:4000/v1}" /home/maab/Documents/pfe/methodology/PFE_locally/.venv/bin/python -m uvicorn app.main:app --reload --port 8000`; then `curl -s localhost:8000/api/health` twice if the first online call is `"unchecked"`; expected `"llm":"ok"` only with the fresh key.
 - **Next:** replace the expired AI-Grid key, restart the backend with `OFFLINE_MODE=false`, rebuild/restart frontend if `.next` is stale, then verify browser Network receives `llm:"ok"` and a short non-TF/CD live query streams.
+
+## S15-FIX2 Root start script (2026-06-08)
+
+- **Status:** done. No `akn_rlm` edit, no deps, no git.
+- **Shipped:** root `start.sh` executable. It loads root `.env`, requires `AI_GRID_API_KEY`, forces host-local dataset/index paths, starts backend live-mode (`OFFLINE_MODE=false`, venv uvicorn on `:8000`) and frontend (`npm run dev` on `:3000`), and traps `Ctrl+C`/TERM/EXIT to kill both process groups (uvicorn reloader + Next child included). Defaults keep `LIVE_TF_CD=replay` and `KG_BUILD_ON_START=false` to avoid the heavy live KG path/startup work; overrides still allowed via env.
+- **Verify:** `bash -n start.sh` passed; `chmod +x start.sh` applied. Did not full-run because a backend was already bound on `:8000` and the current AI-Grid key is still expired.
+- **Next:** replace the expired key in `.env`, run `./start.sh`, verify `curl -s localhost:8000/api/health` returns `"llm":"ok"` (repeat once if first call is `"unchecked"`), then click Live and run a short non-TF/CD query.

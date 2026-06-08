@@ -23,7 +23,11 @@ services:
       EVAL_RESULTS_DIR: /data/eval_results
       KG_INDEX_PATH: /app/data/kg_index.sqlite
       KG_BUILD_ON_START: "true"
-      OFFLINE_MODE: "true"
+      # Offline-first by default. Override only for live demo runs:
+      # OFFLINE_MODE=false AI_GRID_API_KEY=... docker-compose up --build
+      OFFLINE_MODE: "${OFFLINE_MODE:-true}"
+      AI_GRID_API_KEY: "${AI_GRID_API_KEY:-}"
+      AI_GRID_BASE_URL: "${AI_GRID_BASE_URL:-http://app.ai-grid.io:4000/v1}"
       CORS_ORIGINS: "http://localhost:3000"
     healthcheck:
       # Python one-liner avoids adding curl to the slim image
