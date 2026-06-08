@@ -20,8 +20,33 @@ class PipelineLiveError(RuntimeError):
 
     Routers translate this into a clean ``503`` (sync) or an SSE ``error``
     event (stream) so the demo server never crashes when keys/endpoint are
-    down. Full health-gating + nearest-precomputed fallback is S15.
+    down.
     """
+
+
+#: Query types whose live handlers load the 74 MB rdflib KG (~26 s + multi-GB
+#: RAM). When ``LIVE_TF_CD == "replay"`` a live query classified as one of these
+#: is redirected to the nearest precomputed example instead of loading the KG.
+TF_CD_TYPES: frozenset[str] = frozenset({"temporal_factual", "conceptual_definitional"})
+
+
+class LiveReplayRedirect(Exception):
+    """Signal (NOT a ``PipelineLiveError``) that a live TF/CD query was routed to
+    replay under ``LIVE_TF_CD="replay"`` to protect the viva from the heavy KG.
+
+    Deliberately a plain ``Exception`` so ``PipelineService.answer``'s
+    ``except Exception → PipelineLiveError`` wrap does NOT swallow it; the routers
+    catch it explicitly (before their generic handlers) and serve the nearest
+    precomputed example. Carries the (best-known) ``query_type`` + ``query`` so the
+    nearest-prediction picker can match by type then lexically.
+    """
+
+    def __init__(self, query: str, query_type: str | None) -> None:
+        super().__init__(
+            f"live TF/CD query routed to replay (query_type={query_type!r})"
+        )
+        self.query = query
+        self.query_type = query_type
 
 
 @dataclass(frozen=True)
@@ -407,7 +432,33 @@ class PipelineService:
 
         from .answer_runtime import build_answer_response, is_dispatch_failure
 
+        query = query.strip()
         query_type = (options.query_type or "").strip() or None
+
+        # LIVE_TF_CD guard (live free-form only — never the locked offline run):
+        # classify first so a temporal_factual / conceptual_definitional query is
+        # redirected to a precomputed replay instead of triggering the 74 MB KG.
+        # Classifying here also lets us pass the resolved type into ``run`` so the
+        # dispatcher doesn't classify a second time.
+        build_options = options
+        if self.settings.LIVE_TF_CD == "replay":
+            effective_type = query_type or self._safe_classify(query)
+            if effective_type in TF_CD_TYPES:
+                raise LiveReplayRedirect(query, effective_type)
+            # Use the resolved type for the run when we successfully classified.
+            if effective_type is not None:
+                query_type = effective_type
+            elif options.use_kg:
+                # BACKSTOP: we could NOT pin the type (our classify uses
+                # fallback_to_regex=False → an unparseable LLM label yields no
+                # type), so the dispatcher will classify internally. Its
+                # classifier_fn falls back to REGEX (make_llm_classifier_fn →
+                # llm_classify(fallback_to_regex=True)), and the regex rules DO
+                # emit temporal_factual / conceptual_definitional — which would
+                # load the 74 MB KG. Force kg_loader=None so an undetected TF/CD
+                # abstains instead. Only fires when the type is genuinely
+                # ambiguous, so confidently-routed runs keep their KG behaviour.
+                build_options = options.model_copy(update={"use_kg": False})
 
         t0 = time.time()
         try:
@@ -415,8 +466,8 @@ class PipelineService:
             # weights, LLM-pool construction) must also degrade to a 503, never
             # an opaque 500. This also turns a genuine build bug into a 503 —
             # acceptable for the demo (server stays up).
-            disp = self.get_dispatcher(options)
-            raw = disp.run(query.strip(), query_type=query_type)
+            disp = self.get_dispatcher(build_options)
+            raw = disp.run(query, query_type=query_type)
         except Exception as exc:  # build / transport / LLM error that propagated
             raise PipelineLiveError(f"live pipeline error: {exc}") from exc
         latency = time.time() - t0
@@ -439,7 +490,21 @@ class PipelineService:
                 "live pipeline produced no answer (LLM keys/endpoint may be down)"
             )
 
-        return build_answer_response(query.strip(), raw, latency).to_dict()
+        return build_answer_response(query, raw, latency).to_dict()
+
+    def _safe_classify(self, query: str) -> str | None:
+        """Classify for the LIVE_TF_CD guard, swallowing failures to ``None``.
+
+        A failed/unsure classification (LLM down) returns ``None`` so the run
+        proceeds to ``disp.run`` — which then surfaces the real failure as a
+        ``PipelineLiveError`` (→ 503 / nearest-replay), exactly as before. So a
+        down LLM is NEVER misread as a TF/CD redirect.
+        """
+        try:
+            query_type, _confidence = self.classify(query)
+            return query_type
+        except PipelineLiveError:
+            return None
 
     def classify(self, query: str) -> tuple[str, float]:
         """Live classifier preview → ``(query_type, confidence)``.

@@ -152,6 +152,17 @@ class ClassifyResponse(BaseModel):
     confidence: float
 
 
+class NearestResponse(BaseModel):
+    """S15 — the nearest precomputed example to fall back to (replay) when a live
+    run can't run (TF/CD routed to replay, or a live failure). The frontend
+    replays ``question_id`` as a relevant offline example."""
+
+    question_id: str
+    query: str
+    query_type: str
+    dispatched_handler: Optional[str] = None
+
+
 # ---------------------------------------------------------------------------
 # Pipeline config catalog (GET /api/pipeline/config) + reset
 # ---------------------------------------------------------------------------

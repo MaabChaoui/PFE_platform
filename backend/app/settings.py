@@ -34,6 +34,21 @@ class Settings(BaseSettings):
     ALLOW_MODEL_OVERRIDE: bool = True
     MODEL_CATALOG_JSON: Optional[str] = None
 
+    # S15 — live hardening.
+    # Build the default dispatcher at startup so the first live query isn't cold.
+    # Disabled in tests (conftest) so TestClient lifespan never pulls BM25/dense.
+    WARM_DISPATCHER_ON_START: bool = True
+    # Governs ONLY live free-form TF/CD runs (never the locked offline metrics).
+    #   "replay" (default): a live query classified temporal_factual /
+    #     conceptual_definitional is served the nearest precomputed example
+    #     instead of triggering the 74 MB rdflib KG load (~26 s + multi-GB RAM).
+    #   "live": allow the real KG-backed live path (for a machine that can take it).
+    LIVE_TF_CD: str = "replay"
+    # Live LLM reachability probe (health.llm). Short timeout + short cache TTL so
+    # /health stays instant and we don't hammer the endpoint.
+    LLM_PROBE_TIMEOUT_S: float = 2.5
+    LLM_PROBE_CACHE_TTL_S: float = 20.0
+
     @model_validator(mode="after")
     def derive_paths(self) -> "Settings":
         run_dir = self.EVAL_RESULTS_DIR / "rlm_dispatched_full_phase_e_final"

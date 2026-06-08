@@ -136,6 +136,43 @@ class BenchmarkService:
                     predictions[str(question_id)] = record
         return predictions
 
+    def nearest_prediction(
+        self,
+        *,
+        query: str | None = None,
+        query_type: str | None = None,
+    ) -> dict[str, Any] | None:
+        """Pick a "nearest" precomputed prediction to offer as a replay fallback
+        (S15). Strategy: prefer same ``query_type``; within that pool, pick the
+        best lexical-overlap match on the record's own ``query`` text; ties /
+        no query → the first of the pool. Returns the raw prediction record
+        (the shape ``replay_response`` consumes) or ``None`` if none exist.
+        """
+        preds = list(self.predictions_by_id.values())
+        if not preds:
+            return None
+
+        pool = [p for p in preds if query_type and p.get("query_type") == query_type]
+        if not pool:
+            pool = preds
+
+        needle = _lexical_tokens(query) if query else set()
+        if not needle:
+            return pool[0]
+
+        best: dict[str, Any] | None = None
+        best_score = -1.0
+        for record in pool:
+            cand = _lexical_tokens(str(record.get("query") or ""))
+            if not cand:
+                continue
+            overlap = len(needle & cand)
+            # Length-normalised so a long record isn't unfairly favoured.
+            score = overlap / (len(needle | cand) or 1)
+            if score > best_score:
+                best, best_score = record, score
+        return best if best is not None else pool[0]
+
     def _matches(
         self,
         question: dict[str, Any],
@@ -355,3 +392,11 @@ class BenchmarkService:
                 key = str(value)
             counter[key] += 1
         return dict(counter)
+
+
+def _lexical_tokens(text: str) -> set[str]:
+    """Normalised token set for the nearest-prediction lexical match. Reuses the
+    corpus' Arabic normaliser so diacritics/alef variants don't fragment tokens."""
+    from akn_rlm.normalizers import normalize_arabic
+
+    return {token for token in normalize_arabic(text).casefold().split() if token}

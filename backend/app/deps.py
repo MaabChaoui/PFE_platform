@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import threading
 
 from .services.corpus import CorpusService
@@ -9,6 +10,8 @@ from .services.pipeline import PipelineService
 from .services.retrieval_lab import RetrievalLabService
 from .services.results import ResultsService
 from .settings import settings
+
+logger = logging.getLogger(__name__)
 
 _LOCK = threading.RLock()
 _PIPELINE: PipelineService | None = None
@@ -83,9 +86,52 @@ def get_retrieval_lab() -> RetrievalLabService:
         return _RETRIEVAL_LAB
 
 
+def prewarm_default_dispatcher(pipeline: PipelineService) -> bool:
+    """Build the DEFAULT dispatcher once so the first live query isn't cold.
+
+    Pure construction — the dispatcher object graph (BM25 + dense + router +
+    classifier_fn + LLM pool *object*) is built but NO LLM call is made, so this
+    does NOT require keys/network. Any failure (e.g. uncached embedding weights
+    when fully offline) is swallowed + logged so startup never fails offline.
+    Returns ``True`` if the dispatcher was built. The 74 MB KG stays lazy.
+    """
+    try:
+        from .models.answer import AnswerOptions
+
+        # Match the kg setting the common live auto-query uses so the warmed
+        # dispatcher is actually reused: under LIVE_TF_CD="replay" an
+        # ambiguous-type live run builds with kg off (the backstop in
+        # PipelineService.answer), so warm that same variant here.
+        use_kg = settings.LIVE_TF_CD != "replay"
+        pipeline.get_dispatcher(AnswerOptions(use_kg=use_kg))
+        return True
+    except Exception as exc:  # offline-safe: never fail startup
+        logger.warning("default dispatcher pre-warm skipped: %s", exc)
+        return False
+
+
+def prime_health_probe() -> None:
+    """Kick off the first live-LLM probe in the background (non-blocking).
+
+    Offline → resolves to ``"disabled"`` instantly; online → spawns the bg
+    probe so the UI's first /health already has a real verdict. Never raises.
+    """
+    try:
+        from .services.health_probe import get_llm_status
+
+        get_llm_status()
+    except Exception as exc:
+        logger.warning("health probe priming skipped: %s", exc)
+
+
 def warm_services() -> None:
     get_pipeline().load()
     get_corpus()
+    # Build the default dispatcher once (gated so TestClient lifespan never pulls
+    # BM25/dense). Best-effort: offline / missing weights must not fail startup.
+    if settings.WARM_DISPATCHER_ON_START:
+        prewarm_default_dispatcher(get_pipeline())
+    prime_health_probe()
 
 
 def corpus_ready() -> bool:

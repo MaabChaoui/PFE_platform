@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from ..deps import corpus_ready
+from ..services.health_probe import get_llm_status
 from ..settings import settings
 
 router = APIRouter()
@@ -17,5 +18,7 @@ def health():
             and settings.PREDICTIONS_PATH.exists()
         ),
         "corpus_ready": corpus_ready(),
-        "llm": "unchecked",
+        # Real cached probe (S15). Non-blocking: offline → "disabled" instantly;
+        # online → "unchecked" then "ok"/"unreachable" once the bg probe lands.
+        "llm": get_llm_status(),
     }
