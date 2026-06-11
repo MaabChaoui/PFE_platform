@@ -81,4 +81,17 @@
   font-weight: 500;
   font-display: swap;
   src: url('assets/fonts/IBMPlexMono-500.woff2') format('woff2');
+}@font-face {
+  font-family: 'Amiri';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/Amiri-400-arabic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Amiri';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/Amiri-700-arabic.woff2') format('woff2');
 }

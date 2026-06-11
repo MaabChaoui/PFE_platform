@@ -2,10 +2,19 @@
 (function () {
   const stage = document.getElementById('stage');
   const slides = Array.from(document.querySelectorAll('section.slide'));
+  const topnav = document.getElementById('topnav');
   const chrome = document.getElementById('chrome');
-  const chLabel = chrome.querySelector('.ch');
   const numLabel = chrome.querySelector('.num');
+  const SECTIONS = ['Landscape & Limits', 'Foundations', 'AKN-RLM', 'Results', 'Conclusion'];
   let cur = 0;
+
+  /* ---------- top section nav ---------- */
+  SECTIONS.forEach(name => {
+    const s = document.createElement('span');
+    s.textContent = name;
+    topnav.appendChild(s);
+  });
+  const navItems = Array.from(topnav.children);
 
   /* ---------- scaling ---------- */
   function fit() {
@@ -15,33 +24,23 @@
   window.addEventListener('resize', fit);
   fit();
 
-  /* ---------- fragments ---------- */
-  function frags(i) { return Array.from(slides[i].querySelectorAll('.frag')); }
-
-  function show(i, fromEnd) {
+  /* ---------- navigation ---------- */
+  function show(i) {
     i = Math.max(0, Math.min(slides.length - 1, i));
     slides.forEach((s, k) => s.classList.toggle('active', k === i));
     cur = i;
-    const f = frags(i);
-    f.forEach(el => el.classList.toggle('on', !!fromEnd));
     const s = slides[i];
-    if (s.dataset.plain !== undefined) chrome.classList.add('hidden');
-    else chrome.classList.remove('hidden');
-    chLabel.textContent = s.dataset.chapter || '';
+    const plain = s.dataset.plain !== undefined;
+    topnav.classList.toggle('hidden', plain);
+    chrome.classList.toggle('hidden', plain);
+    const sec = s.dataset.section;
+    navItems.forEach((el, k) => el.classList.toggle('active', sec !== undefined && k === +sec));
     numLabel.textContent = (i + 1) + ' / ' + slides.length;
     history.replaceState(null, '', '#' + (i + 1));
   }
 
-  function next() {
-    const f = frags(cur).filter(el => !el.classList.contains('on'));
-    if (f.length) { f[0].classList.add('on'); return; }
-    if (cur < slides.length - 1) show(cur + 1, false);
-  }
-  function prev() {
-    const f = frags(cur).filter(el => el.classList.contains('on'));
-    if (f.length) { f[f.length - 1].classList.remove('on'); return; }
-    if (cur > 0) show(cur - 1, true);
-  }
+  function next() { show(cur + 1); }
+  function prev() { show(cur - 1); }
 
   /* ---------- input ---------- */
   document.addEventListener('keydown', e => {
@@ -49,8 +48,8 @@
         e.key === 'PageDown' || e.key === 'Enter') { e.preventDefault(); next(); }
     else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp' ||
              e.key === 'Backspace') { e.preventDefault(); prev(); }
-    else if (e.key === 'Home') show(0, false);
-    else if (e.key === 'End') show(slides.length - 1, true);
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
     else if (e.key === 'f' || e.key === 'F') {
       if (document.fullscreenElement) document.exitFullscreen();
       else document.documentElement.requestFullscreen();
@@ -64,5 +63,5 @@
 
   /* ---------- start ---------- */
   const h = parseInt(location.hash.slice(1), 10);
-  show(isNaN(h) ? 0 : h - 1, false);
+  show(isNaN(h) ? 0 : h - 1);
 })();

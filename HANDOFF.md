@@ -369,3 +369,18 @@ Demo for the ENSIA viva on **13/06/2026**. Goal: a polished, interactive web dem
 - **Verify (offline):** `cd thesis/poster && /home/maab/Documents/pfe/methodology/PFE_locally/.venv/bin/python build_poster.py` ⇒ `Pages: 1 OK`, `841.92 x 1191.12 pts (A3) OK`; inspect `poster_preview.png`.
 - **Gotchas:** old palette vars (`--navy/--orange/…`) are gone — any future inline styles must use the new tokens; `assets/generated/*.png` (robot spot, pipeline hero watermark) are no longer referenced but kept on disk; Arabic still renders via system Noto Naskh Arabic (not bundled).
 - **Next:** author proof-read of the printed PDF at 100 % zoom; optionally re-shoot `POSTER_REVIEW.md` against v3.
+
+## SLIDES Viva deck v2 — supervisor revisions (2026-06-11)
+
+- **Status:** done. Static files in `thesis/slides/` only; no backend/`akn_rlm`/git changes.
+- **Shipped:** (1) chapter kickers/labels stripped; (2) fragments disabled — every slide renders fully on arrival (deck.js simplified, `.frag` forced visible); (3) new general layout per supervisor sketch: top breadcrumb (Landscape & Limits · Foundations · AKN-RLM · Results · Conclusion, active section bold wine) + bottom-right page number in large bold Cormorant (`N / 34`); (4) five `s-divider` section title pages added (now 34 slides); (5) ENSIA logo (`assets/ensia_logo.png`) atop the title page; (6) thanks page reordered "Thank you · Merci · شكرًا" with شكرًا in **Amiri** (Naskh; `assets/fonts/Amiri-{400,700}-arabic.woff2`, offline); (7) projector pass: ink/faint/gold darkened, SVG label sizes +1px, light inline fills replaced; (8) hook page redesigned to the sketch: ROBERTO **Mata** ⚖ VERSUS **Avianca, Inc.** lockup, prose paragraph, "the hallucinated cases" two-column struck-through list.
+- **Note:** user set `.s-title .main-title` to 80px directly in styles.css — kept; title page rebalanced (ornament removed) so it fits.
+- **Verify (offline):** open `thesis/slides/index.html`; headless `google-chrome-stable --headless --screenshot --window-size=1280,720 --virtual-time-budget=3500 'file://…/index.html#N'` — title/hook/dividers/content/results/thanks all re-verified at 34 slides.
+- **Next:** author content pass; optional KG-explorer screenshot on the KG pillar slide; optional live-demo cutaway slide.
+
+## SLIDES Viva deck v3 — content reorder (2026-06-11)
+
+- **Status:** done. `thesis/slides/index.html` only.
+- **Shipped:** new narrative order per supervisor sketch — Title · Hook · Outline · **L&L** (problem-chain page joined the section, then legal-meaning, Algerian law, hallucinations, Arabic NLP) · **Foundations/SOTA** (AKN, RAG, KG, AM, RLM, synthesis) · **Gaps & Contributions** (moved to end of Foundations) · AKN-RLM · Results · Conclusion (34 slides). Hook redesigned earlier this session (Mata V. Avianca lockup, no Roberto/takeaway, smaller case list). Synthesis page reworked from "each layer retires a risk" into a SOTA ledger ("Every ingredient exists. No system unites them." — Field / establishes / leaves open) so it sets up the gaps page per the user's distinction. Takeaways removed where redundant (chain, Algerian context, gaps). "Retrieval at its limits" parked in the AKN-RLM section before typed handlers (user: revisit later).
+- **Verify:** `grep -oE '<!-- ============ [^=]+' thesis/slides/index.html` lists the 34-slide order; headless screenshots of slides 5/7/16/17/21 all clean.
+- **Next:** content pass on remaining chapters; rework the parked retrieval-limits page for the methodology narrative.

@@ -13,7 +13,7 @@
 <svg width="0" height="0" style="position:absolute">
   <defs>
     <marker id="ar-ink"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#57503e"/>
+      <path d="M0,0 L10,5 L0,10 z" fill="#4d4634"/>
     </marker>
     <marker id="ar-wine" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#6e2433"/>
@@ -31,77 +31,95 @@
 
 <!-- ============ 1 · TITLE ============ -->
 <section class="slide s-title" data-plain>
+  <img class="logo" src="assets/ensia_logo.png" alt="ENSIA — The National School of Artificial Intelligence">
   <div class="inst">
     People&rsquo;s Democratic Republic of Algeria<br>
     Ministry of Higher Education and Scientific Research<br>
     <b>The National School of Artificial Intelligence</b>
-  </div>
-  <div class="orn">
-    <svg width="46" height="40" viewBox="0 0 46 40" aria-hidden="true">
-      <g stroke="#9c7c35" stroke-width="1.3" fill="none">
-        <line x1="23" y1="4" x2="23" y2="32"/>
-        <line x1="5" y1="9" x2="41" y2="9"/>
-        <path d="M5,9 L1,19 M5,9 L9,19 M1,19 a4.5,3.4 0 0 0 8,0"/>
-        <path d="M41,9 L37,19 M41,9 L45,19 M37,19 a4.5,3.4 0 0 0 8,0"/>
-        <line x1="15" y1="34" x2="31" y2="34"/>
-      </g>
-      <circle cx="23" cy="4" r="2.2" fill="#9c7c35"/>
-    </svg>
   </div>
   <div class="main-title">Advancing Legal Reasoning<br>in Algerian Law</div>
   <div class="sub-title">Integrating RAG, Knowledge Graphs &amp; Argument Mining<br>for Citation-Faithful Legal Reasoning</div>
   <div class="authors">Ibrahim El&nbsp;Khalil <b>Attia</b> &nbsp;·&nbsp; Maab <b>Chaoui</b></div>
   <div class="jury">
     <span class="smallcaps">Supervision</span>
-    Prof. Fouad Dahak (ENSIA) &nbsp;·&nbsp; Prof. Iv&aacute;n Cantador (U. Aut&oacute;noma de Madrid)<br>
+    Dr. Fouad Dahak (ENSIA) &nbsp;·&nbsp; Prof. Iv&aacute;n Cantador (U. Aut&oacute;noma de Madrid)<br>
     <span class="smallcaps" style="margin-top:8px">Jury</span>
-    Prof. Wahid Chami (ENSIA), President &nbsp;·&nbsp; Prof. Mohamed Brahimi (ENSIA), Examiner
+    Dr. Wahid Chami (ENSIA), President &nbsp;·&nbsp; Dr. Mohamed Brahimi (ENSIA), Examiner
   </div>
   <div class="defend">Public defense · 13 June 2026 · FYP/2025/135</div>
 </section>
 
 <!-- ============ 2 · HOOK ============ -->
-<section class="slide s-hook" data-chapter="Prologue">
-  <div class="titleblock">
-    <div class="kicker">Mata v. Avianca, Inc. — S.D.N.Y., 2023</div>
-    <h1>A brief was filed in federal court.<br>It cited <em>six</em> judicial decisions.</h1>
-  </div>
-  <div class="body" style="gap:54px; align-items:center">
-    <div style="flex:0 0 250px; text-align:center">
-      <svg width="240" height="300" viewBox="0 0 240 300">
-        <g stroke="#211c14" stroke-width="1.6" fill="none">
-          <line x1="120" y1="22" x2="120" y2="252"/>
-          <line x1="30" y1="50" x2="210" y2="50"/>
-          <line x1="30" y1="50" x2="14" y2="112"/><line x1="30" y1="50" x2="46" y2="112"/>
-          <path d="M14,112 a16,12 0 0 0 32,0" fill="#fbf8ef"/>
-          <line x1="210" y1="50" x2="194" y2="112"/><line x1="210" y1="50" x2="226" y2="112"/>
-          <path d="M194,112 a16,12 0 0 0 32,0" fill="#fbf8ef"/>
-          <line x1="76" y1="262" x2="164" y2="262"/>
-          <path d="M92,252 h56 l8,10 h-72 z" fill="#f5f0e4"/>
-        </g>
-        <circle cx="120" cy="22" r="5" fill="#9c7c35"/>
-        <circle cx="30" cy="50" r="3" fill="#211c14"/>
-        <circle cx="210" cy="50" r="3" fill="#211c14"/>
-        <text x="120" y="292" text-anchor="middle" class="cap">submitted as authority</text>
-      </svg>
+<section class="slide s-hook">
+  <div class="body" style="flex-direction:column; justify-content:center">
+    <div class="vs-row">
+      <div class="vs-name left">Mata</div>
+      <div class="vs-mid">
+        <div class="vs-v">V.</div>
+        <svg width="195" height="144" viewBox="0 0 160 118" style="flex:0 0 auto">
+          <g transform="translate(34,4)">
+            <g stroke="#1d1810" stroke-width="1.7" fill="none">
+              <line x1="46" y1="10" x2="46" y2="90"/>
+              <line x1="12" y1="22" x2="80" y2="22"/>
+              <line x1="12" y1="22" x2="4" y2="48"/><line x1="12" y1="22" x2="20" y2="48"/>
+              <path d="M4,48 a8,6 0 0 0 16,0" fill="#fbf8ef"/>
+              <line x1="80" y1="22" x2="72" y2="48"/><line x1="80" y1="22" x2="88" y2="48"/>
+              <path d="M72,48 a8,6 0 0 0 16,0" fill="#fbf8ef"/>
+              <line x1="28" y1="94" x2="64" y2="94"/>
+            </g>
+            <circle cx="46" cy="10" r="3.5" fill="#876a28"/>
+            <circle cx="12" cy="22" r="2.5" fill="#1d1810"/>
+            <circle cx="80" cy="22" r="2.5" fill="#1d1810"/>
+            <text x="46" y="112" text-anchor="middle" class="cap" font-size="11.5">s.d.n.y. · 2023</text>
+          </g>
+        </svg>
+      </div>
+      <div class="vs-name right">Avianca, Inc.</div>
     </div>
-    <div class="grow" style="position:relative">
-      <ul class="case-list">
-        <li><span class="cname">Varghese v. China Southern Airlines</span><span class="crep">925 F.3d 1339 (11th Cir. 2019)</span><span class="strike frag"></span></li>
-        <li><span class="cname">Shaboon v. EgyptAir</span><span class="crep">2013 IL App (1st) 111279-U</span><span class="strike frag"></span></li>
-        <li><span class="cname">Petersen v. Iran Air</span><span class="crep">905 F. Supp. 2d 121 (D.D.C. 2012)</span><span class="strike frag"></span></li>
-        <li><span class="cname">Martinez v. Delta Air Lines</span><span class="crep">2019 WL 4639462 (Tex. App. 2019)</span><span class="strike frag"></span></li>
-        <li><span class="cname">Estate of Durden v. KLM</span><span class="crep">2017 WL 2418825 (Ga. Ct. App. 2017)</span><span class="strike frag"></span></li>
-        <li><span class="cname">Miller v. United Airlines</span><span class="crep">174 F.3d 366 (2d Cir. 1999)</span><span class="strike frag"></span></li>
+    <p class="hook-prose">
+      A personal-injury suit against an airline. The plaintiff&rsquo;s lawyer filed a brief
+      drafted with <b>ChatGPT</b>, citing six judicial decisions in support — and when the
+      court grew suspicious, the model <b>vouched that they were real</b>.
+    </p>
+    <div class="hook-cases">
+      <div class="hc-label">The hallucinated cases</div>
+      <ul>
+        <li><span>Varghese v. China Southern Airlines</span></li>
+        <li><span>Shaboon v. EgyptAir</span></li>
+        <li><span>Petersen v. Iran Air</span></li>
+        <li><span>Martinez v. Delta Air Lines</span></li>
+        <li><span>Estate of Durden v. KLM</span></li>
+        <li><span>Miller v. United Airlines</span></li>
       </ul>
-      <div class="stamp frag" style="top:34%; right:6%">No such case exists</div>
     </div>
   </div>
-  <div class="takeaway frag">Drafted by a language model: fluent, confident, formatted exactly like real law — and entirely fabricated.</div>
+</section>
+
+<!-- ============ 4 · OUTLINE ============ -->
+<section class="slide s-outline">
+  <div class="titleblock">
+    <div class="kicker">This defense</div>
+    <h1>Outline</h1>
+  </div>
+  <div class="body" style="flex-direction:column; justify-content:center">
+    <ol class="toc">
+      <li><span class="rn">I.</span><span class="t">Landscape &amp; Limits</span><span class="d">why legal AI fails — and why Algeria is the hard case</span></li>
+      <li><span class="rn">II.</span><span class="t">Foundations</span><span class="d">five pillars of citation-faithful reasoning</span></li>
+      <li><span class="rn">III.</span><span class="t">AKN-RLM</span><span class="d">the architecture &amp; its evaluation design</span></li>
+      <li><span class="rn">IV.</span><span class="t">Results</span><span class="d">AlgerianLegalBench, baselines, ablations</span></li>
+      <li><span class="rn">V.</span><span class="t">Conclusion</span><span class="d">what we claim — and what we do not</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ DIVIDER · LANDSCAPE ============ -->
+<section class="slide s-divider" data-section="0">
+  <div class="dtitle">Landscape &amp; Limits</div>
+  <div class="dsub">why legal AI fails — and why Algeria is the hard case</div>
 </section>
 
 <!-- ============ 3 · THE PROBLEM ============ -->
-<section class="slide" data-chapter="Prologue">
+<section class="slide" data-section="0">
   <div class="titleblock">
     <div class="kicker">The problem</div>
     <h1>In law, fluency is not the standard. <em>Justification</em> is.</h1>
@@ -132,7 +150,7 @@
         <line x1="658" y1="100" x2="707" y2="100"/>
         <line x1="893" y1="100" x2="942" y2="100"/>
       </g>
-      <g font-size="13.5" font-style="italic" fill="#8b8270">
+      <g font-size="13.5" font-style="italic" fill="#6e6553">
         <text x="212" y="62" text-anchor="middle">asserts</text>
         <text x="447" y="62" text-anchor="middle">rests on</text>
         <text x="682" y="62" text-anchor="middle">resolves to</text>
@@ -154,30 +172,12 @@
       <span class="chip wine">…or a principled <b>abstention</b></span>
     </div>
   </div>
-  <div class="takeaway">A hallucinated citation is not a small factual error — it severs the chain of legal justification.</div>
-</section>
-
-<!-- ============ 4 · OUTLINE ============ -->
-<section class="slide s-outline" data-chapter="Outline">
-  <div class="titleblock">
-    <div class="kicker">This defense</div>
-    <h1>Outline</h1>
-  </div>
-  <div class="body" style="flex-direction:column; justify-content:center">
-    <ol class="toc">
-      <li><span class="rn">I.</span><span class="t">Landscape &amp; Limits</span><span class="d">why legal AI fails — and why Algeria is the hard case</span></li>
-      <li><span class="rn">II.</span><span class="t">Foundations</span><span class="d">five pillars of citation-faithful reasoning</span></li>
-      <li><span class="rn">III.</span><span class="t">AKN-RLM</span><span class="d">the architecture &amp; its evaluation design</span></li>
-      <li><span class="rn">IV.</span><span class="t">Results</span><span class="d">AlgerianLegalBench, baselines, ablations</span></li>
-      <li><span class="rn">V.</span><span class="t">Conclusion</span><span class="d">what we claim — and what we do not</span></li>
-    </ol>
-  </div>
 </section>
 
 <!-- ============ 5 · CH1 MAIN PROBLEM ============ -->
-<section class="slide" data-chapter="I · Landscape &amp; Limits">
+<section class="slide" data-section="0">
   <div class="titleblock">
-    <div class="kicker">Chapter I — The legal domain through an AI lens</div>
+    <div class="kicker">The legal domain through an AI lens</div>
     <h1>Legal meaning is not <em>linguistic</em> meaning</h1>
   </div>
   <div class="body cols">
@@ -226,7 +226,7 @@
         <text x="481" y="311" text-anchor="middle" class="lbl2">rewrites the text</text>
         <line x1="442" y1="264" x2="382" y2="220" class="edge-wine" stroke-dasharray="5 4" marker-end="url(#ar-wine)"/>
         <text x="432" y="248" class="capw">amended by</text>
-        <text x="300" y="392" text-anchor="middle" font-size="17.5" font-style="italic" fill="#57503e"
+        <text x="300" y="392" text-anchor="middle" font-size="17.5" font-style="italic" fill="#4d4634"
               font-family="'Cormorant Garamond', serif">a provision means nothing without the graph around it</text>
       </svg>
     </div>
@@ -235,9 +235,9 @@
 </section>
 
 <!-- ============ 6 · ALGERIAN CONTEXT ============ -->
-<section class="slide" data-chapter="I · Landscape &amp; Limits">
+<section class="slide" data-section="0">
   <div class="titleblock">
-    <div class="kicker">Chapter I — The low-resource condition</div>
+    <div class="kicker">The low-resource condition</div>
     <h1>Algerian law as a <em>stress test</em></h1>
   </div>
   <div class="body cols" style="align-items:center">
@@ -276,13 +276,12 @@
       </ul>
     </div>
   </div>
-  <div class="takeaway">Not merely an application case — a stress test for legal AI under low-resource, bilingual, structurally complex conditions.</div>
 </section>
 
 <!-- ============ 7 · HALLUCINATION & ATTRIBUTION ============ -->
-<section class="slide" data-chapter="I · Landscape &amp; Limits">
+<section class="slide" data-section="0">
   <div class="titleblock">
-    <div class="kicker">Chapter I — The failure of current AI in law</div>
+    <div class="kicker">The failure of current AI in law</div>
     <h1>Hallucination becomes a <em>legal-validity</em> problem</h1>
   </div>
   <div class="body" style="flex-direction:column; gap:20px; justify-content:center">
@@ -310,60 +309,10 @@
   <div class="takeaway frag">Fluency, truth, attribution, justification — each is a strictly stronger requirement. Law demands the last one.</div>
 </section>
 
-<!-- ============ 8 · RETRIEVAL LIMITS ============ -->
-<section class="slide" data-chapter="I · Landscape &amp; Limits">
-  <div class="titleblock">
-    <div class="kicker">Chapter I — Retrieval at its limits</div>
-    <h1>Retrieval finds passages. Law requires <em>sufficiency</em>.</h1>
-  </div>
-  <div class="body cols" style="align-items:center; gap:48px">
-    <div class="col" style="flex:0 0 460px; display:flex; flex-direction:column; gap:16px">
-      <div class="card">
-        <span class="tag">Sparse — BM25</span>
-        <p><b>Wins:</b> exact article numbers, law numbers, dates. <b>Fails:</b> lay paraphrase, AR/FR vocabulary mismatch.</p>
-      </div>
-      <div class="card">
-        <span class="tag">Dense — embeddings</span>
-        <p><b>Wins:</b> semantic match across phrasings. <b>Fails:</b> exact identifiers, rare legal terms.</p>
-      </div>
-      <div class="card">
-        <span class="tag">Hybrid</span>
-        <p>They fail differently — fusing them lifts recall. <b>But all three are structure-blind:</b> an exception or amendment never &ldquo;resembles&rdquo; the query.</p>
-      </div>
-    </div>
-    <div class="col grow">
-      <div class="smallcaps" style="margin-bottom:12px">What answering actually takes</div>
-      <svg width="520" height="368" viewBox="0 0 520 368">
-        <g class="node-soft">
-          <rect x="0" y="0"   width="430" height="54" rx="2"/>
-          <rect x="30" y="78"  width="430" height="54" rx="2"/>
-          <rect x="60" y="156" width="430" height="54" rx="2"/>
-          <rect x="30" y="234" width="430" height="54" rx="2"/>
-          <rect x="0" y="312" width="430" height="54" rx="2" stroke="#6e2433"/>
-        </g>
-        <g class="edge" marker-end="url(#ar-ink)">
-          <line x1="215" y1="54" x2="240" y2="78"/>
-          <line x1="245" y1="132" x2="270" y2="156"/>
-          <line x1="275" y1="210" x2="250" y2="234"/>
-          <line x1="245" y1="288" x2="220" y2="312"/>
-        </g>
-        <g class="lbl">
-          <text x="20" y="32"><tspan class="capg">1 &nbsp;</tspan> locate the governing rule</text>
-          <text x="50" y="110"><tspan class="capg">2 &nbsp;</tspan> resolve its defined terms</text>
-          <text x="80" y="188"><tspan class="capg">3 &nbsp;</tspan> check exceptions &amp; conditions</text>
-          <text x="50" y="266"><tspan class="capg">4 &nbsp;</tspan> follow cross-references</text>
-          <text x="20" y="344" fill="#6e2433"><tspan class="capw">5 &nbsp;</tspan> verify the applicable version</text>
-        </g>
-      </svg>
-    </div>
-  </div>
-  <div class="takeaway">Hybrid retrieval raises recall — legal sufficiency still requires structural and temporal checking.</div>
-</section>
-
 <!-- ============ 9 · ARABIC NLP ============ -->
-<section class="slide" data-chapter="I · Landscape &amp; Limits">
+<section class="slide" data-section="0">
   <div class="titleblock">
-    <div class="kicker">Chapter I — The non-English gap</div>
+    <div class="kicker">The non-English gap</div>
     <h1>Arabic legal NLP — a <em>cross-cutting</em> constraint</h1>
   </div>
   <div class="body" style="flex-direction:column; justify-content:center; gap:26px">
@@ -387,27 +336,16 @@
   <div class="takeaway">No single model covers Arabic, French, legal register and generation — the language problem must be solved by the <i>architecture</i>.</div>
 </section>
 
-<!-- ============ 10 · SIX GAPS ============ -->
-<section class="slide" data-chapter="I · Landscape &amp; Limits">
-  <div class="titleblock">
-    <div class="kicker">Chapter I — Synthesis</div>
-    <h1>Six gaps, one thesis</h1>
-  </div>
-  <div class="body grid-2x3">
-    <div class="card gapcard"><span class="gnum">1</span><h3>Structured Algerian corpus</h3><p>no machine-readable articles with stable identifiers</p><div class="builds">Akoma Ntoso corpus, 171 files (1963–2025)</div></div>
-    <div class="card gapcard"><span class="gnum">2</span><h3>Temporal legal KG</h3><p>no graph of references, amendments, versions</p><div class="builds">RDF Legal Knowledge Graph</div></div>
-    <div class="card gapcard"><span class="gnum">3</span><h3>Algerian benchmark</h3><p>no citation-grounded evaluation for Algerian law</p><div class="builds">AlgerianLegalBench — 244 questions</div></div>
-    <div class="card gapcard"><span class="gnum">4</span><h3>Recursive orchestration</h3><p>single-pass pipelines cannot inspect or revise</p><div class="builds">bounded RLM controller</div></div>
-    <div class="card gapcard"><span class="gnum">5</span><h3>Argument-aware evidence</h3><p>retrieved text is opaque to verification</p><div class="builds">Toulmin ADU structuring</div></div>
-    <div class="card gapcard"><span class="gnum">6</span><h3>Unified faithful architecture</h3><p>pieces exist; no citation-faithful whole</p><div class="builds">AKN-RLM</div></div>
-  </div>
-  <div class="takeaway">Reliable legal AI is not only a model problem — it is an <i>infrastructure</i> problem.</div>
+<!-- ============ DIVIDER · FOUNDATIONS ============ -->
+<section class="slide s-divider" data-section="1">
+  <div class="dtitle">Foundations</div>
+  <div class="dsub">five pillars of citation-faithful legal reasoning</div>
 </section>
 
 <!-- ============ 11 · PILLAR I — AKN ============ -->
-<section class="slide" data-chapter="II · Foundations">
+<section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Chapter II — Pillar <b>I</b> of V · the corpus</div>
+    <div class="kicker">Pillar <b>I</b> of V · the corpus</div>
     <h1>Akoma Ntoso — giving law a <em>machine-readable body</em></h1>
   </div>
   <div class="body cols" style="align-items:center; gap:44px">
@@ -440,9 +378,9 @@
 </section>
 
 <!-- ============ 12 · PILLAR II — IR ============ -->
-<section class="slide" data-chapter="II · Foundations">
+<section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Chapter II — Pillar <b>II</b> of V · evidence access</div>
+    <div class="kicker">Pillar <b>II</b> of V · evidence access</div>
     <h1>Retrieval &amp; RAG — grounding, not yet <em>reasoning</em></h1>
   </div>
   <div class="body grid-4" style="align-content:center">
@@ -455,9 +393,9 @@
 </section>
 
 <!-- ============ 13 · PILLAR III — KG ============ -->
-<section class="slide" data-chapter="II · Foundations">
+<section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Chapter II — Pillar <b>III</b> of V · relations</div>
+    <div class="kicker">Pillar <b>III</b> of V · relations</div>
     <h1>Legal Knowledge Graphs — because law is <em>relational</em></h1>
   </div>
   <div class="body cols" style="align-items:center; gap:40px">
@@ -500,7 +438,7 @@
         <text x="128" y="266" text-anchor="middle" class="capg">version of</text>
         <text x="372" y="266" text-anchor="middle" class="capw">amended by</text>
         <text x="262" y="120" class="cap">part of</text>
-        <text x="250" y="384" text-anchor="middle" font-size="17" font-style="italic" fill="#57503e"
+        <text x="250" y="384" text-anchor="middle" font-size="17" font-style="italic" fill="#4d4634"
               font-family="'Cormorant Garamond', serif">typed edges: cites · defines · amends · hierarchy · version</text>
       </svg>
     </div>
@@ -509,9 +447,9 @@
 </section>
 
 <!-- ============ 14 · PILLAR IV — ARGUMENT MINING ============ -->
-<section class="slide" data-chapter="II · Foundations">
+<section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Chapter II — Pillar <b>IV</b> of V · inspectability</div>
+    <div class="kicker">Pillar <b>IV</b> of V · inspectability</div>
     <h1>Argument structure — evidence you can <em>inspect</em></h1>
   </div>
   <div class="body" style="flex-direction:column; justify-content:center; gap:8px">
@@ -553,9 +491,9 @@
 </section>
 
 <!-- ============ 15 · PILLAR V — RLM ============ -->
-<section class="slide" data-chapter="II · Foundations">
+<section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Chapter II — Pillar <b>V</b> of V · control</div>
+    <div class="kicker">Pillar <b>V</b> of V · control</div>
     <h1>Recursive Language Models — the <em>orchestration</em> layer</h1>
   </div>
   <div class="body cols" style="align-items:center; gap:48px">
@@ -586,7 +524,7 @@
           <text x="180" y="302">KG traversal</text>
           <text x="370" y="302">NLI verifier</text>
         </g>
-        <text x="280" y="372" text-anchor="middle" font-size="17" font-style="italic" fill="#57503e"
+        <text x="280" y="372" text-anchor="middle" font-size="17" font-style="italic" fill="#4d4634"
               font-family="'Cormorant Garamond', serif">the model queries the law — it never becomes the law</text>
       </svg>
     </div>
@@ -602,29 +540,51 @@
 </section>
 
 <!-- ============ 16 · PILLARS CONCLUSION ============ -->
-<section class="slide" data-chapter="II · Foundations">
+<section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Chapter II — Synthesis</div>
-    <h1>Each layer retires a specific risk</h1>
+    <div class="kicker">Synthesis — the state of the art</div>
+    <h1>Every ingredient exists. <em>No system unites them.</em></h1>
   </div>
   <div class="body" style="flex-direction:column; justify-content:center">
     <table class="ledger" style="max-width:1080px; align-self:center">
-      <tr><th style="width:30%">Layer</th><th style="width:31%">It provides</th><th>Without it</th></tr>
-      <tr><td class="l-layer">Corpus structuring <span class="smallcaps">akn</span></td><td class="l-gives">legal identity</td><td class="l-without">citations point at nothing addressable</td></tr>
-      <tr><td class="l-layer">Hybrid retrieval</td><td class="l-gives">evidence</td><td class="l-without">answers drawn from model memory</td></tr>
-      <tr><td class="l-layer">Knowledge graph</td><td class="l-gives">relations &amp; time</td><td class="l-without">missed exceptions, definitions, amendments</td></tr>
-      <tr><td class="l-layer">ADU structuring</td><td class="l-gives">inspectability</td><td class="l-without">reasoning that cannot be verified</td></tr>
-      <tr><td class="l-layer">RLM orchestration</td><td class="l-gives">control</td><td class="l-without">one-shot answers, no revision, no gap-probing</td></tr>
-      <tr><td class="l-layer">Arabic / French NLP</td><td class="l-gives">linguistic reliability</td><td class="l-without">brittleness across the bilingual corpus</td></tr>
+      <tr><th style="width:26%">Field</th><th style="width:34%">What it establishes</th><th>What it leaves open</th></tr>
+      <tr><td class="l-layer">Akoma Ntoso</td><td class="l-gives">a machine-readable model of legal documents</td><td class="l-without">no structured Algerian corpus exists</td></tr>
+      <tr><td class="l-layer">Retrieval &amp; RAG</td><td class="l-gives">grounded, evidence-based generation</td><td class="l-without">article correctness, temporal validity, claim-level support</td></tr>
+      <tr><td class="l-layer">Knowledge graphs</td><td class="l-gives">relational structure, graph-guided expansion</td><td class="l-without">legal temporality; no Algerian legal KG</td></tr>
+      <tr><td class="l-layer">Argument mining</td><td class="l-gives">inspectable reasoning structure</td><td class="l-without">not integrated into grounded verification</td></tr>
+      <tr><td class="l-layer">Recursive LMs</td><td class="l-gives">bounded orchestration &amp; revision</td><td class="l-without">untested as controllers for legal reasoning</td></tr>
+      <tr><td class="l-layer">Arabic legal NLP</td><td class="l-gives">Arabic &amp; French encoders, generative models</td><td class="l-without">no Algerian legal coverage</td></tr>
     </table>
   </div>
-  <div class="takeaway frag">Not a generic RAG system — a <i>layered legal reasoning architecture</i>, where every layer is accountable for one failure mode.</div>
+  <div class="takeaway">The pieces are mature in isolation — what is open is their unification for citation-faithful, low-resource legal QA.</div>
+</section>
+
+<!-- ============ 10 · SIX GAPS ============ -->
+<section class="slide" data-section="1">
+  <div class="titleblock">
+    <div class="kicker">Gaps &amp; contributions</div>
+    <h1>Six gaps, one thesis</h1>
+  </div>
+  <div class="body grid-2x3">
+    <div class="card gapcard"><span class="gnum">1</span><h3>Structured Algerian corpus</h3><p>no machine-readable articles with stable identifiers</p><div class="builds">Akoma Ntoso corpus, 171 files (1963–2025)</div></div>
+    <div class="card gapcard"><span class="gnum">2</span><h3>Temporal legal KG</h3><p>no graph of references, amendments, versions</p><div class="builds">RDF Legal Knowledge Graph</div></div>
+    <div class="card gapcard"><span class="gnum">3</span><h3>Algerian benchmark</h3><p>no citation-grounded evaluation for Algerian law</p><div class="builds">AlgerianLegalBench — 244 questions</div></div>
+    <div class="card gapcard"><span class="gnum">4</span><h3>Recursive orchestration</h3><p>single-pass pipelines cannot inspect or revise</p><div class="builds">bounded RLM controller</div></div>
+    <div class="card gapcard"><span class="gnum">5</span><h3>Argument-aware evidence</h3><p>retrieved text is opaque to verification</p><div class="builds">Toulmin ADU structuring</div></div>
+    <div class="card gapcard"><span class="gnum">6</span><h3>Unified faithful architecture</h3><p>pieces exist; no citation-faithful whole</p><div class="builds">AKN-RLM</div></div>
+  </div>
+</section>
+
+<!-- ============ DIVIDER · AKN-RLM ============ -->
+<section class="slide s-divider" data-section="2">
+  <div class="dtitle">AKN-RLM</div>
+  <div class="dsub">the architecture &amp; its evaluation design</div>
 </section>
 
 <!-- ============ 17 · ARCHITECTURE ============ -->
-<section class="slide" data-chapter="III · AKN-RLM">
+<section class="slide" data-section="2">
   <div class="titleblock">
-    <div class="kicker">Chapter III — Methodology</div>
+    <div class="kicker">Methodology</div>
     <h1>AKN-RLM at a glance</h1>
   </div>
   <div class="body" style="justify-content:center; align-items:center">
@@ -681,9 +641,9 @@
 </section>
 
 <!-- ============ 18 · DATA LAYER ============ -->
-<section class="slide" data-chapter="III · AKN-RLM">
+<section class="slide" data-section="2">
   <div class="titleblock">
-    <div class="kicker">Chapter III — The data layer</div>
+    <div class="kicker">The data layer</div>
     <h1>From the Official Journal to <em>addressable law</em></h1>
   </div>
   <div class="body cols" style="align-items:center; gap:40px">
@@ -716,7 +676,7 @@
         <text x="310" y="225" text-anchor="middle" class="lbl2">a citation that does not resolve here cannot be emitted</text>
         <line x1="310" y1="100" x2="310" y2="116" class="edge" stroke-dasharray="2 4"/>
         <line x1="310" y1="150" x2="310" y2="170" class="edge" stroke-dasharray="2 4"/>
-        <text x="310" y="296" text-anchor="middle" font-size="17" font-style="italic" fill="#57503e"
+        <text x="310" y="296" text-anchor="middle" font-size="17" font-style="italic" fill="#4d4634"
               font-family="'Cormorant Garamond', serif">expert-validated structuring — the graph is derived, never invented</text>
       </svg>
     </div>
@@ -737,10 +697,60 @@
   <div class="takeaway">Two resources the field did not have: a structured Algerian corpus, and a benchmark that can falsify our own system.</div>
 </section>
 
-<!-- ============ 19 · TYPED HANDLERS ============ -->
-<section class="slide" data-chapter="III · AKN-RLM">
+<!-- ============ 8 · RETRIEVAL LIMITS ============ -->
+<section class="slide" data-section="2">
   <div class="titleblock">
-    <div class="kicker">Chapter III — Routing &amp; retrieval</div>
+    <div class="kicker">Retrieval at its limits</div>
+    <h1>Retrieval finds passages. Law requires <em>sufficiency</em>.</h1>
+  </div>
+  <div class="body cols" style="align-items:center; gap:48px">
+    <div class="col" style="flex:0 0 460px; display:flex; flex-direction:column; gap:16px">
+      <div class="card">
+        <span class="tag">Sparse — BM25</span>
+        <p><b>Wins:</b> exact article numbers, law numbers, dates. <b>Fails:</b> lay paraphrase, AR/FR vocabulary mismatch.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Dense — embeddings</span>
+        <p><b>Wins:</b> semantic match across phrasings. <b>Fails:</b> exact identifiers, rare legal terms.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Hybrid</span>
+        <p>They fail differently — fusing them lifts recall. <b>But all three are structure-blind:</b> an exception or amendment never &ldquo;resembles&rdquo; the query.</p>
+      </div>
+    </div>
+    <div class="col grow">
+      <div class="smallcaps" style="margin-bottom:12px">What answering actually takes</div>
+      <svg width="520" height="368" viewBox="0 0 520 368">
+        <g class="node-soft">
+          <rect x="0" y="0"   width="430" height="54" rx="2"/>
+          <rect x="30" y="78"  width="430" height="54" rx="2"/>
+          <rect x="60" y="156" width="430" height="54" rx="2"/>
+          <rect x="30" y="234" width="430" height="54" rx="2"/>
+          <rect x="0" y="312" width="430" height="54" rx="2" stroke="#6e2433"/>
+        </g>
+        <g class="edge" marker-end="url(#ar-ink)">
+          <line x1="215" y1="54" x2="240" y2="78"/>
+          <line x1="245" y1="132" x2="270" y2="156"/>
+          <line x1="275" y1="210" x2="250" y2="234"/>
+          <line x1="245" y1="288" x2="220" y2="312"/>
+        </g>
+        <g class="lbl">
+          <text x="20" y="32"><tspan class="capg">1 &nbsp;</tspan> locate the governing rule</text>
+          <text x="50" y="110"><tspan class="capg">2 &nbsp;</tspan> resolve its defined terms</text>
+          <text x="80" y="188"><tspan class="capg">3 &nbsp;</tspan> check exceptions &amp; conditions</text>
+          <text x="50" y="266"><tspan class="capg">4 &nbsp;</tspan> follow cross-references</text>
+          <text x="20" y="344" fill="#6e2433"><tspan class="capw">5 &nbsp;</tspan> verify the applicable version</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="takeaway">Hybrid retrieval raises recall — legal sufficiency still requires structural and temporal checking.</div>
+</section>
+
+<!-- ============ 19 · TYPED HANDLERS ============ -->
+<section class="slide" data-section="2">
+  <div class="titleblock">
+    <div class="kicker">Routing &amp; retrieval</div>
     <h1>Typed handlers, not one generic pipeline</h1>
   </div>
   <div class="body" style="flex-direction:column; gap:22px; justify-content:center">
@@ -767,9 +777,9 @@
 </section>
 
 <!-- ============ 20 · FAITHFULNESS GATE ============ -->
-<section class="slide" data-chapter="III · AKN-RLM">
+<section class="slide" data-section="2">
   <div class="titleblock">
-    <div class="kicker">Chapter III — Verification</div>
+    <div class="kicker">Verification</div>
     <h1>The triple faithfulness gate</h1>
   </div>
   <div class="body" style="justify-content:center; align-items:center">
@@ -807,7 +817,7 @@
       <!-- fail path -->
       <g class="frag">
         <path d="M616,180 V250 H360" fill="none" class="edge-wine" stroke-dasharray="6 4" marker-end="url(#ar-wine)"/>
-        <rect x="146" y="222" width="214" height="58" class="node-soft" stroke="#6e2433"/>
+        <rect x="130" y="222" width="246" height="58" class="node-soft" stroke="#6e2433"/>
         <text x="253" y="246" text-anchor="middle" class="capw">corrective regeneration</text>
         <text x="253" y="266" text-anchor="middle" class="lbl2">one attempt — failure signal in prompt</text>
         <path d="M146,250 H85 V166" fill="none" class="edge-wine" stroke-dasharray="6 4" marker-end="url(#ar-wine)"/>
@@ -826,9 +836,9 @@
 </section>
 
 <!-- ============ 21 · EVALUATION DESIGN ============ -->
-<section class="slide" data-chapter="III · AKN-RLM">
+<section class="slide" data-section="2">
   <div class="titleblock">
-    <div class="kicker">Chapter III — Evaluation design</div>
+    <div class="kicker">Evaluation design</div>
     <h1>Measured on every axis it could fail</h1>
   </div>
   <div class="body" style="flex-direction:column; justify-content:center; gap:18px">
@@ -848,10 +858,16 @@
   <div class="takeaway">Article-level Citation F1 is the headline — document-level metrics hide &ldquo;right law, wrong article.&rdquo;</div>
 </section>
 
+<!-- ============ DIVIDER · RESULTS ============ -->
+<section class="slide s-divider" data-section="3">
+  <div class="dtitle">Results</div>
+  <div class="dsub">AlgerianLegalBench — baselines, phases, ablations</div>
+</section>
+
 <!-- ============ 22 · HEADLINE RESULTS ============ -->
-<section class="slide" data-chapter="IV · Results">
+<section class="slide" data-section="3">
   <div class="titleblock">
-    <div class="kicker">Chapter IV — AlgerianLegalBench · 244 questions · locked configuration</div>
+    <div class="kicker">AlgerianLegalBench · 244 questions · locked configuration</div>
     <h1>The headline</h1>
   </div>
   <div class="body" style="flex-direction:column; justify-content:center; gap:22px">
@@ -886,9 +902,9 @@
 </section>
 
 <!-- ============ 23 · DIRECT LLM BASELINES ============ -->
-<section class="slide" data-chapter="IV · Results">
+<section class="slide" data-section="3">
   <div class="titleblock">
-    <div class="kicker">Chapter IV — Tier 1 · direct LLMs on the same benchmark</div>
+    <div class="kicker">Tier 1 · direct LLMs on the same benchmark</div>
     <h1>The empty corner</h1>
   </div>
   <div class="body" style="justify-content:center; align-items:center; gap:30px">
@@ -921,13 +937,13 @@
       <text x="30" y="200" text-anchor="middle" class="cap" transform="rotate(-90 30 200)">hallucinated citations — ↓ better</text>
       <!-- baseline points -->
       <g>
-        <circle cx="416" cy="190" r="7" fill="#8b8270"/><text x="416" y="172" text-anchor="middle" class="lbl2">Llama 3.2 · 3B</text>
-        <circle cx="394" cy="104" r="7" fill="#8b8270"/><text x="408" y="109" class="lbl2">Gemma 2 · 9B</text>
-        <circle cx="343" cy="76"  r="9" fill="#57503e"/><text x="343" y="56"  text-anchor="middle" class="lbl" font-weight="600">Llama 3.3 · 70B</text>
-        <circle cx="306" cy="113" r="7" fill="#8b8270"/><text x="294" y="133" text-anchor="middle" class="lbl2">Qwen 2 · 7B</text>
-        <circle cx="262" cy="86"  r="7" fill="#8b8270"/><text x="240" y="106" text-anchor="middle" class="lbl2">Llama 3.1 · 8B</text>
-        <circle cx="166" cy="73"  r="7" fill="#8b8270"/><text x="166" y="53"  text-anchor="middle" class="lbl2">Aya · 8B</text>
-        <circle cx="561" cy="367" r="7" fill="#8b8270"/><text x="561" y="347" text-anchor="middle" class="lbl2">Gemini 2.5 Flash</text>
+        <circle cx="416" cy="190" r="7" fill="#6e6553"/><text x="416" y="172" text-anchor="middle" class="lbl2">Llama 3.2 · 3B</text>
+        <circle cx="394" cy="104" r="7" fill="#6e6553"/><text x="408" y="109" class="lbl2">Gemma 2 · 9B</text>
+        <circle cx="343" cy="76"  r="9" fill="#4d4634"/><text x="343" y="56"  text-anchor="middle" class="lbl" font-weight="600">Llama 3.3 · 70B</text>
+        <circle cx="306" cy="113" r="7" fill="#6e6553"/><text x="294" y="133" text-anchor="middle" class="lbl2">Qwen 2 · 7B</text>
+        <circle cx="262" cy="86"  r="7" fill="#6e6553"/><text x="240" y="106" text-anchor="middle" class="lbl2">Llama 3.1 · 8B</text>
+        <circle cx="166" cy="73"  r="7" fill="#6e6553"/><text x="166" y="53"  text-anchor="middle" class="lbl2">Aya · 8B</text>
+        <circle cx="561" cy="367" r="7" fill="#6e6553"/><text x="561" y="347" text-anchor="middle" class="lbl2">Gemini 2.5 Flash</text>
         <circle cx="862" cy="367" r="11" fill="#6e2433"/>
         <text x="862" y="340" text-anchor="middle" class="lbl disp" font-size="20" fill="#6e2433" font-weight="600">AKN-RLM</text>
       </g>
@@ -947,9 +963,9 @@
 </section>
 
 <!-- ============ 24 · TIER-2 BASELINES ============ -->
-<section class="slide" data-chapter="IV · Results">
+<section class="slide" data-section="3">
   <div class="titleblock">
-    <div class="kicker">Chapter IV — Tier 2 · same corpus, same indices, same benchmark</div>
+    <div class="kicker">Tier 2 · same corpus, same indices, same benchmark</div>
     <h1>The gain is <em>architectural</em></h1>
   </div>
   <div class="body" style="justify-content:center; align-items:center">
@@ -996,9 +1012,9 @@
 </section>
 
 <!-- ============ 25 · PHASE PROGRESSION ============ -->
-<section class="slide" data-chapter="IV · Results">
+<section class="slide" data-section="3">
   <div class="titleblock">
-    <div class="kicker">Chapter IV — How the result was built</div>
+    <div class="kicker">How the result was built</div>
     <h1>Five phases, one staircase</h1>
   </div>
   <div class="body" style="justify-content:center; align-items:center">
@@ -1059,9 +1075,9 @@
 </section>
 
 <!-- ============ 26 · LIMITS ============ -->
-<section class="slide" data-chapter="IV · Results">
+<section class="slide" data-section="3">
   <div class="titleblock">
-    <div class="kicker">Chapter IV — Ablations &amp; honest limits</div>
+    <div class="kicker">Ablations &amp; honest limits</div>
     <h1>Where it still breaks</h1>
   </div>
   <div class="body grid-2x2" style="gap:18px">
@@ -1090,9 +1106,9 @@
 </section>
 
 <!-- ============ 27 · ABSTENTION ============ -->
-<section class="slide" data-chapter="IV · Results">
+<section class="slide" data-section="3">
   <div class="titleblock">
-    <div class="kicker">Chapter IV — The safety behaviour</div>
+    <div class="kicker">The safety behaviour</div>
     <h1>Knowing when <em>not</em> to answer</h1>
   </div>
   <div class="body cols" style="align-items:center; gap:54px">
@@ -1116,10 +1132,16 @@
   <div class="takeaway">In law, refusal is a safety behaviour, not a failure — a wrong answer with a confident citation is the worst outcome.</div>
 </section>
 
+<!-- ============ DIVIDER · CONCLUSION ============ -->
+<section class="slide s-divider" data-section="4">
+  <div class="dtitle">Conclusion</div>
+  <div class="dsub">what we claim — and what we do not</div>
+</section>
+
 <!-- ============ 28 · CONCLUSION ============ -->
-<section class="slide" data-chapter="V · Conclusion">
+<section class="slide" data-section="4">
   <div class="titleblock">
-    <div class="kicker">Chapter V — Conclusion</div>
+    <div class="kicker">Conclusion</div>
     <h1>Reliability tracks <em>legal structure</em>, not parametric scale</h1>
   </div>
   <div class="body" style="flex-direction:column; justify-content:center; gap:24px">
@@ -1153,7 +1175,7 @@
       <circle cx="23" cy="4" r="2.2" fill="#9c7c35"/>
     </svg>
   </div>
-  <div class="main-title" style="font-size:58px">شكرًا &nbsp;·&nbsp; Merci &nbsp;·&nbsp; Thank you</div>
+  <div class="main-title" style="font-size:58px">Thank you &nbsp;·&nbsp; Merci &nbsp;·&nbsp; <span class="arabic">شكرًا</span></div>
   <div class="sub-title" style="margin-top:6px">We welcome your questions.</div>
   <div class="jury" style="margin-top:14px">
     Ibrahim El Khalil Attia &nbsp;·&nbsp; Maab Chaoui<br>
@@ -1161,9 +1183,9 @@
   </div>
 </section>
 
+<div id="topnav"></div>
 <div id="chrome">
-  <span class="ch"></span>
-  <span class="mid">Advancing Legal Reasoning in Algerian Law</span>
+  <span>Advancing Legal Reasoning in Algerian Law</span>
   <span class="num"></span>
 </div>
 
