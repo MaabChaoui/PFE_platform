@@ -18,8 +18,8 @@
         <span class="t">Defended 13 / 06 / 2026</span>
       </div>
     </div>
-    <h1 class="title">Advancing Legal Reasoning in Algerian Law</h1>
-    <p class="subtitle"><span class="k">RAG</span> + <span class="k">Knowledge Graphs</span> + <span class="k">Argument Mining</span> &nbsp;&rarr;&nbsp; <span class="cf">Citation-Faithful</span> legal answers</p>
+    <h1 class="title">Advancing Legal Reasoning in <em>Algerian Law</em></h1>
+    <p class="subtitle"><span class="k">RAG</span> · <span class="k">Knowledge Graphs</span> · <span class="k">Argument Mining</span> &nbsp;<span class="arr">&rarr;</span>&nbsp; <em class="cf">Citation-faithful legal answers</em></p>
     <div class="mast-meta">
       <span><b>Ibrahim El Khalil Attia</b> &nbsp;·&nbsp; <b>Maab Chaoui</b></span>
       <span class="sep">|</span>
@@ -38,7 +38,7 @@
       <!-- 1.1 problem statement -->
       <div class="pp">
         <h3><span>1.1</span> Fluent is not lawful</h3>
-        <p class="prose"><img class="pspot" src="assets/generated/problem_spot_clean.png" alt="">A legal answer cannot be judged by fluency or plausibility. To be valid it must be <b>grounded in identifiable sources</b>, cite the <b>exact governing articles</b>, stay inside the <b>Algerian jurisdiction</b>, and read each provision <b>as amended</b> at the relevant date — and where the law is silent, the only correct answer is a <b>refusal</b>. A fluent language model guarantees none of this.</p>
+        <p class="prose">A legal answer cannot be judged by fluency or plausibility. To be valid it must be <b>grounded in identifiable sources</b>, cite the <b>exact governing articles</b>, stay inside the <b>Algerian jurisdiction</b>, and read each provision <b>as amended</b> at the relevant date — and where the law is silent, the only correct answer is a <b>refusal</b>. A fluent language model guarantees none of this.</p>
         <p class="kwline">sourced · article-cited · jurisdiction-bound · amendment-aware · <em>or refused</em></p>
       </div>
 
@@ -54,6 +54,7 @@
           <div class="qa">demands the law <b>as amended</b> — Ord.&nbsp;05-02&nbsp;→&nbsp;Family Code, art.&nbsp;54</div>
         </div>
         <div class="quote q3">
+          <span class="stamp">Abstain</span>
           <p dir="rtl" lang="ar">هل يحق لصاحب العمل في الجزائر فصل العامل بحرية تامة دون إبداء أسباب (at-will)؟</p>
           <div class="qa">a <b>foreign-doctrine trap</b> — Algerian law is silent; the system must <b class="r">abstain</b></div>
         </div>
@@ -168,27 +169,28 @@
               <svg class="rec-svg" width="138" height="138" viewBox="0 0 200 200">
                 <defs>
                   <marker id="ah" markerWidth="7" markerHeight="7" refX="3.2" refY="3" orient="auto">
-                    <path d="M0 0L6 3L0 6z" fill="#ee8136"/>
+                    <path d="M0 0L6 3L0 6z" fill="#9c7c35"/>
                   </marker>
                 </defs>
                 <!-- rotating ring arcs (clockwise) -->
-                <g fill="none" stroke="#ee8136" stroke-width="3" marker-end="url(#ah)">
+                <g fill="none" stroke="#9c7c35" stroke-width="2.4" marker-end="url(#ah)">
                   <path d="M100 26 A74 74 0 0 1 168 86"/>
                   <path d="M174 100 A74 74 0 0 1 114 174"/>
                   <path d="M100 174 A74 74 0 0 1 32 114"/>
                   <path d="M26 100 A74 74 0 0 1 86 26"/>
                 </g>
                 <!-- center hub -->
-                <circle cx="100" cy="100" r="33" fill="#0f2c52"/>
-                <text x="100" y="94" text-anchor="middle" fill="#fff" font-family="Liberation Sans,Arial" font-size="13" font-weight="700">Gap-probe</text>
-                <text x="100" y="108" text-anchor="middle" fill="#fff" font-family="Liberation Sans,Arial" font-size="13" font-weight="700">RLM</text>
-                <text x="100" y="121" text-anchor="middle" fill="#9fb6d6" font-family="Liberation Sans,Arial" font-size="8.5">depth ≤ k</text>
+                <circle cx="100" cy="100" r="33" fill="#6e2433"/>
+                <circle cx="100" cy="100" r="29" fill="none" stroke="#f5f0e4" stroke-opacity=".4" stroke-width="1"/>
+                <text x="100" y="94" text-anchor="middle" fill="#f5f0e4" font-family="EB Garamond,Georgia,serif" font-size="13" font-weight="600">Gap-probe</text>
+                <text x="100" y="108" text-anchor="middle" fill="#f5f0e4" font-family="EB Garamond,Georgia,serif" font-size="13" font-weight="600">RLM</text>
+                <text x="100" y="121" text-anchor="middle" fill="#dcb8a0" font-family="EB Garamond,Georgia,serif" font-style="italic" font-size="9">depth ≤ k</text>
                 <!-- 4 cycle nodes -->
-                <g font-family="Liberation Sans,Arial" font-weight="700" font-size="11" text-anchor="middle">
-                  <circle cx="100" cy="20" r="18" fill="#fff" stroke="#ee8136" stroke-width="2.5"/><text x="100" y="24" fill="#0f2c52">Retrieve</text>
-                  <circle cx="180" cy="100" r="18" fill="#fff" stroke="#ee8136" stroke-width="2.5"/><text x="180" y="104" fill="#0f2c52">Inspect</text>
-                  <circle cx="100" cy="180" r="18" fill="#fff" stroke="#ee8136" stroke-width="2.5"/><text x="100" y="184" fill="#0f2c52">Reason</text>
-                  <circle cx="20" cy="100" r="18" fill="#fff" stroke="#ee8136" stroke-width="2.5"/><text x="20" y="104" fill="#0f2c52">Refine</text>
+                <g font-family="EB Garamond,Georgia,serif" font-weight="600" font-size="11.5" text-anchor="middle">
+                  <circle cx="100" cy="20" r="18" fill="#fbf8ef" stroke="#9c7c35" stroke-width="2"/><text x="100" y="24" fill="#211c14">Retrieve</text>
+                  <circle cx="180" cy="100" r="18" fill="#fbf8ef" stroke="#9c7c35" stroke-width="2"/><text x="180" y="104" fill="#211c14">Inspect</text>
+                  <circle cx="100" cy="180" r="18" fill="#fbf8ef" stroke="#9c7c35" stroke-width="2"/><text x="100" y="184" fill="#211c14">Reason</text>
+                  <circle cx="20" cy="100" r="18" fill="#fbf8ef" stroke="#9c7c35" stroke-width="2"/><text x="20" y="104" fill="#211c14">Refine</text>
                 </g>
               </svg>
               <div class="rec-side">
@@ -231,8 +233,8 @@
           <div class="big">0.305</div>
           <div class="lab"><b>Citation F1</b><span>locked deployable</span></div>
           <div class="zeros">
-            <div class="z"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg><div><b>0.000</b> <span>HCR · JIR</span></div></div>
-            <div class="z"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg><div><b>0.703</b> <span>Abstention F1</span></div></div>
+            <div class="z"><svg viewBox="0 0 24 24" fill="none" stroke="#f5f0e4" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg><div><b>0.000</b> <span>HCR · JIR</span></div></div>
+            <div class="z"><svg viewBox="0 0 24 24" fill="none" stroke="#f5f0e4" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg><div><b>0.703</b> <span>Abstention F1</span></div></div>
           </div>
         </div>
         <div class="strip">
@@ -250,7 +252,7 @@
           <div class="row"><div class="lb">Determ.<b>hybrid+rerank</b></div><div class="tk"><div class="fl" style="width:34%"></div></div><div class="vl">0.105</div></div>
           <div class="row"><div class="lb">Minimal RAG<b>dense top-5</b></div><div class="tk"><div class="fl" style="width:57%"></div></div><div class="vl">0.175</div></div>
           <div class="row"><div class="lb">Best LLM<b>Gemini 2.5</b></div><div class="tk"><div class="fl" style="width:61%"></div></div><div class="vl">0.186</div></div>
-          <div class="row"><div class="lb"><b style="color:var(--orange-d)">AKN-RLM</b>locked</div><div class="tk"><div class="fl win" style="width:100%"></div></div><div class="vl win">0.305</div></div>
+          <div class="row"><div class="lb"><b style="color:var(--wine)">AKN-RLM</b>locked</div><div class="tk"><div class="fl win" style="width:100%"></div></div><div class="vl win">0.305</div></div>
         </div>
       </div>
 
@@ -258,7 +260,7 @@
       <div class="cc">
         <div class="ct"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>Jurisdictional infection (JIR)<span class="u">lower = safer</span></div>
         <div class="chart">
-          <div class="row"><div class="lb"><b style="color:var(--green-d)">AKN-RLM</b>triple gate</div><div class="tk"><div class="fl" style="width:2%;background:var(--green)"></div></div><div class="vl good">0.000</div></div>
+          <div class="row"><div class="lb"><b style="color:var(--green)">AKN-RLM</b>triple gate</div><div class="tk"><div class="fl" style="width:2%;background:var(--green)"></div></div><div class="vl good">0.000</div></div>
           <div class="row"><div class="lb">Gemini 2.5<b>15 / 40 traps</b></div><div class="tk"><div class="fl bad" style="width:55%"></div></div><div class="vl bad">0.375</div></div>
           <div class="row"><div class="lb">Qwen 2<b>27 / 40 traps</b></div><div class="tk"><div class="fl bad" style="width:100%"></div></div><div class="vl bad">0.675</div></div>
         </div>
