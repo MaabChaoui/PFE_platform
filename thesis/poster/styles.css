@@ -1,0 +1,296 @@
+/* ============================================================
+   AKN-RLM thesis poster — v2 — A3 portrait, print-ready
+   Pure HTML + CSS + inline SVG. No JS, no dependencies.
+   Reading flow:  WHY (left) -> HOW (center) -> PROOF (right)
+   ============================================================ */
+
+:root{
+  --navy:#0f2c52;       --navy-d:#0a1e3a;     --navy-l:#1a4582;
+  --orange:#ee8136;     --orange-d:#d96b22;
+  --orange-soft:#fbe6d4;
+  --green:#2e9e6e;      --green-d:#1f7a52;    --green-soft:#dcefe4;
+  --teal:#1c8a8a;       --teal-soft:#d6ecec;
+  --red:#cf4b3e;        --red-soft:#f7ddd8;
+  --bg:#eef1f5;         --card:#ffffff;
+  --ink:#15212f;        --muted:#62707f;      --line:#dde3ec;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff}
+@page{ size:A3 portrait; margin:0; }
+body{
+  font-family:'Liberation Sans','Helvetica Neue',Arial,sans-serif;
+  color:var(--ink); line-height:1.26; -webkit-font-smoothing:antialiased;
+}
+
+.poster{ width:297mm; height:420mm; overflow:hidden; background:var(--bg);
+  display:flex; flex-direction:column; position:relative; }
+
+/* small reusable bits */
+.ico{display:inline-flex}
+.num-badge{font-weight:800}
+
+/* ============================ MASTHEAD ============================ */
+.masthead{
+  height:45mm; background:linear-gradient(118deg,var(--navy-d),var(--navy) 55%,var(--navy-l));
+  color:#fff; padding:5mm 11mm 4.6mm; display:flex; flex-direction:column;
+  justify-content:center; border-bottom:2.2mm solid var(--orange); position:relative;
+}
+.mast-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3mm}
+.logo-pill{background:#fff;border-radius:2mm;padding:1.7mm 3mm;display:flex;align-items:center}
+.logo-pill img{height:7.4mm;display:block}
+.mast-tags{display:flex;gap:2.2mm;font-size:7.4pt;color:#bcd0ec;letter-spacing:.3pt}
+.mast-tags .t{border:1px solid #4f74a8;border-radius:5mm;padding:.7mm 2.4mm}
+.title{font-size:25pt;font-weight:800;line-height:1.02;letter-spacing:-.3pt;margin-bottom:1.3mm}
+.subtitle{font-size:10.5pt;font-weight:400;color:#cfe0f4}
+.subtitle .k{color:var(--orange);font-weight:700}
+.subtitle .cf{color:#fff;font-weight:700}
+.mast-meta{margin-top:2.4mm;display:flex;flex-wrap:wrap;gap:0 5mm;font-size:8pt;color:#c4d6ee}
+.mast-meta b{color:#fff}
+.mast-meta .sep{color:var(--orange);font-weight:800}
+
+/* ============================ BODY GRID ============================ */
+.body{ flex:1; display:grid; grid-template-columns:0.9fr 1.34fr 0.9fr; gap:4.2mm;
+  padding:4.2mm 5mm; overflow:hidden; }
+.col{display:flex;flex-direction:column;overflow:hidden}
+.col.side{justify-content:space-between}
+
+/* section header (column titles) */
+.sec{display:flex;align-items:center;gap:2.4mm;margin-bottom:.5mm}
+.sec .badge{width:9mm;height:9mm;border-radius:2.2mm;flex:none;color:#fff;font-weight:800;
+  font-size:8pt;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.sec .badge small{font-size:5.4pt;font-weight:700;opacity:.85;letter-spacing:.5pt}
+.sec.why .badge{background:var(--red)} .sec.how .badge{background:var(--orange)} .sec.proof .badge{background:var(--green)}
+.sec .t b{font-size:13pt;color:var(--navy);letter-spacing:.1pt;display:block;line-height:1.02}
+.sec .t span{font-size:7.2pt;color:var(--muted);text-transform:uppercase;letter-spacing:.7pt}
+
+/* group label used across columns */
+.glabel{font-size:7.6pt;font-weight:800;letter-spacing:.6pt;text-transform:uppercase;
+  color:var(--navy);display:flex;align-items:center;gap:1.8mm}
+.glabel::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---------------- LEFT (WHY) — paper / LaTeX style ---------------- */
+.col.paper{background:#fff;border:1px solid var(--line);border-radius:1.6mm;
+  padding:3.4mm 4mm 3.8mm;font-family:'Liberation Serif',Georgia,serif}
+.col.paper .sec{margin-bottom:1mm}
+
+.pp{border-top:1px solid #e6ebf1;padding-top:2mm}
+.pp h3{font-size:10pt;color:var(--navy);font-weight:700;margin-bottom:1.4mm;letter-spacing:.1pt}
+.pp h3 span{color:var(--orange-d);margin-right:.8mm;font-variant-numeric:lining-nums}
+
+/* 1.1 problem statement */
+.prose{font-size:8.7pt;color:#222d3a;line-height:1.4;text-align:justify}
+.prose b{color:var(--navy)}
+.pspot{float:right;width:19mm;margin:.6mm 0 1mm 2.6mm}
+.kwline{margin-top:2mm;padding:1.2mm 0 1mm;border-top:1px solid #c9d2dd;border-bottom:1px solid #c9d2dd;
+  text-align:center;font-variant:small-caps;letter-spacing:.4pt;font-size:8.2pt;color:var(--navy);font-weight:700}
+.kwline em{color:var(--red);font-style:normal}
+
+/* 1.2 block-quoted benchmark questions (RTL) */
+.quote{margin-top:1.7mm;padding:.4mm 2.4mm .4mm 0;border-right:.6mm solid var(--teal)}
+.quote.q2{border-right-color:var(--orange)}
+.quote.q3{border-right-color:var(--red)}
+.quote p[dir="rtl"]{font-family:'Noto Naskh Arabic','Noto Kufi Arabic','DejaVu Sans',serif;
+  font-size:9.6pt;font-weight:500;color:#1d2c3e;line-height:1.55;text-align:right}
+.qa{font-size:7.5pt;font-style:italic;color:var(--muted);margin-top:.7mm;line-height:1.2}
+.qa::before{content:"—\2002"}
+.qa b{color:var(--navy);font-style:normal}
+.qa b.r{color:var(--red)}
+.qsrc{font-size:6.6pt;color:var(--muted);font-style:italic;text-align:right;margin-top:1.4mm}
+
+/* 1.3 figure: HCR bar chart, plot-frame style */
+.fig{margin-top:.6mm}
+.bars{display:flex;align-items:stretch;gap:1.8mm;height:30mm;padding:0 1.5mm;
+  border-left:.45mm solid #46525f;border-bottom:.45mm solid #46525f;
+  background-image:repeating-linear-gradient(to top,transparent 0,transparent calc(25% - .5px),#e8edf3 calc(25% - .5px),#e8edf3 25%)}
+.hbar{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0}
+.hbar .bv{font-size:6.4pt;font-weight:700;color:#8c2f27;margin-bottom:.5mm;letter-spacing:-.2pt}
+.hbar .bv.g{color:var(--green-d)}
+.hbar .bf{width:66%;background:#b5443a}
+.hbar .bf.g{background:var(--green-d)}
+.hbar.ours{border-left:1px dashed #aebbca;align-self:stretch;justify-content:flex-end}
+.xlab{display:flex;gap:1.8mm;padding:.7mm 1.5mm 0}
+.xlab div{flex:1;text-align:center;min-width:0}
+.xlab b{display:block;font-size:6pt;color:var(--navy);font-weight:700;line-height:1.05;white-space:nowrap}
+.xlab span{display:block;font-size:5.7pt;color:var(--muted);line-height:1.15}
+.xlab .ours b{color:var(--green-d)}
+.figcap{font-size:7pt;color:#3c4a5a;line-height:1.3;margin-top:1.6mm;text-align:justify}
+.figcap b{color:var(--navy)}
+.figcap b.g{color:var(--green-d)}
+
+/* 1.4 hard-case list */
+.hardlist{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:1.6mm 3.4mm;margin-top:.4mm}
+.hardlist li{font-size:7.7pt;color:#3c4a5a;line-height:1.28;padding-left:2.6mm;position:relative}
+.hardlist li::before{content:"–";position:absolute;left:0;color:var(--orange-d);font-weight:700}
+.hardlist b{color:var(--navy)}
+
+/* 1.5 objectives */
+.objs{display:grid;grid-template-columns:1fr 1fr;gap:2mm 3.4mm;margin-top:.4mm}
+.ob{display:flex;gap:1.7mm;align-items:flex-start}
+.ob .ck{width:3.7mm;height:3.7mm;color:var(--green-d);flex:none;margin-top:.3mm}
+.ob b{font-size:8pt;color:var(--navy);display:block;line-height:1.1}
+.ob span{font-size:7pt;color:var(--muted);line-height:1.2;display:block;margin-top:.4mm}
+
+/* 1.6 significance: numbered contributions */
+.sigl{margin:0.2mm 0 0 4.4mm;display:flex;flex-direction:column;gap:1.7mm}
+.sigl>li{font-size:7.9pt;color:#3c4a5a;line-height:1.3;padding-left:.6mm}
+.sigl>li::marker{color:var(--orange-d);font-weight:700}
+.sigl b{color:var(--navy)}
+.sigl ul{list-style:none;margin-top:1mm;display:flex;flex-direction:column;gap:.8mm}
+.sigl ul li{font-size:7.5pt;line-height:1.25;padding-left:3mm;position:relative}
+.sigl ul li::before{content:"–";position:absolute;left:.6mm;color:var(--orange-d);font-weight:700}
+
+/* ---------------- CENTER (HOW) — architecture ---------------- */
+.arch{position:relative;flex:1;display:flex;flex-direction:column;
+  background:linear-gradient(165deg,var(--navy) 0%,var(--navy-d) 100%);
+  border-radius:3mm;padding:4mm 4.4mm 4mm;overflow:hidden}
+.arch::before{ content:""; position:absolute; inset:0;
+  background-image:url('assets/generated/legal_ai_pipeline_hero.png');
+  background-size:contain; background-repeat:no-repeat; background-position:center;
+  opacity:.20; mix-blend-mode:screen; pointer-events:none; }
+.arch>*{position:relative;z-index:1}
+.arch .sec .t b{color:#fff}.arch .sec .t span{color:#9fb6d6}
+.arch-sub{font-size:7.6pt;color:#aac1e0;margin:.8mm 0 2.2mm}
+.arch-flow{flex:1;display:flex;flex-direction:column;justify-content:flex-start}
+.arch-flow .band.b-rec{flex:1;display:flex;flex-direction:column}
+.arch-flow .band.b-rec .rec-wrap{margin-top:auto;margin-bottom:auto}
+
+/* a band = one architecture zone */
+.band{background:rgba(255,255,255,.95);border-radius:2.6mm;padding:2.4mm 3mm 2.6mm;position:relative;
+  border-left:1.8mm solid var(--navy-l)}
+.band.b-struct{border-left-color:var(--teal)}
+.band.b-retr{border-left-color:var(--orange)}
+.band.b-rec{border-left-color:var(--orange);background:#fff;border:1.6mm solid var(--orange);box-shadow:0 0 0 .8mm rgba(238,129,54,.18)}
+.band.b-verify{border-left-color:var(--green)}
+.band-tab{display:flex;align-items:center;gap:1.8mm;margin-bottom:1.8mm}
+.band-tab .bn{width:5.4mm;height:5.4mm;border-radius:1.4mm;color:#fff;font-weight:800;font-size:7.4pt;
+  display:flex;align-items:center;justify-content:center;flex:none}
+.b-struct .bn{background:var(--teal)} .b-retr .bn{background:var(--orange)}
+.b-rec .bn{background:var(--orange)} .b-verify .bn{background:var(--green)}
+.band-tab b{font-size:9pt;color:var(--navy);text-transform:uppercase;letter-spacing:.5pt}
+.band-tab .cap{margin-left:auto;font-size:6.7pt;color:var(--muted);text-align:right;line-height:1.05;font-weight:600}
+
+/* horizontal mini flow of nodes inside a band */
+.flow{display:flex;align-items:stretch;gap:0}
+.fnode{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:1.1mm;padding:0 .4mm}
+.fnode .fi{width:8.4mm;height:8.4mm;border-radius:2mm;display:flex;align-items:center;justify-content:center;color:#fff}
+.fnode .fi svg{width:5mm;height:5mm}
+.fnode b{font-size:7.4pt;color:var(--navy);line-height:1.05;font-weight:700}
+.fnode span{font-size:6.4pt;color:var(--muted);line-height:1.02}
+.fi.c-navy{background:var(--navy-l)} .fi.c-teal{background:var(--teal)}
+.fi.c-orange{background:var(--orange)} .fi.c-green{background:var(--green)} .fi.c-grey{background:#7c8ba0}
+.fconn{display:flex;align-items:center;justify-content:center;width:6mm;flex:none;color:#9fb1c6;padding-top:3mm}
+.fconn svg{width:5mm;height:4mm}
+
+/* query-type chips (band 2) */
+.types{display:flex;flex-wrap:wrap;gap:1.2mm;justify-content:center;margin-top:1.8mm}
+.types .ty{font-size:6.3pt;font-weight:700;color:var(--orange-d);background:var(--orange-soft);
+  border:1px solid #f1c9a4;border-radius:4mm;padding:.5mm 1.8mm}
+
+/* recursion cycle band */
+.rec-wrap{display:flex;align-items:center;gap:2mm}
+.rec-svg{flex:none}
+.rec-side{flex:1;display:flex;flex-direction:column;gap:1.6mm}
+.rec-side .rs{display:flex;gap:1.6mm;align-items:flex-start}
+.rec-side .rs .d{width:3mm;height:3mm;border-radius:50%;background:var(--orange);flex:none;margin-top:.8mm}
+.rec-side .rs b{font-size:7.4pt;color:var(--navy);display:block;line-height:1.06}
+.rec-side .rs span{font-size:6.5pt;color:var(--muted);line-height:1.05}
+.rec-exit{display:flex;align-items:center;gap:1.6mm;background:var(--green-soft);border:1px solid #bfe3cf;
+  border-radius:2mm;padding:1.4mm 2mm;margin-top:.4mm}
+.rec-exit svg{width:4.4mm;height:4.4mm;color:var(--green-d);flex:none}
+.rec-exit b{font-size:7pt;color:var(--green-d);line-height:1.05}
+
+/* triple gate band 4 */
+.gates{display:flex;align-items:center;gap:1.4mm}
+.gate{flex:1;background:#f4f8f5;border:1px solid #cfe6da;border-radius:2mm;padding:1.6mm 1mm;text-align:center}
+.gate svg{width:5.2mm;height:5.2mm;color:var(--green);margin-bottom:.6mm}
+.gate b{display:block;font-size:7pt;color:var(--navy);line-height:1.04}
+.gate span{display:block;font-size:6pt;color:var(--muted)}
+.gate-arrow{color:#bcd0c5;flex:none;display:flex;align-items:center}.gate-arrow svg{width:4mm;height:4mm}
+.outcomes{display:flex;gap:2mm;margin-top:1.8mm}
+.oc{flex:1;display:flex;align-items:center;gap:1.8mm;border-radius:2mm;padding:1.8mm 2.2mm;color:#fff}
+.oc.ans{background:var(--green)} .oc.abs{background:var(--navy-l)}
+.oc svg{width:5.6mm;height:5.6mm;flex:none}
+.oc b{font-size:8pt;display:block;line-height:1.05}.oc span{font-size:6.3pt;opacity:.9}
+
+/* connector arrow between bands */
+.blink{display:flex;justify-content:center;color:#5f7aa3;padding:.2mm 0}
+.blink svg{width:5mm;height:4.2mm}
+
+/* ---------------- RIGHT (PROOF) — results ---------------- */
+.headline{background:linear-gradient(135deg,var(--orange),var(--orange-d));border-radius:2.8mm;
+  padding:3mm 3.4mm;color:#fff}
+.headline .top{display:flex;align-items:center;gap:3mm}
+.headline .big{font-size:38pt;font-weight:800;line-height:.86;letter-spacing:-1.5pt}
+.headline .lab b{font-size:10pt;display:block}.headline .lab span{font-size:7pt;color:#ffe6d2}
+.headline .zeros{margin-left:auto;display:flex;flex-direction:column;gap:1.4mm}
+.headline .z{display:flex;align-items:center;gap:1.4mm;background:rgba(255,255,255,.16);border-radius:1.6mm;padding:.9mm 2mm}
+.headline .z svg{width:3.6mm;height:3.6mm;flex:none}
+.headline .z b{font-size:8pt}.headline .z span{font-size:6pt;color:#ffe6d2}
+.headline .strip{display:flex;gap:2mm;margin-top:2.4mm}
+.headline .st{flex:1;background:rgba(255,255,255,.14);border-radius:1.8mm;padding:1.4mm 1mm;text-align:center}
+.headline .st b{display:block;font-size:11pt;font-weight:800}.headline .st span{display:block;font-size:6pt;color:#ffe6d2;letter-spacing:.2pt}
+
+/* generic chart card */
+.cc{background:var(--card);border:1px solid var(--line);border-radius:2.6mm;padding:2.6mm 3mm}
+.cc .ct{font-size:8.4pt;font-weight:700;color:var(--navy);margin-bottom:2mm;display:flex;align-items:center;gap:1.8mm}
+.cc .ct svg{width:4.2mm;height:4.2mm;color:var(--orange)}
+.cc .ct .u{margin-left:auto;font-size:6.4pt;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4pt}
+
+.chart{display:flex;flex-direction:column;gap:1.7mm}
+.row{display:flex;align-items:center;gap:1.6mm}
+.row .lb{width:26mm;flex:none;font-size:6.8pt;color:var(--muted);text-align:right;line-height:1.02}
+.row .lb b{display:block;font-size:7pt;color:var(--navy);font-weight:700}
+.row .tk{flex:1;height:5mm;background:#e7ecf2;border-radius:1mm;overflow:hidden}
+.row .fl{height:100%;border-radius:1mm;background:#9fb1c6}
+.row .fl.win{background:linear-gradient(90deg,var(--orange),var(--orange-d))}
+.row .fl.bad{background:linear-gradient(90deg,#e08a7f,var(--red))}
+.row .vl{width:9mm;flex:none;font-size:7.6pt;font-weight:800;color:var(--navy);text-align:right}
+.row .vl.win{color:var(--orange-d)} .row .vl.good{color:var(--green-d)} .row .vl.bad{color:var(--red)}
+.mult-inline{display:flex;gap:1.6mm;margin-top:2.2mm}
+.mult-inline .mi{flex:1;text-align:center;background:var(--navy);color:#fff;border-radius:1.8mm;padding:1.4mm .6mm}
+.mult-inline .mi b{display:block;font-size:10pt;font-weight:800;color:var(--orange)}
+.mult-inline .mi span{display:block;font-size:5.8pt;color:#bcd0ec;line-height:1.02;margin-top:.4mm}
+
+/* benchmark stat strip + difficulty bar */
+.bstats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8mm}
+.bstats .s{background:var(--card);border:1px solid var(--line);border-radius:2mm;padding:1.8mm 1mm;text-align:center}
+.bstats .s b{display:block;font-size:12pt;font-weight:800;color:var(--navy);line-height:1}
+.bstats .s span{display:block;font-size:6pt;color:var(--muted);text-transform:uppercase;letter-spacing:.2pt;margin-top:.8mm}
+.diff{margin-top:.4mm}
+.diff .dl{display:flex;justify-content:space-between;font-size:6.6pt;color:var(--muted);margin-bottom:1mm}
+.diff .db{display:flex;height:5mm;border-radius:1mm;overflow:hidden;font-size:6.4pt;font-weight:700;color:#fff}
+.diff .db .seg{display:flex;align-items:center;justify-content:center}
+.diff .db .e{background:#86b8a0}.diff .db .m{background:var(--teal)}.diff .db .h{background:var(--navy)}
+
+/* faithfulness callout already covered by .cc + .row.bad */
+.faith-note{font-size:6.8pt;color:#4a5867;line-height:1.22;margin-top:1.8mm;background:#f4f8f5;
+  border-left:1.4mm solid var(--green);border-radius:1.4mm;padding:1.6mm 2mm}
+.faith-note b{color:var(--navy)}
+
+/* limitations / future */
+.lf{display:grid;grid-template-columns:1fr 1fr;gap:2.4mm}
+.lf .h{font-size:7.8pt;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.4pt;
+  display:flex;align-items:center;gap:1.4mm;margin-bottom:1.4mm}
+.lf .h svg{width:3.8mm;height:3.8mm}
+.lf.l .h svg{color:var(--orange)} .lf.f .h svg{color:var(--teal)}
+.lf ul{list-style:none}
+.lf li{font-size:6.9pt;color:#3c4a5a;line-height:1.18;padding-left:2.8mm;position:relative;margin-bottom:.9mm}
+.lf li::before{content:"";position:absolute;left:0;top:1.3mm;width:1.4mm;height:1.4mm;border-radius:50%}
+.lf.l li::before{background:var(--orange)} .lf.f li::before{background:var(--teal)}
+
+/* ============================ FOOTER (equation) ============================ */
+.footer{height:30mm;background:linear-gradient(100deg,var(--navy-d),var(--navy) 72%);
+  color:#fff;border-top:2.2mm solid var(--orange);padding:0 9mm;display:flex;align-items:center;gap:5mm}
+.eq{display:flex;align-items:center;gap:2.6mm;flex:1}
+.eq .term{display:flex;flex-direction:column;align-items:center;gap:1mm;text-align:center}
+.eq .term .ec{width:9.5mm;height:9.5mm;border-radius:2.2mm;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;color:var(--orange)}
+.eq .term .ec svg{width:5.6mm;height:5.6mm}
+.eq .term b{font-size:7pt;color:#dce8f7;line-height:1.05;max-width:24mm}
+.eq .op{font-size:14pt;font-weight:300;color:#7d97bd}
+.eq .result{display:flex;flex-direction:column;justify-content:center}
+.eq .result .lab{font-size:7pt;letter-spacing:1.4pt;color:var(--orange);text-transform:uppercase;font-weight:700}
+.eq .result b{font-size:15pt;font-weight:800;line-height:1.04}
+.eq .result span{font-size:7.4pt;color:#b9cae3}
+.eq .result span em{color:var(--orange);font-style:normal;font-weight:700}

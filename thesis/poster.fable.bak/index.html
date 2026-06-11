@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AKN-RLM — Citation-Faithful Legal AI for Algerian Law</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="poster">
+
+  <!-- ============================ MASTHEAD ============================ -->
+  <header class="masthead">
+    <div class="mast-top">
+      <div class="logo-pill"><img src="assets/ensia_logo.png" alt="ENSIA"></div>
+      <div class="mast-tags">
+        <span class="t">Engineer · AI &amp; Data Science</span>
+        <span class="t">FYP/2025/135</span>
+        <span class="t">Defended 13 / 06 / 2026</span>
+      </div>
+    </div>
+    <h1 class="title">Advancing Legal Reasoning in Algerian Law</h1>
+    <p class="subtitle"><span class="k">RAG</span> + <span class="k">Knowledge Graphs</span> + <span class="k">Argument Mining</span> &nbsp;&rarr;&nbsp; <span class="cf">Citation-Faithful</span> legal answers</p>
+    <div class="mast-meta">
+      <span><b>Ibrahim El Khalil Attia</b> &nbsp;·&nbsp; <b>Maab Chaoui</b></span>
+      <span class="sep">|</span>
+      <span>Supervisor <b>Dr. Fouad Dahak</b></span>
+      <span>Co-supervisor <b>Prof. Ivan Cantador</b></span>
+    </div>
+  </header>
+
+  <!-- ============================ BODY ============================ -->
+  <main class="body">
+
+    <!-- =================== LEFT · WHY =================== -->
+    <section class="col side">
+      <div class="sec why"><div class="badge"><small>WHY</small>01</div><div class="t"><b>The Problem</b><span>Why legal QA is hard</span></div></div>
+
+      <!-- problem statement -->
+      <div class="pstate">
+        <p>In law, <b>fluent ≠ correct</b>. An answer is legally valid only if it is</p>
+        <div class="req-chips">
+          <span class="rq">sourced</span><span class="rq">article-cited</span><span class="rq">jurisdiction-bound</span><span class="rq">amendment-aware</span><span class="rq alt">— or refused</span>
+        </div>
+      </div>
+
+      <!-- real benchmark questions -->
+      <div class="lgroup">
+        <div class="glabel">Real questions, real demands <i>AlgerianLegalBench</i></div>
+        <div class="bubbles">
+          <div class="bubble bb-teal">
+            <p dir="rtl" lang="ar">بيّن الأساس القانوني لمبدأ خضوع القاضي للنص التشريعي، وحدود سلطته عند غياب النص&hellip;</p>
+            <div class="dem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3h8l4 4v14H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg><span>needs <b>exact articles</b> — Civil Code Art.&nbsp;1–2</span></div>
+          </div>
+          <div class="bubble bb-orange">
+            <p dir="rtl" lang="ar">كيف تغيّرت شروط الخلع في قانون الأسرة بعد تعديل 2005؟</p>
+            <div class="dem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>needs the law <b>as amended</b> — Ord.&nbsp;05-02 → Art.&nbsp;54</span></div>
+          </div>
+          <div class="bubble bb-red">
+            <p dir="rtl" lang="ar">هل يحق لصاحب العمل في الجزائر فصل العامل بحرية تامة دون إبداء أسباب (at-will)؟</p>
+            <div class="dem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l9 16H3L12 3z"/><line x1="12" y1="10" x2="12" y2="14"/><circle cx="12" cy="16.6" r=".5" fill="currentColor" stroke="none"/></svg><span><b>foreign-doctrine trap</b> — Algerian law is silent → <b>abstain</b></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LLM failure chart -->
+      <div class="lgroup">
+        <div class="glabel">Off-the-shelf LLMs fail this bar</div>
+        <div class="hcr">
+          <div class="hcr-head"><b>Hallucinated-Citation Rate</b><span class="u">share of cited articles that don't exist</span></div>
+          <div class="hcr-bars">
+            <div class="hbar"><div class="stack"><div class="bv">0.492</div><div class="bf" style="height:61%"></div></div><b>Llama&nbsp;3.2</b><span>3B</span></div>
+            <div class="hbar"><div class="stack"><div class="bv">0.701</div><div class="bf" style="height:86%"></div></div><b>Qwen&nbsp;2</b><span>7B</span></div>
+            <div class="hbar"><div class="stack"><div class="bv">0.775</div><div class="bf" style="height:96%"></div></div><b>Llama&nbsp;3.1</b><span>8B</span></div>
+            <div class="hbar"><div class="stack"><div class="bv">0.811</div><div class="bf" style="height:100%"></div></div><b>Aya&nbsp;Exp.</b><span>8B</span></div>
+            <div class="hbar"><div class="stack"><div class="bv">0.725</div><div class="bf" style="height:89%"></div></div><b>Gemma&nbsp;2</b><span>9B</span></div>
+            <div class="hbar"><div class="stack"><div class="bv">0.803</div><div class="bf" style="height:99%"></div></div><b>Llama&nbsp;3.3</b><span>70B</span></div>
+            <div class="hbar ours"><div class="stack"><div class="bv good">0.000</div><div class="bf" style="height:2%"></div></div><b>AKN-RLM</b><span>ours</span></div>
+          </div>
+          <div class="hcr-notes">
+            <div class="hn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l9 16H3L12 3z"/><line x1="12" y1="10" x2="12" y2="14"/></svg><span>Up to <b>4 of 5</b> cited articles are <b>fabricated</b> — and the <b>70B</b> model is among the worst. <b>Scale doesn't fix law.</b></span></div>
+            <div class="hn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg><span><b>6 of 7</b> also import <b>foreign law</b> on &gt;12 of 40 trap questions; Gemini 2.5 stays "clean" (0.008) only by <b>declining to cite at all</b>.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- why Algerian law is hard -->
+      <div class="lgroup">
+        <div class="glabel">…and Algerian law is a hard case</div>
+        <div class="hard-grid">
+          <div class="hard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h14v16l-7-3-7 3V4z"/></svg><div><b>Arabic-first</b><span>232 / 244 benchmark Qs in Arabic</span></div></div>
+          <div class="hard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>Layered in time</b><span>1963–2025 · amendments rewrite articles</span></div></div>
+          <div class="hard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="8" y="14" width="8" height="7" rx="1"/><path d="M6.5 10v2M17.5 10v2M12 12v2"/></svg><div><b>Deep structure</b><span>code → chapter → section → article</span></div></div>
+          <div class="hard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v6M21 7v6M7 9v5l5 2 5-2V9"/></svg><div><b>Low-resource</b><span>barely covered by legal-AI datasets</span></div></div>
+        </div>
+      </div>
+
+      <!-- objectives -->
+      <div class="lgroup">
+        <div class="glabel">Objectives</div>
+        <div class="obj-grid">
+          <div class="obj"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M8 12.5l2.6 2.6 5.4-6"/></svg></div><div><b>Structure the law</b><span>171 docs → AKN XML + legal KG</span></div></div>
+          <div class="obj"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M8 12.5l2.6 2.6 5.4-6"/></svg></div><div><b>Benchmark it</b><span>AlgerianLegalBench · 244 expert Qs</span></div></div>
+          <div class="obj"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M8 12.5l2.6 2.6 5.4-6"/></svg></div><div><b>Reason on evidence</b><span>typed retrieval + bounded recursion</span></div></div>
+          <div class="obj"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M8 12.5l2.6 2.6 5.4-6"/></svg></div><div><b>Verify or abstain</b><span>triple faithfulness gate</span></div></div>
+        </div>
+      </div>
+
+      <!-- significance & impact -->
+      <div class="lgroup">
+        <div class="glabel">Significance &amp; impact</div>
+        <div class="sig">
+          <div class="si"><div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16M8 20h8M4 7h16"/><path d="M7 7l-3 6a3.2 3.2 0 006.4 0L7 7zM17 7l-3 6a3.2 3.2 0 006.4 0L17 7z"/></svg></div><div><b>First citation-faithful QA for Algerian law</b><span>every claim resolves to a registered article — or the system abstains</span></div></div>
+          <div class="si"><div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div><div><b>Reusable legal infrastructure</b><span>structured corpus + KG + benchmark for Algerian legal NLP</span></div></div>
+          <div class="si"><div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div><div><b>A recipe for low-resource legal AI</b><span>evidence control beats parameter scale</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== CENTER · HOW =================== -->
+    <section class="col">
+      <div class="arch">
+        <div class="sec how"><div class="badge"><small>HOW</small>02</div><div class="t"><b>The AKN-RLM Architecture</b><span>Documents → structure → verified answer</span></div></div>
+        <p class="arch-sub">Four zones, each repairing a failure mode of the last — a controlled evidence pipeline, not one model.</p>
+
+        <div class="arch-flow">
+
+          <!-- BAND 1 -->
+          <div class="band b-struct">
+            <div class="band-tab"><div class="bn">1</div><b>Structure the law</b><div class="cap">171 files · 1963–2025<br>FRBR article registry</div></div>
+            <div class="flow">
+              <div class="fnode"><div class="fi c-grey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3h8l4 4v14H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M14 3v4h4"/></svg></div><b>Raw texts</b><span>PDF · TXT</span></div>
+              <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
+              <div class="fnode"><div class="fi c-navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5"/><line x1="13" y1="5" x2="11" y2="19"/></svg></div><b>Akoma Ntoso</b><span>XML · articles</span></div>
+              <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
+              <div class="fnode"><div class="fi c-teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="7" r="2.2"/><circle cx="12" cy="18" r="2.2"/><path d="M8 7l8 0M7.4 8L11 16M16.6 9L13 16"/></svg></div><b>Knowledge Graph</b><span>RDF · amend. chains</span></div>
+            </div>
+          </div>
+          <div class="blink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+
+          <!-- BAND 2 -->
+          <div class="band b-retr">
+            <div class="band-tab"><div class="bn">2</div><b>Retrieve evidence</b><div class="cap">RRF( BM25 + Dense )</div></div>
+            <div class="flow">
+              <div class="fnode"><div class="fi c-grey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div><b>Legal question</b><span>AR · FR</span></div>
+              <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
+              <div class="fnode"><div class="fi c-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M6 8v3a2 2 0 002 2h8M18 8v0M16 18h0"/></svg></div><b>Classifier</b><span>routes 8 types</span></div>
+              <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
+              <div class="fnode"><div class="fi c-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="18" cy="18" r="3"/></svg></div><b>Hybrid retrieval</b><span>typed handlers</span></div>
+            </div>
+            <div class="types">
+              <span class="ty">exact-article</span><span class="ty">rule-application</span><span class="ty">multi-hop</span><span class="ty">temporal</span><span class="ty">conceptual</span><span class="ty">layman</span><span class="ty">long-context</span><span class="ty">unanswerable</span>
+            </div>
+          </div>
+          <div class="blink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+
+          <!-- BAND 3 — RECURSION CYCLE (highlight) -->
+          <div class="band b-rec">
+            <div class="band-tab"><div class="bn">3</div><b>Reason recursively</b><div class="cap">bounded · gap-driven<br>depth-limited</div></div>
+            <div class="rec-wrap">
+              <svg class="rec-svg" width="138" height="138" viewBox="0 0 200 200">
+                <defs>
+                  <marker id="ah" markerWidth="7" markerHeight="7" refX="3.2" refY="3" orient="auto">
+                    <path d="M0 0L6 3L0 6z" fill="#ee8136"/>
+                  </marker>
+                </defs>
+                <!-- rotating ring arcs (clockwise) -->
+                <g fill="none" stroke="#ee8136" stroke-width="3" marker-end="url(#ah)">
+                  <path d="M100 26 A74 74 0 0 1 168 86"/>
+                  <path d="M174 100 A74 74 0 0 1 114 174"/>
+                  <path d="M100 174 A74 74 0 0 1 32 114"/>
+                  <path d="M26 100 A74 74 0 0 1 86 26"/>
+                </g>
+                <!-- center hub -->
+                <circle cx="100" cy="100" r="33" fill="#0f2c52"/>
+                <text x="100" y="94" text-anchor="middle" fill="#fff" font-family="Liberation Sans,Arial" font-size="13" font-weight="700">Gap-probe</text>
+                <text x="100" y="108" text-anchor="middle" fill="#fff" font-family="Liberation Sans,Arial" font-size="13" font-weight="700">RLM</text>
+                <text x="100" y="121" text-anchor="middle" fill="#9fb6d6" font-family="Liberation Sans,Arial" font-size="8.5">depth ≤ k</text>
+                <!-- 4 cycle nodes -->
+                <g font-family="Liberation Sans,Arial" font-weight="700" font-size="11" text-anchor="middle">
+                  <circle cx="100" cy="20" r="18" fill="#fff" stroke="#ee8136" stroke-width="2.5"/><text x="100" y="24" fill="#0f2c52">Retrieve</text>
+                  <circle cx="180" cy="100" r="18" fill="#fff" stroke="#ee8136" stroke-width="2.5"/><text x="180" y="104" fill="#0f2c52">Inspect</text>
+                  <circle cx="100" cy="180" r="18" fill="#fff" stroke="#ee8136" stroke-width="2.5"/><text x="100" y="184" fill="#0f2c52">Reason</text>
+                  <circle cx="20" cy="100" r="18" fill="#fff" stroke="#ee8136" stroke-width="2.5"/><text x="20" y="104" fill="#0f2c52">Refine</text>
+                </g>
+              </svg>
+              <div class="rec-side">
+                <div class="rs"><div class="d"></div><div><b>Detects evidence gaps</b><span>insufficient support → expand</span></div></div>
+                <div class="rs"><div class="d"></div><div><b>Toulmin ADU mining</b><span>on every cited article</span></div></div>
+                <div class="rs"><div class="d"></div><div><b>One corrective retry</b><span>then stops — no open recursion</span></div></div>
+                <div class="rec-exit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l4 4 10-10"/></svg><b>Evidence sufficient → verify &amp; answer</b></div>
+              </div>
+            </div>
+          </div>
+          <div class="blink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+
+          <!-- BAND 4 -->
+          <div class="band b-verify">
+            <div class="band-tab"><div class="bn">4</div><b>Verify &amp; answer</b><div class="cap">triple faithfulness gate</div></div>
+            <div class="gates">
+              <div class="gate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg><b>Citation exists</b><span>vs registry</span></div>
+              <div class="gate-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h12M12 6l6 6-6 6"/></svg></div>
+              <div class="gate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.6 2.4 15.4 0 18"/></svg><b>Jurisdiction OK</b><span>canary check</span></div>
+              <div class="gate-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h12M12 6l6 6-6 6"/></svg></div>
+              <div class="gate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H7l-3 3V5z"/><path d="M8 10l2 2 4-4"/></svg><b>Claim supported</b><span>multiling. NLI</span></div>
+            </div>
+            <div class="outcomes">
+              <div class="oc ans"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><div><b>Verifiable answer</b><span>every claim → a registered article</span></div></div>
+              <div class="oc abs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg><div><b>Principled abstention</b><span>when the law is silent</span></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== RIGHT · PROOF =================== -->
+    <section class="col side">
+      <div class="sec proof"><div class="badge"><small>PROOF</small>03</div><div class="t"><b>Results</b><span>Frozen 244-question run</span></div></div>
+
+      <!-- headline -->
+      <div class="headline">
+        <div class="top">
+          <div class="big">0.305</div>
+          <div class="lab"><b>Citation F1</b><span>locked deployable</span></div>
+          <div class="zeros">
+            <div class="z"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg><div><b>0.000</b> <span>HCR · JIR</span></div></div>
+            <div class="z"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg><div><b>0.703</b> <span>Abstention F1</span></div></div>
+          </div>
+        </div>
+        <div class="strip">
+          <div class="st"><b>1.64×</b><span>vs direct LLM</span></div>
+          <div class="st"><b>2.9×</b><span>vs determ. retr.</span></div>
+          <div class="st"><b>1.74×</b><span>vs minimal RAG</span></div>
+        </div>
+      </div>
+
+      <!-- comparison bar chart -->
+      <div class="cc">
+        <div class="ct"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Citation F1 vs baselines<span class="u">higher = better</span></div>
+        <div class="chart">
+          <div class="row"><div class="lb">Direct LLM<b>raw</b></div><div class="tk"><div class="fl" style="width:18%"></div></div><div class="vl">0.056</div></div>
+          <div class="row"><div class="lb">Determ.<b>hybrid+rerank</b></div><div class="tk"><div class="fl" style="width:34%"></div></div><div class="vl">0.105</div></div>
+          <div class="row"><div class="lb">Minimal RAG<b>dense top-5</b></div><div class="tk"><div class="fl" style="width:57%"></div></div><div class="vl">0.175</div></div>
+          <div class="row"><div class="lb">Best LLM<b>Gemini 2.5</b></div><div class="tk"><div class="fl" style="width:61%"></div></div><div class="vl">0.186</div></div>
+          <div class="row"><div class="lb"><b style="color:var(--orange-d)">AKN-RLM</b>locked</div><div class="tk"><div class="fl win" style="width:100%"></div></div><div class="vl win">0.305</div></div>
+        </div>
+      </div>
+
+      <!-- faithfulness / safety chart -->
+      <div class="cc">
+        <div class="ct"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>Jurisdictional infection (JIR)<span class="u">lower = safer</span></div>
+        <div class="chart">
+          <div class="row"><div class="lb"><b style="color:var(--green-d)">AKN-RLM</b>triple gate</div><div class="tk"><div class="fl" style="width:2%;background:var(--green)"></div></div><div class="vl good">0.000</div></div>
+          <div class="row"><div class="lb">Gemini 2.5<b>15 / 40 traps</b></div><div class="tk"><div class="fl bad" style="width:55%"></div></div><div class="vl bad">0.375</div></div>
+          <div class="row"><div class="lb">Qwen 2<b>27 / 40 traps</b></div><div class="tk"><div class="fl bad" style="width:100%"></div></div><div class="vl bad">0.675</div></div>
+        </div>
+        <div class="faith-note">Only AKN-RLM holds <b>0.000</b> hallucinated-citation &amp; foreign-law rates. Reliability tracks <b>legal structure, not scale</b> — the largest baselines hallucinate most.</div>
+      </div>
+
+      <!-- benchmark summary -->
+      <div class="cc">
+        <div class="ct"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg>AlgerianLegalBench<span class="u">244 questions</span></div>
+        <div class="bstats">
+          <div class="s"><b>23</b><span>categories</span></div>
+          <div class="s"><b>8</b><span>query types</span></div>
+          <div class="s"><b>40</b><span>infection traps</span></div>
+          <div class="s"><b>232</b><span>Arabic Q</span></div>
+          <div class="s"><b>12</b><span>French Q</span></div>
+          <div class="s"><b>.829</b><span>κ agreement</span></div>
+        </div>
+        <div class="diff">
+          <div class="dl"><span>Difficulty mix</span><span>Easy · Medium · Hard</span></div>
+          <div class="db"><div class="seg e" style="width:23%">23%</div><div class="seg m" style="width:35%">35%</div><div class="seg h" style="width:42%">42%</div></div>
+        </div>
+      </div>
+
+      <!-- limitations / future -->
+      <div class="lf-wrap">
+        <div class="lf-row" style="display:grid;grid-template-columns:1fr 1fr;gap:2.4mm">
+          <div class="lf l">
+            <div class="h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l9 16H3L12 3z"/><line x1="12" y1="10" x2="12" y2="14"/></svg>Limits</div>
+            <ul><li>Retrieval ceiling: R@10 = 0.258</li><li>French under-served</li><li>Abstention precision 0.654</li><li>Metrics are proxies</li></ul>
+          </div>
+          <div class="lf f">
+            <div class="h"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Next</div>
+            <ul><li>Corpus-tuned embedder</li><li>French ↔ Arabic retrieval</li><li>Graph-retrieval redesign</li><li>Expert legal review</li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================ FOOTER (equation) ============================ -->
+  <footer class="footer">
+    <div class="eq">
+      <div class="term"><div class="ec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3h8l4 4v14H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M14 3v4h4"/><path d="M8 7l-2 3 2 3" stroke-width="1.6"/></svg></div><b>Structured sources</b></div>
+      <div class="op">+</div>
+      <div class="term"><div class="ec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/></svg></div><b>Controlled retrieval</b></div>
+      <div class="op">+</div>
+      <div class="term"><div class="ec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9a8 6 0 0114-3M20 8V4M20 8h-4M20 15a8 6 0 01-14 3M4 16v4M4 16h4"/></svg></div><b>Recursive reasoning</b></div>
+      <div class="op">+</div>
+      <div class="term"><div class="ec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div><b>Citation verification</b></div>
+      <div class="op">=</div>
+      <div class="result"><span class="lab">The takeaway</span><b>Trustworthy Legal AI</b><span>an <em>evidence-controlled system</em>, not an unconstrained generator.</span></div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

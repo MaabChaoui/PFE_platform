@@ -127,7 +127,7 @@ new_dataset/data/txt/
 # against the locked F5 baseline. If size becomes a problem we add globs here.)
 
 thesis_runs/
-thesis/
+# thesis/
 thesis_eval/
 thesis_eval_results/
 thesis_comparisons/
