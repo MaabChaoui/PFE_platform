@@ -33,6 +33,13 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = "http://localhost:3000"
     ALLOW_MODEL_OVERRIDE: bool = True
     MODEL_CATALOG_JSON: Optional[str] = None
+    # SFIX-2 — backend-owned demo default model. When set (and
+    # ALLOW_MODEL_OVERRIDE is on), live runs with no explicit model override
+    # use this id for classifier/generator/supervisor AND the generator
+    # cascade (HyDE, gap probe, router tie-breaker) — so a single-model demo
+    # API key never hits the locked Phase E models. Unset (default) keeps the
+    # locked behaviour exactly. Echoed at GET /pipeline/config.
+    DEMO_DEFAULT_MODEL: Optional[str] = None
 
     # S15 — live hardening.
     # Build the default dispatcher at startup so the first live query isn't cold.

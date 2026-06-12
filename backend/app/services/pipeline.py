@@ -31,6 +31,9 @@ class PipelineLiveError(RuntimeError):
 #: is redirected to the nearest precomputed example instead of loading the KG.
 TF_CD_TYPES: frozenset[str] = frozenset({"temporal_factual", "conceptual_definitional"})
 
+#: Max recorded HyDE generations kept per service (see ``_record_hyde_run``).
+_HYDE_RUNS_MAX = 8
+
 
 class LiveReplayRedirect(Exception):
     """Signal (NOT a ``PipelineLiveError``) that a live TF/CD query was routed to
@@ -84,6 +87,12 @@ class PipelineService:
         self._kg: Any = None
         self._router: Any = None
         self._dispatchers: dict[tuple[tuple[str, Any], ...], Any] = {}
+        # SFIX-2 — last few HyDE generations, keyed by the (stripped) query
+        # the dispatcher's enhancer saw: {query: {"answer", "model"}}. The
+        # memoized dispatchers share this dict across requests; keying by
+        # query keeps entries per-question. Single-user demo: concurrent-run
+        # races are acceptable (worst case a missing/stale hyde step).
+        self._hyde_runs: dict[str, dict[str, Any]] = {}
         # Serialises dispatcher BUILDS only. Env-driven enhancer flags
         # (E1-E7, AKN_E4_HYDE, AKN_NO_CITATION_GATE) are read from os.environ
         # at build time and mutating them is process-global; we set them under
@@ -341,6 +350,7 @@ class PipelineService:
         key = _options_key(
             options,
             allow_model_override=self.settings.ALLOW_MODEL_OVERRIDE,
+            demo_default_model=self.settings.DEMO_DEFAULT_MODEL,
         )
         disp = self._dispatchers.get(key)
         if disp is not None:
@@ -356,6 +366,7 @@ class PipelineService:
                 DEFAULT_LLM_CLASSIFIER_MODEL,
                 make_llm_classifier_fn,
             )
+            from akn_rlm.rlm.enhancers import DEFAULT_HYDE_MODEL
 
             registry = self.registry
             bm25 = self.bm25()
@@ -363,11 +374,15 @@ class PipelineService:
             pool = self.llm_pool()
             router = self.router()
 
-            allow_models = self.settings.ALLOW_MODEL_OVERRIDE
-            classifier_model = (
-                options.classifier_model if allow_models and options.classifier_model
-                else DEFAULT_LLM_CLASSIFIER_MODEL
+            # SFIX-2 — effective models: explicit override, else the
+            # backend-owned demo default (when overrides are allowed), else
+            # the locked Phase E literals.
+            eff_classifier, eff_sub, eff_supervisor = _effective_models(
+                options,
+                allow_model_override=self.settings.ALLOW_MODEL_OVERRIDE,
+                demo_default_model=self.settings.DEMO_DEFAULT_MODEL,
             )
+            classifier_model = eff_classifier or DEFAULT_LLM_CLASSIFIER_MODEL
             classifier_fn = make_llm_classifier_fn(pool, model=classifier_model)
             # kg on → lazy loader (74 MB rdflib parse on first TF/CD dispatch);
             # kg off → None so TF/CD abstain (plan §5).
@@ -392,17 +407,24 @@ class PipelineService:
                     "rule_application": options.mh_ra_coverage_min,
                 },
             )
-            if allow_models and options.sub_model:
-                kwargs["sub_model"] = options.sub_model
+            if eff_sub:
+                kwargs["sub_model"] = eff_sub
                 # Explicitly selecting the locked generator must reproduce the
                 # thesis pipeline exactly; only non-default generators cascade
                 # to auxiliary LLM calls.
-                if options.sub_model != SUB_LLM_MODEL:
-                    kwargs["hyde_model"] = options.sub_model
-                    kwargs["recursion_probe_model"] = options.sub_model
-                    kwargs["router_tiebreak_model"] = options.sub_model
-            if allow_models and options.supervisor_model:
-                kwargs["supervisor_model"] = options.supervisor_model
+                if eff_sub != SUB_LLM_MODEL:
+                    kwargs["hyde_model"] = eff_sub
+                    kwargs["recursion_probe_model"] = eff_sub
+                    kwargs["router_tiebreak_model"] = eff_sub
+            if eff_supervisor:
+                kwargs["supervisor_model"] = eff_supervisor
+
+            # SFIX-2 — record HyDE generations so `answer` can surface them
+            # as a synthetic trajectory step (live-only; replay untouched).
+            hyde_model_used = kwargs.get("hyde_model") or DEFAULT_HYDE_MODEL
+            kwargs["hyde_observer"] = (
+                lambda q, a, _m=hyde_model_used: self._record_hyde_run(q, a, _m)
+            )
 
             with self._scoped_env(_env_for_options(options)):
                 disp = _disp_mod.build_dispatcher(
@@ -412,6 +434,21 @@ class PipelineService:
 
             self._dispatchers[key] = disp
             return disp
+
+    def _record_hyde_run(self, query: str, answer: str, model: str) -> None:
+        """``hyde_observer`` target — keep the last few HyDE generations.
+
+        Bounded FIFO (insertion-ordered dict); re-recording a query moves it
+        to the back. Single-user demo: not lock-protected on purpose.
+        """
+        key = (query or "").strip()
+        if not key:
+            return
+        runs = self._hyde_runs
+        runs.pop(key, None)
+        runs[key] = {"answer": str(answer or ""), "model": model}
+        while len(runs) > _HYDE_RUNS_MAX:
+            runs.pop(next(iter(runs)), None)
 
     def reset_dispatchers(self) -> int:
         """Clear the memo cache (and the akn_rlm default singleton). Returns
@@ -499,7 +536,16 @@ class PipelineService:
                 "live pipeline produced no answer (LLM keys/endpoint may be down)"
             )
 
-        return build_answer_response(query, raw, latency).to_dict()
+        resp = build_answer_response(query, raw, latency).to_dict()
+        # SFIX-2 — surface the HyDE generation recorded by the dispatcher's
+        # observer as a synthetic trajectory step (live runs only; the akn_rlm
+        # trajectory contract and replay are untouched). Popped per query so a
+        # later run regenerates its own entry (the enhancer's cache hit
+        # re-fires the observer).
+        hyde_entry = self._hyde_runs.pop(query, None)
+        if options.hyde and hyde_entry is not None:
+            _insert_hyde_step(resp, hyde_entry)
+        return resp
 
     def _safe_classify(self, query: str) -> str | None:
         """Classify for the LIVE_TF_CD guard, swallowing failures to ``None``.
@@ -613,17 +659,75 @@ class PipelineService:
         return registry if isinstance(registry, dict) else {}
 
 
+def _effective_models(
+    options: "AnswerOptions",
+    *,
+    allow_model_override: bool,
+    demo_default_model: str | None,
+) -> tuple[str | None, str | None, str | None]:
+    """``(classifier, sub, supervisor)`` the build actually uses: the explicit
+    override, else the demo default (SFIX-2), else ``None`` (locked literals).
+    ``DEMO_DEFAULT_MODEL`` is constant per process, so keying the dispatcher
+    cache on these effective values stays coherent — and "no override" and
+    "explicit demo model" share one memoized dispatcher."""
+    if not allow_model_override:
+        return None, None, None
+    demo = demo_default_model or None
+    return (
+        options.classifier_model or demo,
+        options.sub_model or demo,
+        options.supervisor_model or demo,
+    )
+
+
+def _insert_hyde_step(resp: dict[str, Any], entry: dict[str, Any]) -> None:
+    """Insert the synthetic ``hyde`` trajectory step into a response dict,
+    right after the ``route`` step (or at index 0 when there is none).
+    Live-only; shape: ``{step:"hyde", depth:0, detail:{hypothetical_answer,
+    model, channel, degraded}}``."""
+    answer = str(entry.get("answer") or "")
+    degraded = answer == ""
+    step = {
+        "step": "hyde",
+        "depth": 0,
+        "summary": (
+            "HyDE call failed — dense retrieval ran on the bare query"
+            if degraded
+            else "HyDE generated a hypothetical answer to steer dense retrieval"
+        ),
+        "detail": {
+            "hypothetical_answer": answer,
+            "model": entry.get("model"),
+            "channel": "dense_only",
+            "degraded": degraded,
+        },
+    }
+    trajectory = resp.get("trajectory") or []
+    index = 0
+    for i, existing in enumerate(trajectory):
+        if existing.get("step") == "route":
+            index = i + 1
+            break
+    trajectory.insert(index, step)
+    resp["trajectory"] = trajectory
+
+
 def _options_key(
     options: "AnswerOptions",
     *,
     allow_model_override: bool = True,
+    demo_default_model: str | None = None,
 ) -> tuple[tuple[str, Any], ...]:
     """Hashable, normalized build key. Excludes ``query_type`` — manual routing
-    is a run-time ``run(query, query_type=...)`` arg, not a build input."""
+    is a run-time ``run(query, query_type=...)`` arg, not a build input.
+    Model fields are the *effective* models (demo default applied), so
+    "no override" and "explicit demo model" hit the same cached dispatcher."""
     enh = options.enhancers
-    classifier_model = options.classifier_model if allow_model_override else None
-    sub_model = options.sub_model if allow_model_override else None
-    supervisor_model = options.supervisor_model if allow_model_override else None
+    classifier_model, sub_model, supervisor_model = _effective_models(
+        options,
+        allow_model_override=allow_model_override,
+        demo_default_model=demo_default_model,
+    )
     return (
         ("enable_recursion", options.enable_recursion),
         ("recursion_max_depth", options.recursion_max_depth),

@@ -50,6 +50,10 @@ export NEXT_PUBLIC_API_BASE="${NEXT_PUBLIC_API_BASE:-http://localhost:$BACKEND_P
 export KG_BUILD_ON_START="${KG_BUILD_ON_START:-false}"
 export WARM_DISPATCHER_ON_START="${WARM_DISPATCHER_ON_START:-true}"
 export LIVE_TF_CD="${LIVE_TF_CD:-replay}"
+# SFIX-2: the demo AI-Grid key only unlocks gemma — default every live model
+# knob (classifier/generator/supervisor + generator cascade) to it. Explicitly
+# selecting a locked Phase E model in the UI still sends that model.
+export DEMO_DEFAULT_MODEL="${DEMO_DEFAULT_MODEL:-google/gemma-4-31B}"
 
 if [[ -d "$FRONTEND_DIR/.next" ]]; then
   echo "Clearing stale Next.js dev build cache at $FRONTEND_DIR/.next"

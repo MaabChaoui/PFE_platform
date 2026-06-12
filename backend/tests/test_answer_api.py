@@ -206,6 +206,64 @@ def test_generator_override_cascades_to_auxiliary_models(monkeypatch) -> None:
     assert "router_tiebreak_model" not in kwargs
 
 
+def test_demo_default_model_applies_to_all_roles_and_cascade(monkeypatch) -> None:
+    # SFIX-2 (a): demo default + no overrides ⇒ gemma everywhere, incl. the
+    # generator's auxiliary cascade (HyDE / gap probe / router tie-breaker).
+    captured = _patch_build(monkeypatch)
+    classifier_capture = _patch_classifier(monkeypatch)
+    config = Settings(DEMO_DEFAULT_MODEL="google/gemma-4-31B")
+    service = _stubbed_service(config)
+
+    service.get_dispatcher(AnswerOptions())
+
+    kwargs = captured["kwargs"]
+    assert kwargs["sub_model"] == "google/gemma-4-31B"
+    assert kwargs["supervisor_model"] == "google/gemma-4-31B"
+    assert classifier_capture["model"] == "google/gemma-4-31B"
+    assert kwargs["hyde_model"] == "google/gemma-4-31B"
+    assert kwargs["recursion_probe_model"] == "google/gemma-4-31B"
+    assert kwargs["router_tiebreak_model"] == "google/gemma-4-31B"
+
+
+def test_explicit_locked_generator_suppresses_demo_cascade(monkeypatch) -> None:
+    # SFIX-2 (b): explicitly selecting the locked Phase E generator must
+    # reproduce the thesis pipeline exactly even when a demo default is set.
+    captured = _patch_build(monkeypatch)
+    config = Settings(DEMO_DEFAULT_MODEL="google/gemma-4-31B")
+    service = _stubbed_service(config)
+
+    service.get_dispatcher(AnswerOptions(sub_model=SUB_LLM_MODEL))
+
+    kwargs = captured["kwargs"]
+    assert kwargs["sub_model"] == SUB_LLM_MODEL
+    assert "hyde_model" not in kwargs
+    assert "recursion_probe_model" not in kwargs
+    assert "router_tiebreak_model" not in kwargs
+
+
+def test_options_key_normalizes_demo_default(monkeypatch) -> None:
+    # SFIX-2 (c): "no override" and "explicit demo model" share one key (and
+    # one memoized dispatcher); the locked generator stays a distinct combo.
+    demo = "google/gemma-4-31B"
+    no_override = _options_key(AnswerOptions(), demo_default_model=demo)
+    explicit = _options_key(
+        AnswerOptions(
+            classifier_model=demo, sub_model=demo, supervisor_model=demo
+        ),
+        demo_default_model=demo,
+    )
+    assert no_override == explicit
+    locked = _options_key(AnswerOptions(sub_model=SUB_LLM_MODEL), demo_default_model=demo)
+    assert locked != no_override
+
+    captured = _patch_build(monkeypatch)
+    service = _stubbed_service(Settings(DEMO_DEFAULT_MODEL=demo))
+    first = service.get_dispatcher(AnswerOptions())
+    second = service.get_dispatcher(AnswerOptions(sub_model=demo))
+    assert first is second
+    assert captured["calls"] == 1
+
+
 def test_model_override_flag_ignores_model_fields(monkeypatch) -> None:
     captured = _patch_build(monkeypatch)
     classifier_capture = _patch_classifier(monkeypatch)
@@ -263,6 +321,96 @@ def test_memoization_and_reset(monkeypatch) -> None:
     assert cleared == 2
     service.get_dispatcher(AnswerOptions())
     assert captured["calls"] == 3  # cache cleared → rebuilt
+
+
+# ---------------------------------------------------------------------------
+# SFIX-2 — HyDE observer → synthetic `hyde` trajectory step (live runs only)
+# ---------------------------------------------------------------------------
+
+
+def _patch_hyde_dispatcher(
+    monkeypatch, *, fire_observer: bool, hyde_answer: str = "جواب افتراضي"
+) -> None:
+    """A fake dispatcher whose run fires the captured ``hyde_observer`` (or
+    not) and returns a minimal valid raw result with a ``route`` step."""
+
+    def fake_build(**kwargs):
+        observer = kwargs.get("hyde_observer")
+
+        class _Disp:
+            def run(self, query, query_type=None):
+                if fire_observer and observer is not None:
+                    observer(query, hyde_answer)
+                return {
+                    "answer_text": "نص الجواب",
+                    "citations": [],
+                    "trajectory": [
+                        {"step": "route", "depth": 0, "routed_doc_ids": ["doc"]},
+                        {"step": "rank", "depth": 0},
+                    ],
+                    "abstention": False,
+                    "abstention_reason": None,
+                    "_telemetry": {
+                        "dispatched_handler": "rule_application",
+                        "dispatched_query_type": "rule_application",
+                        "sub_call_count": 1,
+                    },
+                }
+
+        return _Disp()
+
+    monkeypatch.setattr(dispatcher_mod, "build_dispatcher", fake_build)
+
+
+def test_hyde_step_injected_after_route(monkeypatch) -> None:
+    from akn_rlm.rlm.enhancers import DEFAULT_HYDE_MODEL
+
+    _patch_hyde_dispatcher(monkeypatch, fire_observer=True)
+    service = _stubbed_service()
+
+    resp = service.answer("ما هي شروط الزواج؟", AnswerOptions())
+
+    steps = [s["step"] for s in resp["trajectory"]]
+    assert steps.index("hyde") == steps.index("route") + 1
+    hyde = next(s for s in resp["trajectory"] if s["step"] == "hyde")
+    assert hyde["depth"] == 0
+    assert hyde["detail"] == {
+        "hypothetical_answer": "جواب افتراضي",
+        "model": DEFAULT_HYDE_MODEL,
+        "channel": "dense_only",
+        "degraded": False,
+    }
+    # The entry is consumed per query (a later run re-records via cache hit).
+    assert service._hyde_runs == {}
+
+
+def test_hyde_step_degraded_when_generation_failed(monkeypatch) -> None:
+    _patch_hyde_dispatcher(monkeypatch, fire_observer=True, hyde_answer="")
+    service = _stubbed_service()
+
+    resp = service.answer("ما هي شروط الزواج؟", AnswerOptions())
+
+    hyde = next(s for s in resp["trajectory"] if s["step"] == "hyde")
+    assert hyde["detail"]["degraded"] is True
+    assert hyde["detail"]["hypothetical_answer"] == ""
+
+
+def test_no_hyde_step_without_observer_entry(monkeypatch) -> None:
+    _patch_hyde_dispatcher(monkeypatch, fire_observer=False)
+    service = _stubbed_service()
+
+    resp = service.answer("ما هي شروط الزواج؟", AnswerOptions())
+
+    assert all(s["step"] != "hyde" for s in resp["trajectory"])
+
+
+def test_no_hyde_step_when_hyde_option_off(monkeypatch) -> None:
+    _patch_hyde_dispatcher(monkeypatch, fire_observer=True)
+    service = _stubbed_service()
+
+    resp = service.answer("ما هي شروط الزواج؟", AnswerOptions(hyde=False))
+
+    assert all(s["step"] != "hyde" for s in resp["trajectory"])
 
 
 def _parse_sse(text: str) -> list[tuple[str, str]]:

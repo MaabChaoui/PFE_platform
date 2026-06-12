@@ -52,7 +52,9 @@ export function retrievalHostIndex(steps: StepEvent[]): number | null {
   return (
     find((s) => s.step === 'rank') ??
     find((s) => s.step === 'candidate_pool') ??
-    find((s) => stepMeta(s.step).phase === 'retrieve')
+    // `hyde` is retrieve-phase but tells its own story (the hypothetical
+    // answer) — never let it host the BM25/Dense/Hybrid channels card.
+    find((s) => s.step !== 'hyde' && stepMeta(s.step).phase === 'retrieve')
   )
 }
 

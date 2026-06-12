@@ -191,6 +191,11 @@ class PipelineConfig(BaseModel):
     defaults: dict[str, Any]
     models: dict[str, list[PipelineModelOption]] = Field(default_factory=dict)
     model_overrides_enabled: bool = True
+    # SFIX-2 — backend-owned demo default (settings.DEMO_DEFAULT_MODEL). When
+    # set, live runs with no explicit override use this model id for all
+    # three model knobs (+ the generator cascade). Catalog `default=True`
+    # still means "locked Phase E" — replay relies on that.
+    demo_default_model: Optional[str] = None
 
 
 class ResetResponse(BaseModel):

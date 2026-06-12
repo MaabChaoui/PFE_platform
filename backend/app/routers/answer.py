@@ -301,6 +301,7 @@ def pipeline_config() -> PipelineConfig:
         defaults=defaults,
         models=pipeline_model_catalog(),
         model_overrides_enabled=settings.ALLOW_MODEL_OVERRIDE,
+        demo_default_model=settings.DEMO_DEFAULT_MODEL,
     )
 
 

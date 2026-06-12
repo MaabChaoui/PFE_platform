@@ -21,6 +21,7 @@ import {
   Repeat,
   Scale,
   ShieldCheck,
+  Sparkles,
   Split,
   Workflow,
 } from 'lucide-react'
@@ -113,6 +114,8 @@ export interface StepMeta {
  *  humanised label + `other` phase so the timeline never breaks on drift. */
 export const STEP_META: Record<string, StepMeta> = {
   route: { label: 'Document routing', phase: 'route', icon: Compass },
+  // Live-only, backend-injected (SFIX-2): the locked replay run never carries it.
+  hyde: { label: 'HyDE expansion', phase: 'retrieve', icon: Sparkles },
   candidate_pool: { label: 'Candidate pool', phase: 'retrieve', icon: Layers },
   rank: { label: 'Rank & fuse', phase: 'retrieve', icon: ArrowDownNarrowWide },
   supervisor: { label: 'Supervisor verify', phase: 'verify', icon: ShieldCheck },

@@ -497,6 +497,10 @@ export interface PipelineConfig {
   models: ModelCatalog
   /** settings.ALLOW_MODEL_OVERRIDE — when false the dropdowns are read-only. */
   model_overrides_enabled: boolean
+  /** settings.DEMO_DEFAULT_MODEL (SFIX-2) — backend-owned demo default. When
+   *  set, live runs with NO explicit override use this id for all three model
+   *  knobs (catalog `default: true` still means "locked Phase E"). */
+  demo_default_model?: string | null
 }
 
 export interface ResetResponse {

@@ -198,22 +198,34 @@ function ModelSelect({
   roleKey,
   options,
   value,
+  demoDefaultId,
   disabled,
   onChange,
 }: {
   roleKey: string
   options: PipelineModelOption[]
   value: string | null
+  /** Backend demo default (SFIX-2), passed only when it should apply (live). */
+  demoDefaultId: string | null
   disabled: boolean
   onChange: (key: string, value: unknown) => void
 }) {
-  const def = options.find((o) => o.default) ?? options[0]
-  const current = value ?? def?.id ?? ''
+  const locked = options.find((o) => o.default) ?? options[0]
+  const demo = demoDefaultId ? options.find((o) => o.id === demoDefaultId) : undefined
+  // `null` (no override) resolves server-side to the demo default when one is
+  // active, else the locked Phase E model — display must mirror that.
+  const effectiveDefault = demo ?? locked
+  const current = value ?? effectiveDefault?.id ?? ''
   return (
     <Select
       value={current}
       disabled={disabled || options.length === 0}
-      onValueChange={(v) => onChange(roleKey, def && v === def.id ? null : v)}
+      // Emit null iff the chosen id == the effective default; anything else is
+      // an explicit override — INCLUDING the locked id while a demo default is
+      // active (null would resolve back to the demo model server-side).
+      onValueChange={(v) =>
+        onChange(roleKey, effectiveDefault && v === effectiveDefault.id ? null : v)
+      }
     >
       <SelectTrigger className="h-9 w-full text-xs">
         <SelectValue placeholder="Locked default" />
@@ -223,9 +235,14 @@ function ModelSelect({
           <SelectItem key={o.id} value={o.id} className="text-xs">
             <span className="flex items-center gap-2">
               <span className="truncate">{o.label}</span>
+              {demo && o.id === demo.id ? (
+                <Badge variant="muted" className="px-1.5 py-0 font-mono text-[9px]">
+                  demo default
+                </Badge>
+              ) : null}
               {o.default ? (
                 <Badge variant="muted" className="px-1.5 py-0 font-mono text-[9px]">
-                  default
+                  {demo ? 'locked' : 'default'}
                 </Badge>
               ) : null}
             </span>
@@ -353,6 +370,11 @@ export function RunConfig({ liveActive, overrides, onChange, className }: RunCon
   const options = data?.options ?? []
   const models = data?.models ?? {}
   const modelOverridesEnabled = data?.model_overrides_enabled ?? false
+  const demoDefaultModel = data?.demo_default_model ?? null
+  // The demo default governs LIVE runs only — replay keeps showing the locked
+  // Phase E defaults (disabled), which is what the locked run actually used.
+  const activeDemoDefault =
+    liveActive && modelOverridesEnabled ? demoDefaultModel : null
 
   const generic = options.filter((o) => !MODEL_OPTION_KEYS.has(o.key))
   const basic = generic.filter((o) => !o.advanced)
@@ -410,6 +432,13 @@ export function RunConfig({ liveActive, overrides, onChange, className }: RunCon
             <SheetDescription>
               Read from <code className="font-mono text-[11px]">/api/pipeline/config</code>.
               Defaults are the locked Phase E configuration.
+              {demoDefaultModel ? (
+                <>
+                  {' '}Model defaults are pinned to{' '}
+                  <code className="font-mono text-[11px]">{demoDefaultModel}</code> for
+                  this demo key; locked Phase E models are labeled.
+                </>
+              ) : null}
             </SheetDescription>
           </SheetHeader>
 
@@ -480,6 +509,7 @@ export function RunConfig({ liveActive, overrides, onChange, className }: RunCon
                           roleKey={key}
                           options={models[role] ?? []}
                           value={modelValue(key)}
+                          demoDefaultId={activeDemoDefault}
                           disabled={modelsDisabled}
                           onChange={onChange}
                         />

@@ -94,6 +94,23 @@ def test_pipeline_config_catalog_matches_locked_defaults() -> None:
     ]
 
 
+def test_pipeline_config_echoes_demo_default_model(monkeypatch) -> None:
+    # SFIX-2: default-off (None) keeps the locked behaviour …
+    with TestClient(app) as client:
+        assert client.get("/api/pipeline/config").json()["demo_default_model"] is None
+
+    # … and a configured demo default is echoed additively (catalog defaults
+    # untouched — `default=True` still marks the locked Phase E models).
+    from app.settings import settings as app_settings
+
+    monkeypatch.setattr(app_settings, "DEMO_DEFAULT_MODEL", "google/gemma-4-31B")
+    with TestClient(app) as client:
+        payload = client.get("/api/pipeline/config").json()
+    assert payload["demo_default_model"] == "google/gemma-4-31B"
+    assert payload["models"]["generator"][0]["id"] == "Qwen3-30B-A3B-Thinking"
+    assert payload["models"]["generator"][0]["default"] is True
+
+
 def test_pipeline_model_catalog_can_be_configured_offline() -> None:
     config = Settings(
         MODEL_CATALOG_JSON=(

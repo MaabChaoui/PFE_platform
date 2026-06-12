@@ -474,6 +474,17 @@ export function StepCard({
           <div className="space-y-3 border-t border-foreground/[0.07] bg-background/30 px-3.5 py-3">
             {hasDetail ? <DetailGrid detail={event.detail} /> : null}
 
+            {/* hyde (live-only, backend-injected) — honest framing. The Arabic
+                hypothetical answer itself renders RTL via the detail grid. */}
+            {event.step === 'hyde' ? (
+              <p className="text-[10px] leading-relaxed text-muted-foreground/70">
+                {event.detail?.degraded === true
+                  ? 'HyDE call failed — dense ran on the bare query. '
+                  : 'Model-generated hypothetical answer used as a dense-retrieval probe — BM25 still sees the bare query. '}
+                Not shown in replay (the locked run didn&apos;t record it).
+              </p>
+            ) : null}
+
             {enrichKind === 'retrieve' ? (
               <RetrievalChannels compare={enr.compare} status={enr.compareStatus} />
             ) : enrichKind === 'verify' ? (
