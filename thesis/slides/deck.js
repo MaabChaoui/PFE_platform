@@ -5,7 +5,7 @@
   const topnav = document.getElementById('topnav');
   const chrome = document.getElementById('chrome');
   const numLabel = chrome.querySelector('.num');
-  const SECTIONS = ['Landscape & Limits', 'Foundations', 'AKN-RLM', 'Results', 'Conclusion'];
+  const SECTIONS = ['Landscape & Limits', 'Foundations', 'AKN-RLM', 'Evaluation & Results', 'Conclusion'];
   let cur = 0;
 
   /* ---------- top section nav ---------- */

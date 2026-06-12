@@ -105,8 +105,8 @@
     <ol class="toc">
       <li><span class="rn">I.</span><span class="t">Landscape &amp; Limits</span><span class="d">why legal AI fails — and why Algeria is the hard case</span></li>
       <li><span class="rn">II.</span><span class="t">Foundations</span><span class="d">four pillars of citation-faithful reasoning</span></li>
-      <li><span class="rn">III.</span><span class="t">AKN-RLM</span><span class="d">the architecture &amp; its evaluation design</span></li>
-      <li><span class="rn">IV.</span><span class="t">Results</span><span class="d">AlgerianLegalBench, baselines, ablations</span></li>
+      <li><span class="rn">III.</span><span class="t">AKN-RLM</span><span class="d">the architecture, layer by layer</span></li>
+      <li><span class="rn">IV.</span><span class="t">Evaluation &amp; Results</span><span class="d">AlgerianLegalBench, baselines, ablations</span></li>
       <li><span class="rn">V.</span><span class="t">Conclusion</span><span class="d">what we claim — and what we do not</span></li>
     </ol>
   </div>
@@ -561,7 +561,7 @@
 <!-- ============ DIVIDER · AKN-RLM ============ -->
 <section class="slide s-divider" data-section="2">
   <div class="dtitle">AKN-RLM</div>
-  <div class="dsub">the architecture &amp; its evaluation design</div>
+  <div class="dsub">the architecture, layer by layer</div>
 </section>
 
 <!-- ============ 17 · CONTEXT ============ -->
@@ -571,76 +571,51 @@
     <h1>AKN-RLM in <em>context</em></h1>
   </div>
   <div class="body" style="justify-content:center; align-items:center">
-    <svg width="1100" height="400" viewBox="0 0 1100 400">
-      <!-- system boundary -->
-      <rect x="20" y="16" width="1060" height="292" rx="8" fill="rgba(251,248,239,.6)" stroke="#1d1810" stroke-width="1.2"/>
-      <text x="42" y="44" class="capw">contribution iii — the AKN-RLM architecture</text>
-
-      <!-- generative workers (left) -->
-      <text x="180" y="72" text-anchor="middle" class="cap">generative workers — AI Grid</text>
-      <g>
-        <rect x="60" y="84"  width="240" height="38" class="node-soft"/><rect x="60" y="84"  width="4" height="38" fill="#6e2433"/>
-        <rect x="60" y="130" width="240" height="38" class="node-soft"/><rect x="60" y="130" width="4" height="38" fill="#6e2433"/>
-        <rect x="60" y="176" width="240" height="38" class="node-soft"/><rect x="60" y="176" width="4" height="38" fill="#6e2433"/>
-        <text x="180" y="108" text-anchor="middle" class="lbl2">gpt-oss-120b — root planning</text>
-        <text x="180" y="154" text-anchor="middle" class="lbl2">Qwen3-30B — verify · decompose</text>
-        <text x="180" y="200" text-anchor="middle" class="lbl2">Gemma-4-31B — classify · ADUs</text>
+    <svg width="1060" height="400" viewBox="0 0 1060 400">
+      <!-- query -->
+      <rect x="10" y="150" width="180" height="46" rx="23" class="node-soft"/>
+      <text x="100" y="178" text-anchor="middle" class="lbl">Arabic / French query</text>
+      <line x1="190" y1="173" x2="252" y2="173" class="edge" stroke-width="1.4" marker-end="url(#ar-ink)"/>
+      <!-- dispatcher, flush against the system -->
+      <rect x="258" y="108" width="128" height="134" class="node-soft"/>
+      <rect x="258" y="108" width="4" height="134" fill="#6e2433"/>
+      <text x="324" y="160" text-anchor="middle" class="lbl">query</text>
+      <text x="324" y="180" text-anchor="middle" class="lbl">dispatcher</text>
+      <text x="324" y="205" text-anchor="middle" class="lbl2">routes by type</text>
+      <!-- system -->
+      <rect x="386" y="90" width="270" height="170" class="node" stroke-width="1.8"/>
+      <text x="521" y="162" text-anchor="middle" class="lbl disp" style="font-size:30px" font-weight="600">AKN-RLM</text>
+      <text x="521" y="188" text-anchor="middle" class="lbl2">bounded recursion · faithfulness gates</text>
+      <!-- corpus database -->
+      <rect x="790" y="50" width="190" height="86" class="node-soft"/>
+      <text x="885" y="84" text-anchor="middle" class="lbl">corpus database</text>
+      <text x="885" y="104" text-anchor="middle" class="lbl2">Akoma Ntoso XML · indices</text>
+      <g transform="translate(1002,58)">
+        <path d="M1,10 V48 a24,8 0 0 0 48,0 V10" fill="#fbf8ef" stroke="#1d1810" stroke-width="1.2"/>
+        <ellipse cx="25" cy="10" rx="24" ry="8" fill="#fbf8ef" stroke="#1d1810" stroke-width="1.2"/>
+        <text x="25" y="40" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="13" fill="#4d4634">&lt;&gt;</text>
       </g>
-
-      <!-- data layer (right) -->
-      <text x="900" y="72" text-anchor="middle" class="capg">contribution i — the data layer</text>
-      <g>
-        <rect x="760" y="84" width="280" height="44" class="node-soft"/><rect x="760" y="84" width="4" height="44" fill="#9c7c35"/>
-        <text x="902" y="102" text-anchor="middle" class="lbl">legal corpus — Akoma Ntoso XML</text>
-        <text x="902" y="120" text-anchor="middle" class="lbl2">171 files · 1963–2025</text>
-        <rect x="760" y="152" width="280" height="40" class="node-soft"/><rect x="760" y="152" width="4" height="40" fill="#9c7c35"/>
-        <text x="902" y="177" text-anchor="middle" class="lbl2">indices — BM25 · FAISS (e5-small)</text>
-        <rect x="760" y="216" width="280" height="40" class="node-soft"/><rect x="760" y="216" width="4" height="40" fill="#9c7c35"/>
-        <text x="902" y="241" text-anchor="middle" class="lbl2">knowledge graph — 765k triples</text>
+      <line x1="656" y1="140" x2="784" y2="98" class="edge" stroke-width="1.4" marker-start="url(#ar-ink)" marker-end="url(#ar-ink)"/>
+      <text x="710" y="94" text-anchor="middle" class="cap">retrieve · verify</text>
+      <!-- knowledge graph -->
+      <rect x="790" y="264" width="190" height="86" class="node-soft"/>
+      <text x="885" y="298" text-anchor="middle" class="lbl">knowledge graph</text>
+      <text x="885" y="318" text-anchor="middle" class="lbl2">RDF · 765k triples</text>
+      <g transform="translate(1002,272)" stroke="#1d1810" stroke-width="1.1">
+        <line x1="12" y1="18" x2="38" y2="8"/><line x1="12" y1="18" x2="42" y2="38"/>
+        <line x1="42" y1="38" x2="18" y2="46"/><line x1="38" y1="8" x2="42" y2="38"/>
+        <circle cx="12" cy="18" r="5.5" fill="#fbf8ef"/><circle cx="38" cy="8" r="4.5" fill="#fbf8ef"/>
+        <circle cx="42" cy="38" r="4.5" fill="#fbf8ef"/><circle cx="18" cy="46" r="3.5" fill="#fbf8ef"/>
       </g>
-      <g class="edge" marker-end="url(#ar-ink)">
-        <line x1="900" y1="128" x2="900" y2="146"/>
-        <path d="M1040,106 H1062 V236 H1046" fill="none"/>
-      </g>
-
-      <!-- supervisor (center) -->
-      <rect x="430" y="130" width="240" height="72" rx="4" fill="#fbf8ef" stroke="#6e2433" stroke-width="1.6"/>
-      <text x="550" y="160" text-anchor="middle" class="lbl" fill="#6e2433" font-weight="600">RLM supervisor</text>
-      <text x="550" y="182" text-anchor="middle" class="lbl2">root controller — bounded recursion</text>
-
-      <!-- llm → supervisor -->
-      <g stroke="#6e2433" stroke-width="1.1" fill="none" marker-end="url(#ar-wine)">
-        <line x1="300" y1="103" x2="424" y2="150"/>
-        <line x1="300" y1="149" x2="424" y2="166"/>
-        <line x1="300" y1="195" x2="424" y2="182"/>
-      </g>
-      <text x="318" y="128" class="capw">reasoning calls</text>
-
-      <!-- stores → supervisor -->
-      <g stroke="#9c7c35" stroke-width="1.1" fill="none" marker-end="url(#ar-gold)">
-        <line x1="760" y1="172" x2="676" y2="160"/>
-        <line x1="760" y1="236" x2="676" y2="190"/>
-      </g>
-      <text x="718" y="256" text-anchor="middle" class="capg">verified evidence</text>
-
-      <!-- user flow across the boundary -->
-      <line x1="505" y1="345" x2="505" y2="208" class="edge" marker-end="url(#ar-ink)"/>
-      <line x1="595" y1="208" x2="595" y2="345" stroke="#3f5d49" stroke-width="1.3" marker-end="url(#ar-green)"/>
-      <text x="493" y="300" text-anchor="end" class="cap">legal question · ar / fr</text>
-      <text x="607" y="300" class="cap" fill="#3f5d49">cited answer · or abstention</text>
-      <circle cx="550" cy="358" r="8" fill="#4d4634"/>
-      <path d="M536,382 a14,12 0 0 1 28,0" fill="#4d4634"/>
-      <text x="550" y="397" text-anchor="middle" class="lbl2">user</text>
-
-      <!-- benchmark outside the boundary -->
-      <rect x="790" y="324" width="270" height="52" rx="3" fill="#fbf8ef" stroke="#9c7c35" stroke-width="1.1" stroke-dasharray="5 4"/>
-      <text x="925" y="345" text-anchor="middle" class="lbl">AlgerianLegalBench</text>
-      <text x="925" y="364" text-anchor="middle" class="lbl2">244 questions — evaluates the boundary</text>
-      <text x="925" y="394" text-anchor="middle" class="capg">contribution ii — the evaluation layer</text>
-      <line x1="840" y1="324" x2="840" y2="311" stroke="#9c7c35" stroke-width="1.1" stroke-dasharray="4 3" marker-end="url(#ar-gold)"/>
+      <line x1="656" y1="220" x2="784" y2="296" class="edge" stroke-width="1.4" marker-start="url(#ar-ink)" marker-end="url(#ar-ink)"/>
+      <text x="706" y="234" text-anchor="middle" class="cap">traverse</text>
+      <!-- answer -->
+      <line x1="521" y1="260" x2="521" y2="326" class="edge" stroke-width="1.5" marker-end="url(#ar-ink)"/>
+      <text x="521" y="364" text-anchor="middle" class="lbl disp" style="font-size:26px">answer <tspan font-style="italic" fill="#876a28">or</tspan> abstention</text>
+      <text x="521" y="388" text-anchor="middle" class="lbl2">always with citations — or the reason for refusal</text>
     </svg>
   </div>
-  <div class="takeaway">Nothing reaches the user that did not originate, resolve, and verify inside this boundary.</div>
+  <div class="takeaway">Nothing reaches the user that did not originate, resolve, and verify inside the system.</div>
 </section>
 
 <!-- ============ 18 · CORPUS + KG ============ -->
@@ -765,49 +740,6 @@
   <div class="takeaway">A benchmark built to falsify our own system — retrieval, citation, faithfulness and abstention are all measurable.</div>
 </section>
 
-<!-- ============ 20 · QUERY DISPATCHER ============ -->
-<section class="slide" data-section="2">
-  <div class="titleblock">
-    <div class="kicker">The query dispatcher</div>
-    <h1>One question, <em>eight behaviours</em></h1>
-  </div>
-  <div class="body" style="flex-direction:column; gap:20px; justify-content:center">
-    <svg width="1100" height="76" viewBox="0 0 1100 76" style="align-self:center">
-      <g class="node-soft">
-        <rect x="0"   y="12" width="150" height="52" rx="2"/>
-        <rect x="190" y="12" width="180" height="52" rx="2"/>
-        <rect x="410" y="12" width="200" height="52" rx="2"/>
-        <rect x="650" y="12" width="190" height="52" rx="2"/>
-        <rect x="880" y="12" width="220" height="52" rx="2" stroke="#6e2433" stroke-width="1.4"/>
-      </g>
-      <g text-anchor="middle">
-        <text x="75"  y="44" class="lbl">question</text>
-        <text x="280" y="32" class="lbl">normalize</text><text x="280" y="52" class="lbl2">NFC · hamza · diacritics</text>
-        <text x="510" y="32" class="lbl">classify</text><text x="510" y="52" class="lbl2">Gemma-4-31B · few-shot</text>
-        <text x="745" y="32" class="lbl">doc-router</text><text x="745" y="52" class="lbl2">top-3 candidate codes</text>
-        <text x="990" y="32" class="lbl" fill="#6e2433" font-weight="600">typed handler</text><text x="990" y="52" class="lbl2">1 of 8</text>
-      </g>
-      <g class="edge" marker-end="url(#ar-ink)">
-        <line x1="150" y1="38" x2="184" y2="38"/>
-        <line x1="370" y1="38" x2="404" y2="38"/>
-        <line x1="610" y1="38" x2="644" y2="38"/>
-        <line x1="840" y1="38" x2="874" y2="38"/>
-      </g>
-    </svg>
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; flex:1">
-      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">exact article</h3><p style="font-size:14.5px">registry lookup · strict citation discipline</p></div>
-      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">rule application</h3><p style="font-size:14.5px">facts decomposed into governing provisions</p></div>
-      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">multi-hop</h3><p style="font-size:14.5px">chained retrieval — recursion until coverage ≥ 4</p></div>
-      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">temporal-factual</h3><p style="font-size:14.5px">KG amendment chain — the version in force at the date</p></div>
-      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">conceptual</h3><p style="font-size:14.5px">concept-at-date SPARQL · legal definitions</p></div>
-      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">long context</h3><p style="font-size:14.5px">wider retrieval &amp; synthesis budget</p></div>
-      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">layman</h3><p style="font-size:14.5px">Darja → MSA rewrite · HyDE bridges to legal language</p></div>
-      <div class="card" style="padding:13px 15px; border-color:rgba(110,36,51,.45)"><h3 style="font-size:18px; margin-bottom:4px; color:var(--wine)">unanswerable</h3><p style="font-size:14.5px">abstain — never import foreign law</p></div>
-    </div>
-  </div>
-  <div class="takeaway">A temporal question and a lay question fail differently — so they are not handled identically.</div>
-</section>
-
 <!-- ============ 21 · ARCHITECTURE ============ -->
 <section class="slide" data-section="2">
   <div class="titleblock">
@@ -865,6 +797,49 @@
     </svg>
   </div>
   <div class="takeaway">Not a chatbot, not plain RAG — every stage is typed, bounded, and verified before delivery.</div>
+</section>
+
+<!-- ============ 20 · QUERY DISPATCHER ============ -->
+<section class="slide" data-section="2">
+  <div class="titleblock">
+    <div class="kicker">The query dispatcher</div>
+    <h1>One question, <em>eight behaviours</em></h1>
+  </div>
+  <div class="body" style="flex-direction:column; gap:20px; justify-content:center">
+    <svg width="1100" height="76" viewBox="0 0 1100 76" style="align-self:center">
+      <g class="node-soft">
+        <rect x="0"   y="12" width="150" height="52" rx="2"/>
+        <rect x="190" y="12" width="180" height="52" rx="2"/>
+        <rect x="410" y="12" width="200" height="52" rx="2"/>
+        <rect x="650" y="12" width="190" height="52" rx="2"/>
+        <rect x="880" y="12" width="220" height="52" rx="2" stroke="#6e2433" stroke-width="1.4"/>
+      </g>
+      <g text-anchor="middle">
+        <text x="75"  y="44" class="lbl">question</text>
+        <text x="280" y="32" class="lbl">normalize</text><text x="280" y="52" class="lbl2">NFC · hamza · diacritics</text>
+        <text x="510" y="32" class="lbl">classify</text><text x="510" y="52" class="lbl2">Gemma-4-31B · few-shot</text>
+        <text x="745" y="32" class="lbl">doc-router</text><text x="745" y="52" class="lbl2">top-3 candidate codes</text>
+        <text x="990" y="32" class="lbl" fill="#6e2433" font-weight="600">typed handler</text><text x="990" y="52" class="lbl2">1 of 8</text>
+      </g>
+      <g class="edge" marker-end="url(#ar-ink)">
+        <line x1="150" y1="38" x2="184" y2="38"/>
+        <line x1="370" y1="38" x2="404" y2="38"/>
+        <line x1="610" y1="38" x2="644" y2="38"/>
+        <line x1="840" y1="38" x2="874" y2="38"/>
+      </g>
+    </svg>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; flex:1">
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">exact article</h3><p style="font-size:14.5px">registry lookup · strict citation discipline</p></div>
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">rule application</h3><p style="font-size:14.5px">facts decomposed into governing provisions</p></div>
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">multi-hop</h3><p style="font-size:14.5px">chained retrieval — recursion until coverage ≥ 4</p></div>
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">temporal-factual</h3><p style="font-size:14.5px">KG amendment chain — the version in force at the date</p></div>
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">conceptual</h3><p style="font-size:14.5px">concept-at-date SPARQL · legal definitions</p></div>
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">long context</h3><p style="font-size:14.5px">wider retrieval &amp; synthesis budget</p></div>
+      <div class="card" style="padding:13px 15px"><h3 style="font-size:18px; margin-bottom:4px">layman</h3><p style="font-size:14.5px">Darja → MSA rewrite · HyDE bridges to legal language</p></div>
+      <div class="card" style="padding:13px 15px; border-color:rgba(110,36,51,.45)"><h3 style="font-size:18px; margin-bottom:4px; color:var(--wine)">unanswerable</h3><p style="font-size:14.5px">abstain — never import foreign law</p></div>
+    </div>
+  </div>
+  <div class="takeaway">A temporal question and a lay question fail differently — so they are not handled identically.</div>
 </section>
 
 <!-- ============ 22 · GENERATIVE / DETERMINISTIC ============ -->
@@ -974,31 +949,33 @@
     <div class="col" style="flex:0 0 620px">
       <svg width="620" height="340" viewBox="0 0 620 340">
         <!-- ground -->
-        <rect x="6" y="56" width="240" height="88" class="node" stroke-width="1.3"/>
-        <text x="126" y="78" text-anchor="middle" class="cap" style="fill:#3f5d49">ground</text>
-        <text x="126" y="100" text-anchor="middle" class="lbl">Art. 124 — Civil Code</text>
-        <text x="126" y="119" text-anchor="middle" class="lbl2">&ldquo;fault causing damage to another</text>
-        <text x="126" y="136" text-anchor="middle" class="lbl2">obliges reparation&rdquo;</text>
+        <rect x="6" y="50" width="240" height="110" class="node" stroke-width="1.3"/>
+        <text x="126" y="72" text-anchor="middle" class="cap" style="fill:#3f5d49">ground</text>
+        <text x="126" y="92" text-anchor="middle" class="lbl">Art. 124 — Civil Code</text>
+        <text x="126" y="115" text-anchor="middle" class="arabic" style="font-size:15.5px" fill="#4d4634">«كل فعل أيا كان يرتكبه الشخص بخطئه،</text>
+        <text x="126" y="135" text-anchor="middle" class="arabic" style="font-size:15.5px" fill="#4d4634">ويسبب ضررا للغير، يلزم من كان سببا</text>
+        <text x="126" y="154" text-anchor="middle" class="arabic" style="font-size:15.5px" fill="#4d4634">في حدوثه بالتعويض»</text>
         <!-- claim -->
-        <rect x="380" y="56" width="234" height="88" class="node" stroke="#6e2433" stroke-width="1.5"/>
-        <text x="497" y="78" text-anchor="middle" class="capw">claim</text>
-        <text x="497" y="104" text-anchor="middle" class="lbl" fill="#6e2433" font-weight="600">the driver must compensate</text>
-        <text x="497" y="124" text-anchor="middle" class="lbl2">the victim</text>
+        <rect x="380" y="50" width="234" height="110" class="node" stroke="#6e2433" stroke-width="1.5"/>
+        <text x="497" y="72" text-anchor="middle" class="capw">claim</text>
+        <text x="497" y="108" text-anchor="middle" class="arabic" style="font-size:18px" fill="#6e2433" font-weight="600">يُلزم السائق بتعويض الضحية</text>
+        <text x="497" y="136" text-anchor="middle" class="lbl2" font-style="italic">the driver must compensate the victim</text>
         <!-- ground -> claim -->
-        <line x1="246" y1="100" x2="374" y2="100" class="edge" stroke-width="1.4" marker-end="url(#ar-ink)"/>
+        <line x1="246" y1="104" x2="374" y2="104" class="edge" stroke-width="1.4" marker-end="url(#ar-ink)"/>
         <!-- warrant -->
-        <rect x="120" y="196" width="250" height="80" class="node-soft" stroke="#9c7c35"/>
-        <text x="245" y="218" text-anchor="middle" class="capg">warrant</text>
-        <text x="245" y="240" text-anchor="middle" class="lbl2">liability requires fault, damage,</text>
-        <text x="245" y="257" text-anchor="middle" class="lbl2">causation — all present here</text>
-        <line x1="248" y1="190" x2="298" y2="110" class="edge" stroke-dasharray="3 4" marker-end="url(#ar-ink)"/>
+        <rect x="120" y="200" width="250" height="84" class="node-soft" stroke="#9c7c35"/>
+        <text x="245" y="222" text-anchor="middle" class="capg">warrant</text>
+        <text x="245" y="248" text-anchor="middle" class="arabic" style="font-size:15.5px" fill="#4d4634">الخطأ والضرر والعلاقة السببية</text>
+        <text x="245" y="270" text-anchor="middle" class="arabic" style="font-size:15.5px" fill="#4d4634">كلها قائمة في هذه الواقعة</text>
+        <line x1="248" y1="194" x2="298" y2="112" class="edge" stroke-dasharray="3 4" marker-end="url(#ar-ink)"/>
         <!-- rebuttal -->
-        <rect x="380" y="196" width="234" height="80" class="node-soft" stroke="#6e2433" stroke-dasharray="5 4"/>
-        <text x="497" y="218" text-anchor="middle" class="capw">rebuttal</text>
-        <text x="497" y="240" text-anchor="middle" class="lbl2">Art. 127 — no liability where</text>
-        <text x="497" y="257" text-anchor="middle" class="lbl2">force majeure caused the damage</text>
-        <line x1="497" y1="190" x2="497" y2="150" class="edge-wine" stroke-dasharray="5 4" marker-end="url(#ar-wine)"/>
-        <text x="510" y="176" class="capw">unless</text>
+        <rect x="380" y="200" width="234" height="92" class="node-soft" stroke="#6e2433" stroke-dasharray="5 4"/>
+        <text x="497" y="222" text-anchor="middle" class="capw">rebuttal</text>
+        <text x="497" y="241" text-anchor="middle" class="lbl2">Art. 127 — Civil Code</text>
+        <text x="497" y="264" text-anchor="middle" class="arabic" style="font-size:15px" fill="#4d4634">«إذا أثبت أن الضرر قد نشأ عن قوة قاهرة</text>
+        <text x="497" y="283" text-anchor="middle" class="arabic" style="font-size:15px" fill="#4d4634">كان غير ملزم بتعويض هذا الضرر»</text>
+        <line x1="497" y1="194" x2="497" y2="166" class="edge-wine" stroke-dasharray="5 4" marker-end="url(#ar-wine)"/>
+        <text x="510" y="184" class="capw">unless</text>
         <text x="310" y="320" text-anchor="middle" font-size="17" font-style="italic" fill="#4d4634"
               font-family="'Cormorant Garamond', serif">every unit carries its source article — nothing floats free</text>
       </svg>
@@ -1075,8 +1052,14 @@
   <div class="takeaway">Abstention is a first-class legal answer — refusing is safer than inventing.</div>
 </section>
 
+<!-- ============ DIVIDER · RESULTS ============ -->
+<section class="slide s-divider" data-section="3">
+  <div class="dtitle">Evaluation &amp; Results</div>
+  <div class="dsub">deployment · metrics · what the locked run shows</div>
+</section>
+
 <!-- ============ 24 · DEPLOYMENT ============ -->
-<section class="slide" data-section="2">
+<section class="slide" data-section="3">
   <div class="titleblock">
     <div class="kicker">Deployment &amp; objectives</div>
     <h1>The locked configuration</h1>
@@ -1137,7 +1120,7 @@
 </section>
 
 <!-- ============ 25 · EVALUATION ============ -->
-<section class="slide" data-section="2">
+<section class="slide" data-section="3">
   <div class="titleblock">
     <div class="kicker">Evaluation setup &amp; metrics</div>
     <h1>Measured on every axis it could fail</h1>
@@ -1160,12 +1143,6 @@
     </table>
   </div>
   <div class="takeaway">Article-level Citation F1 is the headline — document-level metrics hide &ldquo;right law, wrong article.&rdquo;</div>
-</section>
-
-<!-- ============ DIVIDER · RESULTS ============ -->
-<section class="slide s-divider" data-section="3">
-  <div class="dtitle">Results</div>
-  <div class="dsub">AlgerianLegalBench — what the locked run shows</div>
 </section>
 
 <!-- ============ 26 · MAIN RESULTS ============ -->
