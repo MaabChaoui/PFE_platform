@@ -55,11 +55,7 @@
       else document.documentElement.requestFullscreen();
     }
   });
-  document.addEventListener('click', e => {
-    if (e.target.closest('a')) return;
-    next();
-  });
-  document.addEventListener('contextmenu', e => { e.preventDefault(); prev(); });
+  document.addEventListener('contextmenu', e => e.preventDefault());
 
   /* ---------- start ---------- */
   const h = parseInt(location.hash.slice(1), 10);

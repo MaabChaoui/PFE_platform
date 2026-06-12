@@ -195,6 +195,7 @@ h1 em { font-style: italic; font-weight: 500; color: var(--wine); }
 
 .chip {
   display: inline-block;
+  /* justify-items: center; */
   border: 1px solid var(--line);
   background: var(--paper-2);
   border-radius: 999px;

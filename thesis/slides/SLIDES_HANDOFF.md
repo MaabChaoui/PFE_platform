@@ -3,7 +3,7 @@
 ## Project Overview
 Static, **fully offline** HTML slide deck for the AKN-RLM thesis viva (ENSIA, defense **13 June 2026**). Lives entirely in `thesis/slides/` — no build step, no server, no network. Separate from the demo app (backend/frontend); none of those were touched.
 
-- `index.html` — all **34 slides** as `<section class="slide">` blocks, delimited by `<!-- ============ N · NAME ============ -->` comments (numbers are historical labels, NOT current order). Inline SVG for every diagram.
+- `index.html` — all **32 slides** as `<section class="slide">` blocks, delimited by `<!-- ============ N · NAME ============ -->` comments (numbers are historical labels, NOT current order). Inline SVG for every diagram.
 - `styles.css` — design system. Tokens in `:root`: paper `#f5f0e4`, ink `#1d1810`, wine `#6e2433`, gold `#876a28`, green `#38543f`. Components: `.card .ledger .dtable .rule-list .chip .bignum .trip .req-line .takeaway .kicker` etc.
 - `deck.js` — nav engine: 1280×720 stage scaled to window; ←/→/Space/click advance, right-click back, `F` fullscreen, `#N` deep-link. **Fragments are disabled** (everything visible on arrival — supervisor's rule). Builds the top breadcrumb from `SECTIONS` array; highlights via `data-section="0..4"` on each slide; `data-plain` hides chrome (title/thanks).
 - `fonts.css` + `assets/fonts/*.woff2` — Cormorant Garamond (display/titles), EB Garamond (body), IBM Plex Mono (XML pane), **Amiri** (Arabic Naskh, thanks page). All local; keep it offline.
@@ -20,8 +20,8 @@ Static, **fully offline** HTML slide deck for the AKN-RLM thesis viva (ENSIA, de
 - `HANDOFF.md` (repo root) — appended SLIDES v1/v2/v3 entries.
 
 ## Current Status
-Deck is complete and supervisor-revised. Current order (34): Title · Hook (Mata **V.** Avianca lockup, hallucinated cases small + struck) · Outline · **L&L divider** · Legal-meaning · The-problem (chain-links hero: snapped wine link, ghosted tail) · Algerian context · Hallucination · **Foundations divider** · Arabic NLP · Pillars I–IV of IV (RAG, KG, **AM = ADU-triplets redesign w/ scope note**, RLM) · Synthesis (SOTA ledger, Arabic-NLP row first, no AKN row) · Gaps & Contributions · **AKN-RLM divider** · Architecture · AKN ("The corpus standard") · Data layer · Retrieval-limits (**parked here, rework pending**) · Typed handlers · Gate · Evaluation · **Results divider** · Headline · Empty-corner scatter · Tier-2 bars · Phase staircase · Limits · Abstention · **Conclusion divider** · Conclusion · Thanks (Thank you · Merci · شكرًا in Amiri).
-No blockers. All changed slides verified via headless-Chrome screenshots.
+Deck rebuilt to the supervisor's numbered outline (v5, 2026-06-12). Current order (32): Title · Hook · Outline · **L&L divider** · Legal-meaning · The-problem · Algerian context · Hallucination · **Foundations divider** · Arabic NLP · Pillars (RAG, KG, AM, RLM) · **Synthesis+Gaps merged** (gap-card layout, SOTA folded in) · **AKN-RLM divider** · **17 Context** (boundary diagram: RLM supervisor center, AI-Grid LLMs left, corpus→indices/KG right, user below, benchmark outside as evaluator, contributions i/ii/iii) · **18 Corpus+KG** (pipeline + eId XML pane + law-student/senior-expert multi-pass validation card) · **19 Benchmark** (query-type bars, difficulty/language stats, 3-step annotation protocol, κ=0.829) · **20 Query dispatcher** (flow strip + 8 behaviour cards) · 21 Architecture (kept) · **22 Generative inside / deterministic outside** (nested shell diagram) · 23 Gate (kept) · **24 Deployment+objectives** (remote/local nodes + locked-run constraints) · **25 Evaluation setup & metrics** (3 tiers + ablations cards over metric table) · **Results divider** · **Main results (1/2)** (bignums + tier-best bars ×1.64/×1.74/×2.9) · **Interpretation (2/2)** (compact staircase + 5 readings) · **Conclusion divider** · Conclusion ledger · **Limitations & future work** · Thanks.
+Deleted in v5: synthesis ledger, AKN pillar slide, Retrieval-limits, scatter, tier-2 bars, full staircase, limits, abstention. No blockers; slides 15/17–25/27/28/31 screenshot-verified.
 
 ## Key Decisions
 - **Supervisor directives (standing):** no "Chapter N" labels anywhere; no click-to-reveal; breadcrumb header w/ active section bold wine + big bold page number bottom-right; intermediate divider pages; takeaway lines (`.takeaway`) only when they add something — prune redundant ones; projector contrast (darkened inks; smallest SVG text ≥ ~12.5px).
@@ -31,9 +31,9 @@ No blockers. All changed slides verified via headless-Chrome screenshots.
 - Edit workflow: large/structural edits via `python3` heredoc string-replace on `index.html` (Edit tool loses file-state after scripts); sections moved by cutting between marker comments.
 
 ## Next Steps
-1. **Rework "Retrieval at its limits"** (parked in AKN-RLM section) to fit the methodology narrative — user said "we'll work on it later".
-2. Content pass on remaining chapters (methodology + results wording) — user drives slide-by-slide; expect more sketch images.
-3. Possible additions mentioned: KG-explorer screenshot on the KG pillar; live-demo cutaway slide.
+1. Author dry-run against the talk track — expect wording tweaks slide-by-slide (user drives; may bring more sketches).
+2. Possible additions mentioned earlier: KG-explorer screenshot on the KG pillar; live-demo cutaway slide.
+3. Key results numbers if slides change: best direct LLM 0.186 (Gemini 2.5 Flash), best minimal RAG 0.175, best deterministic 0.105 (hybrid+rerank), AKN-RLM 0.305; phases .056/.175/.298/.301/.302/.305; AMF 0.471; benchmark query types 66/59/40/26/17/17/12/7, difficulty 56/85/103, κ=0.829.
 4. After each session: append an entry to root `HANDOFF.md`.
 
 ## Start Here
