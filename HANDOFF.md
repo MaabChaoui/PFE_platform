@@ -365,7 +365,7 @@ Demo for the ENSIA viva on **13/06/2026**. Goal: a polished, interactive web dem
 ## POSTER-V3 Poster restyled to the deck theme (2026-06-11)
 
 - **Status:** done. Static files in `thesis/poster/` only; slides untouched (fonts *copied* from `thesis/slides/assets/fonts/` → `thesis/poster/assets/fonts/`). No backend/frontend/`akn_rlm` change, no deps, no git, no network.
-- **Shipped:** full rewrite of `thesis/poster/styles.css` to the viva deck's paper-and-ink system (parchment `#f5f0e4` page, dark-ink `#15120c/#211c14` masthead + center architecture panel + footer for variety, wine `#6e2433` / gold `#9c7c35` / green `#3f5d49` accents; Cormorant Garamond display, EB Garamond text, IBM Plex Mono tags — all local woff2). Targeted `index.html` edits: title `<em>`, kicker-style subtitle, robot spot image dropped → wine drop cap, deck-style rotated "Abstain" stamp on the trap question, recursion SVG recoloured gold/wine + Garamond, recursion band restructured (big 66mm centered cycle, bullet row, full-width exit bar), inline `var(--orange-d)/(--green-d)` → wine/green. `DESIGN_BRIEF.md` visual-system section updated to v3. Content/facts/layout-grid unchanged (same WHY→HOW→PROOF, all numbers per `EXTRACTED_FACTS.md`).
+- **Shipped:** full rewrite of `thesis/poster/styles.css` to the viva deck's paper-and-ink system (parchment `#f5f0e4` page, dark-ink `#15120c/#211c14` masthead + center architecture panel + footer for variety, wine `#6e2433` / olive green `#38543f` / sage `#a8b89a` accents (v3.1: gold accents replaced by the deck's olive green after author feedback; dark surfaces green-cooled to `#14160f/#1c1f15`); Cormorant Garamond display, EB Garamond text, IBM Plex Mono tags — all local woff2). Targeted `index.html` edits: title `<em>`, kicker-style subtitle, robot spot image dropped → wine drop cap, deck-style rotated "Abstain" stamp on the trap question, recursion SVG recoloured olive/wine + Garamond, recursion band restructured (big 66mm centered cycle, bullet row, full-width exit bar), inline `var(--orange-d)/(--green-d)` → wine/green. `DESIGN_BRIEF.md` visual-system section updated to v3. Content/facts/layout-grid unchanged (same WHY→HOW→PROOF, all numbers per `EXTRACTED_FACTS.md`).
 - **Verify (offline):** `cd thesis/poster && /home/maab/Documents/pfe/methodology/PFE_locally/.venv/bin/python build_poster.py` ⇒ `Pages: 1 OK`, `841.92 x 1191.12 pts (A3) OK`; inspect `poster_preview.png`.
 - **Gotchas:** old palette vars (`--navy/--orange/…`) are gone — any future inline styles must use the new tokens; `assets/generated/*.png` (robot spot, pipeline hero watermark) are no longer referenced but kept on disk; Arabic still renders via system Noto Naskh Arabic (not bundled).
 - **Next:** author proof-read of the printed PDF at 100 % zoom; optionally re-shoot `POSTER_REVIEW.md` against v3.
@@ -410,3 +410,29 @@ Demo for the ENSIA viva on **13/06/2026**. Goal: a polished, interactive web dem
 - **Shipped:** (1) "Results" section renamed **"Evaluation & Results"** (breadcrumb SECTIONS, divider title, outline TOC); Deployment + Evaluation-setup slides moved into it (now divider → deployment → eval setup → main results → interpretation; data-section 2→3); AKN-RLM divider dsub → "the architecture, layer by layer". (2) Architecture overview now precedes the query dispatcher (swap of 20/21). (3) **Context slide redesigned** to the supervisor's black-box sketch: query → query-dispatcher panel flush against the AKN-RLM system box → "answer *or* abstention"; corpus database (cylinder icon, "retrieve · verify" double arrow) and knowledge graph (graph icon, "traverse" double arrow) on the right. (4) ADU slide examples now in **Arabic** (Amiri): Art. 124 actual wording «كل فعل أيا كان يرتكبه الشخص بخطئه…», claim «يُلزم السائق بتعويض الضحية» + English gloss, Art. 127 force-majeure excerpt as rebuttal.
 - **Gotcha:** in SVG, `font-size`/`fill` presentation attributes lose to the CSS classes (`.lbl` etc.) — use inline `style="…"` for overrides.
 - **Verify:** slides 17/24/26/27 screenshot-verified; order via marker grep.
+
+## SLIDES Viva deck v5.3 — research question slide (2026-06-12)
+
+- **Status:** done. `thesis/slides/index.html` (35 slides).
+- **Shipped:** new statement slide closing section I (after Hallucination, before the Foundations divider): the supervisor's research question set large in Cormorant, with the three properties color-keyed to the metrics that later answer them (citation-faithful → wine / jurisdiction-aware → gold / principled abstention → green) and a smallcaps line "each property is measurable — …". Conclusion slide kicker changed to "The research question — answered" to close the bracket.
+- **Note:** author manually edited the conclusion ledger contents (e.g., "45 legal documents") — left untouched.
+- **Verify:** slides 9 and 33 screenshot-verified.
+
+## SLIDES Viva deck v5.4 — slide 5 Arabic example + overflow fix (2026-06-12)
+
+- **Status:** done. `thesis/slides/index.html` (35 slides).
+- **Shipped:** "Legal meaning is not linguistic meaning" diagram: node labels now Arabic/Amiri (المادة 124 — المسؤولية عن الفعل الضار; المادة 78 تعرّف الخطأ; المادة 127 القوة القاهرة; المادة 140 المسؤولية التضامنية; القانون 05-10 لسنة 2005 يعيد صياغة النص; hierarchy strip القانون المدني ← الكتاب الثاني ← الفصل الثالث), role captions stay English. Top hierarchy box widened 150→264 (text overflowed both sides).
+- **Gotcha:** bidi in SVG text — parentheses around years and «» quotes get misplaced in mixed runs; prefer "لسنة 2005" over "(2005)" and drop nested quotes.
+- **Verify:** slide 5 screenshot-verified.
+
+## SLIDES Viva deck v5.5 — section I tightened (2026-06-12)
+
+- **Status:** done. `thesis/slides/index.html` (34 slides).
+- **Shipped:** chain-links "The problem" slide deleted; its two keepers — the h1 "In law, fluency is not the standard. Justification is." and the req-line "the standard of a legal answer…" — merged into the hallucination slide (3 failure cards kept, req-line below them, ladder takeaway kept). Algerian-context slide now follows the merged slide. Section I arc: legal-domain difficulty → legal-answering difficulty + hallucination → Algeria as the stress test → research question.
+- **Verify:** slide 6 screenshot-verified; order via marker grep.
+
+## SLIDES Viva deck v5.6 — Algeria stress-test slide reworked (2026-06-12)
+
+- **Status:** done. `thesis/slides/index.html` (34 slides).
+- **Shipped:** "Algerian law as a stress test": diagram now has inward pressure arrows from the four satellites into a double-ringed center (gold accent strips on the center-facing edge of each box); right column distilled to three numbered points — English well-resourced (LexGLUE · LegalBench · COLIEE) / Arabic is not, Algeria least of all (AraLegal-BERT ≈ 3.6% Algerian coverage, per Thesis.txt §2) / infrastructure must come first (corpus + benchmark before any system).
+- **Verify:** slide 7 screenshot-verified.

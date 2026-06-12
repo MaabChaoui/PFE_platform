@@ -17,7 +17,7 @@ the *problem* in under 30 seconds (left), follow the *pipeline* as the visual ce
   Exports offline through headless Chrome. Fonts = the deck's local woff2 set
   (`assets/fonts/`): Cormorant Garamond (display), EB Garamond (text), IBM Plex Mono
   (tags); Arabic = system Noto Naskh Arabic.
-- `print-color-adjust: exact` so the parchment/ink/wine/gold palette survives PDF export.
+- `print-color-adjust: exact` so the parchment/ink/wine/olive palette survives PDF export.
 
 ## Layout (three bands, top→bottom)
 ```
@@ -39,7 +39,7 @@ the *problem* in under 30 seconds (left), follow the *pipeline* as the visual ce
 └──────────────────────────────────────────────────────────┘
 ```
 Column grid `0.9fr 1.34fr 0.9fr` — the **center is widest** and sits on a **dark ink
-panel** (the deck's stage colour, with a hairline gold inner frame) so the 4-zone
+panel** (the deck's stage colour, with a hairline sage inner frame) so the 4-zone
 architecture is the focal point.
 
 ## Left column (v3 "paper style" — follows the author's sketch, LaTeX aesthetic)
@@ -85,24 +85,24 @@ a flowing journal-article read, *not* stacked outlined cards:
 | Token | Value | Use |
 |---|---|---|
 | Paper | `#f5f0e4` / `#fbf8ef` / `#efe8d6` | page, cards, chart tracks |
-| Dark ink | `#15120c` / `#211c14` | masthead, center panel, footer (the deck's stage) |
+| Dark ink | `#14160f` / `#1c1f15` | masthead, center panel, footer (green-cooled deck stage) |
 | Wine | `#6e2433` / `#8d3a4a` | emphasis, 0.305 headline card, failure bars, abstention |
-| Gold | `#9c7c35` / `#b89a55` | section numerals, kickers, arrows, recursion cycle, hairlines |
-| Green | `#3f5d49` | verification gates / "0.000" / answer node |
-| Ink / Muted | `#211c14` / `#57503e` / `#8b8270` | text |
+| Olive green | `#38543f` / `#5d7a64` | section numerals, arrows, recursion cycle, verification, answer node |
+| Sage | `#a8b89a` | accents/kickers/hairlines on the dark surfaces |
+| Ink / Muted | `#1d1810` / `#4d4634` / `#6e6553` | text |
 | Hairlines | `#d8cdb4` / `#e6ddc8` | rules, card borders |
 
 - **Type system = the deck's**: Cormorant Garamond for display titles, big numerals and
   italic section numbers; EB Garamond for text (small-caps kickers, italic annotations);
   IBM Plex Mono only for masthead metadata tags. Stat heroes are lining-nums Cormorant.
-- **Stage colours encode the pipeline phase**: Structure (gold) → Retrieve (wine) →
-  Reason (gold highlight band) → Verify/Answer (green); abstention is wine.
-- Dark surfaces carry the deck's grain: faint radial gold/wine glows + a `.15mm` gold
+- **Stage colours encode the pipeline phase**: Structure (sage) → Retrieve (wine) →
+  Reason (olive highlight band) → Verify/Answer (olive green); abstention is wine.
+- Dark surfaces carry the deck's grain: faint radial sage/wine glows + a `.15mm` sage
   inner hairline frame; paper cards keep the deck's inset-highlight shadow.
 - Icons: hand-built inline SVG line icons in outlined paper circles (document, XML,
   graph, magnifier, recursion, shield-check). No raster images except the ENSIA logo.
 - Deck motifs reused: the rotated wine **"Abstain" rubber stamp** on the trap question,
-  the drop cap, italic gold ordinals, the small-caps keyword line.
+  the drop cap, italic olive ordinals, the small-caps keyword line.
 
 ## Honesty / accuracy rules baked into the design
 - Every printed number is in `EXTRACTED_FACTS.md` with a line reference.
