@@ -481,3 +481,64 @@ svg .edge-wine { stroke: var(--wine); stroke-width: 1.3; fill: none; }
   border-top: 1.5px solid rgba(110,36,51,.65);
   transform: rotate(-.7deg);
 }
+
+/* ---------- problem slide: the standard line ---------- */
+.req-line { align-self: center; text-align: center; }
+.req-line .cap-lead {
+  display: block;
+  font-size: 12.5px; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.req-line .items {
+  font-family: var(--display);
+  font-size: 28px;
+  color: var(--ink);
+}
+.req-line .items b { font-weight: 700; }
+.req-line .or-abstain { font-style: italic; color: var(--wine); }
+
+/* ---------- ADU triplets ---------- */
+.trip {
+  display: grid;
+  grid-template-columns: 150px 122px 1fr 96px;
+  gap: 0 16px;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line-2);
+}
+.trip:last-of-type { border-bottom: none; }
+.t-src {
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  border-radius: 3px;
+  padding: 8px 6px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.35;
+}
+.t-src b {
+  display: block;
+  font-family: var(--display);
+  font-size: 18px;
+  color: var(--ink);
+}
+.t-rel { text-align: center; }
+.t-rel span {
+  display: block;
+  font-size: 11.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.t-rel::after { content: '⟶'; display: block; font-size: 21px; line-height: .9; margin-top: 1px; }
+.rel-supports   { color: var(--green); }
+.rel-conditions { color: var(--gold); }
+.rel-limits     { color: var(--wine); }
+.t-stmt { font-size: 17.5px; font-style: italic; line-height: 1.35; }
+.t-role {
+  font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--faint); text-align: right;
+}
+.scope-note { border-left: 3px solid var(--wine); }
+.scope-note p { font-size: 15.5px; }

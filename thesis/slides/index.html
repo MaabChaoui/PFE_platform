@@ -38,7 +38,7 @@
     <b>The National School of Artificial Intelligence</b>
   </div>
   <div class="main-title">Advancing Legal Reasoning<br>in Algerian Law</div>
-  <div class="sub-title">Integrating RAG, Knowledge Graphs &amp; Argument Mining<br>for Citation-Faithful Legal Reasoning</div>
+  <div class="sub-title">Integrating RAG, Knowledge Graphs &amp; Argument Mining<br>for Citation-Faithfulness</div>
   <div class="authors">Ibrahim El&nbsp;Khalil <b>Attia</b> &nbsp;·&nbsp; Maab <b>Chaoui</b></div>
   <div class="jury">
     <span class="smallcaps">Supervision</span>
@@ -118,62 +118,6 @@
   <div class="dsub">why legal AI fails — and why Algeria is the hard case</div>
 </section>
 
-<!-- ============ 3 · THE PROBLEM ============ -->
-<section class="slide" data-section="0">
-  <div class="titleblock">
-    <div class="kicker">The problem</div>
-    <h1>In law, fluency is not the standard. <em>Justification</em> is.</h1>
-  </div>
-  <div class="body" style="flex-direction:column; justify-content:center">
-    <svg width="1128" height="230" viewBox="0 0 1128 230" style="align-self:center">
-      <!-- chain boxes -->
-      <g>
-        <rect x="8"   y="70" width="180" height="60" class="node"/>
-        <rect x="243" y="70" width="180" height="60" class="node"/>
-        <rect x="478" y="70" width="180" height="60" class="node"/>
-        <rect x="713" y="70" width="180" height="60" class="node"/>
-        <rect x="948" y="70" width="172" height="60" class="node"/>
-        <text x="98"  y="96" text-anchor="middle" class="lbl disp" font-size="20">Answer</text>
-        <text x="98"  y="117" text-anchor="middle" class="lbl2">what the system says</text>
-        <text x="333" y="96" text-anchor="middle" class="lbl disp" font-size="20">Claim</text>
-        <text x="333" y="117" text-anchor="middle" class="lbl2">a legal proposition</text>
-        <text x="568" y="96" text-anchor="middle" class="lbl disp" font-size="20">Citation</text>
-        <text x="568" y="117" text-anchor="middle" class="lbl2">&ldquo;Art. 124, Civil Code&rdquo;</text>
-        <text x="803" y="96" text-anchor="middle" class="lbl disp" font-size="20">Article</text>
-        <text x="803" y="117" text-anchor="middle" class="lbl2">the real provision</text>
-        <text x="1034" y="96" text-anchor="middle" class="lbl disp" font-size="20">Official source</text>
-        <text x="1034" y="117" text-anchor="middle" class="lbl2">JORADP</text>
-      </g>
-      <g class="edge" marker-end="url(#ar-ink)">
-        <line x1="188" y1="100" x2="237" y2="100"/>
-        <line x1="423" y1="100" x2="472" y2="100"/>
-        <line x1="658" y1="100" x2="707" y2="100"/>
-        <line x1="893" y1="100" x2="942" y2="100"/>
-      </g>
-      <g font-size="13.5" font-style="italic" fill="#6e6553">
-        <text x="212" y="62" text-anchor="middle">asserts</text>
-        <text x="447" y="62" text-anchor="middle">rests on</text>
-        <text x="682" y="62" text-anchor="middle">resolves to</text>
-        <text x="917" y="62" text-anchor="middle">published in</text>
-      </g>
-      <!-- the break -->
-      <g class="frag">
-        <rect x="652" y="84" width="62" height="32" fill="#f5f0e4"/>
-        <path d="M658,114 L672,86 L682,112 L696,84 L708,110" stroke="#6e2433" stroke-width="2.4" fill="none"/>
-        <text x="683" y="158" text-anchor="middle" class="capw" font-size="13">hallucinated — resolves to nothing</text>
-        <text x="683" y="196" text-anchor="middle" fill="#6e2433" font-size="17.5" font-style="italic"
-              font-family="'Cormorant Garamond', serif">every link to the right of the break is severed</text>
-      </g>
-    </svg>
-    <div style="display:flex; gap:14px; justify-content:center; margin-top:26px">
-      <span class="chip">a <b>real</b> legal source</span>
-      <span class="chip">the <b>correct</b> article</span>
-      <span class="chip">a <b>valid</b> citation</span>
-      <span class="chip wine">…or a principled <b>abstention</b></span>
-    </div>
-  </div>
-</section>
-
 <!-- ============ 5 · CH1 MAIN PROBLEM ============ -->
 <section class="slide" data-section="0">
   <div class="titleblock">
@@ -232,6 +176,59 @@
     </div>
   </div>
   <div class="takeaway"><span class="lead-word">Hence</span>Structure is an asset when machine-readable — and a liability when buried inside publication-oriented PDFs.</div>
+</section>
+
+<!-- ============ 3 · THE PROBLEM ============ -->
+<section class="slide" data-section="0">
+  <div class="titleblock">
+    <div class="kicker">The problem</div>
+    <h1>In law, fluency is not the standard. <em>Justification</em> is.</h1>
+  </div>
+  <div class="body" style="flex-direction:column; justify-content:center; gap:50px">
+    <svg width="1128" height="240" viewBox="0 0 1128 240" style="align-self:center">
+      <!-- chain group A: answer, claim, citation -->
+      <g>
+        <rect x="20"  y="74" width="190" height="64" rx="32" fill="#fbf8ef" stroke="#1d1810" stroke-width="2"/>
+        <rect x="186" y="74" width="190" height="64" rx="32" fill="#fbf8ef" stroke="#1d1810" stroke-width="2"/>
+        <rect x="352" y="74" width="190" height="64" rx="32" fill="#fbf8ef" stroke="#1d1810" stroke-width="2"/>
+        <text x="115" y="113" text-anchor="middle" class="lbl disp" font-size="21">Answer</text>
+        <text x="281" y="113" text-anchor="middle" class="lbl disp" font-size="21">Claim</text>
+        <text x="447" y="113" text-anchor="middle" class="lbl disp" font-size="21">Citation</text>
+      </g>
+      <!-- the snapped link -->
+      <g stroke="#6e2433" stroke-width="2.4" fill="none">
+        <path d="M556,80 a30,26 0 0 0 0,52"/>
+        <path d="M634,132 a30,26 0 0 0 0,-52"/>
+        <line x1="578" y1="88" x2="588" y2="78"/>
+        <line x1="584" y1="106" x2="598" y2="104"/>
+        <line x1="600" y1="128" x2="608" y2="138"/>
+      </g>
+      <!-- chain group B: article, official source (out of reach) -->
+      <g opacity="0.55">
+        <rect x="648" y="74" width="190" height="64" rx="32" fill="#fbf8ef" stroke="#1d1810" stroke-width="2"/>
+        <rect x="814" y="74" width="190" height="64" rx="32" fill="#fbf8ef" stroke="#1d1810" stroke-width="2"/>
+        <text x="743" y="113" text-anchor="middle" class="lbl disp" font-size="21">Article</text>
+        <text x="909" y="113" text-anchor="middle" class="lbl disp" font-size="21">Official source</text>
+      </g>
+      <!-- sub labels -->
+      <g class="lbl2" text-anchor="middle">
+        <text x="115" y="170">what the system says</text>
+        <text x="281" y="170">a legal proposition</text>
+        <text x="447" y="170">&ldquo;Art. 124, Civil Code&rdquo;</text>
+        <text x="743" y="170" fill="#6e6553">the real provision</text>
+        <text x="909" y="170" fill="#6e6553">JORADP</text>
+      </g>
+      <!-- captions at the break -->
+      <text x="595" y="48" text-anchor="middle" class="capw" font-size="13.5">the hallucinated citation</text>
+      <text x="595" y="216" text-anchor="middle" fill="#6e2433" font-size="20" font-style="italic"
+            font-family="'Cormorant Garamond', serif">resolves to nothing — the chain of justification is severed</text>
+    </svg>
+    <div class="req-line">
+      <span class="cap-lead">the standard of a legal answer</span>
+      <span class="items">a <b>real</b> legal source &nbsp;·&nbsp; the <b>correct</b> article &nbsp;·&nbsp; a <b>valid</b> citation
+      &nbsp;—&nbsp; <span class="or-abstain">or a principled abstention</span></span>
+    </div>
+  </div>
 </section>
 
 <!-- ============ 6 · ALGERIAN CONTEXT ============ -->
@@ -309,8 +306,14 @@
   <div class="takeaway frag">Fluency, truth, attribution, justification — each is a strictly stronger requirement. Law demands the last one.</div>
 </section>
 
+<!-- ============ DIVIDER · FOUNDATIONS ============ -->
+<section class="slide s-divider" data-section="1">
+  <div class="dtitle">Foundations</div>
+  <div class="dsub">five pillars of citation-faithful legal reasoning</div>
+</section>
+
 <!-- ============ 9 · ARABIC NLP ============ -->
-<section class="slide" data-section="0">
+<section class="slide" data-section="1">
   <div class="titleblock">
     <div class="kicker">The non-English gap</div>
     <h1>Arabic legal NLP — a <em>cross-cutting</em> constraint</h1>
@@ -336,51 +339,10 @@
   <div class="takeaway">No single model covers Arabic, French, legal register and generation — the language problem must be solved by the <i>architecture</i>.</div>
 </section>
 
-<!-- ============ DIVIDER · FOUNDATIONS ============ -->
-<section class="slide s-divider" data-section="1">
-  <div class="dtitle">Foundations</div>
-  <div class="dsub">five pillars of citation-faithful legal reasoning</div>
-</section>
-
-<!-- ============ 11 · PILLAR I — AKN ============ -->
-<section class="slide" data-section="1">
-  <div class="titleblock">
-    <div class="kicker">Pillar <b>I</b> of V · the corpus</div>
-    <h1>Akoma Ntoso — giving law a <em>machine-readable body</em></h1>
-  </div>
-  <div class="body cols" style="align-items:center; gap:44px">
-    <div class="col grow">
-      <ul class="rule-list">
-        <li><span class="n">·</span><span>OASIS XML standard for legal documents: <b>hierarchy, metadata, cross-references, temporal versions</b>.</span></li>
-        <li><span class="n">·</span><span>Each article becomes a <b>stable, citable unit</b> (<span style="font-family:var(--mono); font-size:16px">eId</span>) — the anchor for retrieval, the KG, and citation checking.</span></li>
-        <li><span class="n">·</span><span>PDFs are readable by humans — they <b>hide</b> article boundaries, hierarchy, references, amendment history.</span></li>
-        <li><span class="n">·</span><span>In Algerian law, structuring is a <b>precondition</b>, not preprocessing — nothing downstream exists without it.</span></li>
-      </ul>
-    </div>
-    <div class="col" style="flex:0 0 520px">
-      <div class="codepane"><span class="cm">&lt;!-- Civil Code, Ordinance 75-58 --&gt;</span>
-<span class="tg">&lt;akomaNtoso&gt;</span><span class="tg">&lt;act</span> <span class="at">name</span>=<span class="vl">"code_civil"</span><span class="tg">&gt;</span>
-  <span class="tg">&lt;meta&gt;</span>
-    <span class="tg">&lt;FRBRWork</span> <span class="at">value</span>=<span class="vl">"/akn/dz/act/1975-09-26/75-58"</span><span class="tg">/&gt;</span>
-    <span class="cm">&lt;!-- lifecycle: amended by Law 05-10 (2005) --&gt;</span>
-  <span class="tg">&lt;/meta&gt;</span>
-  <span class="tg">&lt;body&gt;&lt;book</span> <span class="at">eId</span>=<span class="vl">"book_2"</span><span class="tg">&gt;&lt;chapter</span> <span class="at">eId</span>=<span class="vl">"chp_3"</span><span class="tg">&gt;</span>
-    <span class="tg">&lt;article</span> <span class="at">eId</span>=<span class="vl">"art_124"</span><span class="tg">&gt;</span>
-      <span class="tg">&lt;num&gt;</span><span class="ar">المادة 124</span><span class="tg">&lt;/num&gt;</span>
-      <span class="tg">&lt;content&gt;</span><span class="ar">كل فعل أيّا كان يرتكبه الشخص بخطئه…</span><span class="tg">&lt;/content&gt;</span>
-      <span class="tg">&lt;ref</span> <span class="at">href</span>=<span class="vl">"#art_127"</span><span class="tg">/&gt;</span>
-    <span class="tg">&lt;/article&gt;</span>
-  <span class="tg">&lt;/chapter&gt;&lt;/book&gt;&lt;/body&gt;</span>
-<span class="tg">&lt;/act&gt;&lt;/akomaNtoso&gt;</span></div>
-    </div>
-  </div>
-  <div class="takeaway"><span class="lead-word">Pillar I</span>Stable article identity — before anything can be retrieved, linked, or verified, it must be <i>addressable</i>.</div>
-</section>
-
 <!-- ============ 12 · PILLAR II — IR ============ -->
 <section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Pillar <b>II</b> of V · evidence access</div>
+    <div class="kicker">Pillar <b>I</b> of IV · evidence access</div>
     <h1>Retrieval &amp; RAG — grounding, not yet <em>reasoning</em></h1>
   </div>
   <div class="body grid-4" style="align-content:center">
@@ -395,7 +357,7 @@
 <!-- ============ 13 · PILLAR III — KG ============ -->
 <section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Pillar <b>III</b> of V · relations</div>
+    <div class="kicker">Pillar <b>II</b> of IV · relations</div>
     <h1>Legal Knowledge Graphs — because law is <em>relational</em></h1>
   </div>
   <div class="body cols" style="align-items:center; gap:40px">
@@ -443,57 +405,56 @@
       </svg>
     </div>
   </div>
-  <div class="takeaway"><span class="lead-word">Pillar III</span>The graph supplies what similarity cannot — the relational and temporal context of every article.</div>
+  <div class="takeaway"><span class="lead-word">Pillar II</span>The graph supplies what similarity cannot — the relational and temporal context of every article.</div>
 </section>
 
 <!-- ============ 14 · PILLAR IV — ARGUMENT MINING ============ -->
 <section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Pillar <b>IV</b> of V · inspectability</div>
-    <h1>Argument structure — evidence you can <em>inspect</em></h1>
+    <div class="kicker">Pillar <b>III</b> of IV · inspectability</div>
+    <h1>Argument-aware evidence — not flat text, <em>structured units</em></h1>
   </div>
-  <div class="body" style="flex-direction:column; justify-content:center; gap:8px">
-    <svg width="1100" height="350" viewBox="0 0 1100 350" style="align-self:center">
-      <!-- ground -> claim -->
-      <line x1="312" y1="106" x2="772" y2="106" class="edge" stroke-width="1.6" marker-end="url(#ar-ink)"/>
-      <rect x="30" y="58" width="282" height="96" class="node"/>
-      <text x="171" y="86" text-anchor="middle" class="capg">ground</text>
-      <text x="171" y="112" text-anchor="middle" class="lbl">Art. 124 — fault causing damage</text>
-      <text x="171" y="133" text-anchor="middle" class="lbl">obliges reparation</text>
-      <rect x="778" y="58" width="282" height="96" class="node" stroke-width="1.6"/>
-      <text x="919" y="86" text-anchor="middle" class="capg">claim</text>
-      <text x="919" y="112" text-anchor="middle" class="lbl">the driver must compensate</text>
-      <text x="919" y="133" text-anchor="middle" class="lbl">the victim</text>
-      <!-- warrant -->
-      <line x1="542" y1="106" x2="542" y2="186" class="edge" stroke-dasharray="4 4"/>
-      <rect x="400" y="186" width="284" height="62" class="node-soft"/>
-      <text x="542" y="210" text-anchor="middle" class="capg">warrant</text>
-      <text x="542" y="232" text-anchor="middle" class="lbl2">since fault + damage + causation → liability</text>
-      <!-- backing -->
-      <line x1="542" y1="248" x2="542" y2="288" class="edge" stroke-dasharray="4 4"/>
-      <rect x="412" y="288" width="260" height="48" class="node-soft"/>
-      <text x="542" y="308" text-anchor="middle" class="capg">backing</text>
-      <text x="542" y="327" text-anchor="middle" class="lbl2">Civil Code, Book II — in force</text>
-      <!-- rebuttal -->
-      <line x1="919" y1="154" x2="919" y2="196" class="edge-wine" stroke-dasharray="5 4"/>
-      <rect x="788" y="196" width="262" height="62" class="node-soft" stroke="#6e2433"/>
-      <text x="919" y="220" text-anchor="middle" class="capw">rebuttal</text>
-      <text x="919" y="242" text-anchor="middle" class="lbl2">unless force majeure — Art. 127</text>
-      <!-- label on arrow -->
-      <text x="542" y="92" text-anchor="middle" class="cap">so, presumably</text>
-    </svg>
-    <p class="lede frag" style="align-self:center; text-align:center; max-width:940px">
-      Each cited provision becomes an <b>ADU triplet</b> — claims, grounds, warrants, rebuttals, backing —
-      so support can be <b>checked unit by unit</b> before the final answer is written.
-    </p>
+  <div class="body cols" style="align-items:center; gap:46px">
+    <div class="col" style="flex:0 0 430px; display:flex; flex-direction:column; gap:18px">
+      <ul class="rule-list">
+        <li><span class="n">·</span><span>Retrieved provisions become <b>ADU-inspired triplets</b> — ⟨&thinsp;source · relation · statement&thinsp;⟩ — instead of undifferentiated context.</span></li>
+        <li><span class="n">·</span><span>Legal roles survive generation: <b>rule, condition, exception</b> — a fluent answer can no longer collapse them.</span></li>
+        <li><span class="n">·</span><span>The same units later feed <b>Gate III</b>: claim-level support is checked against these grounds by NLI.</span></li>
+      </ul>
+      <div class="card scope-note">
+        <span class="tag" style="color:var(--wine)">Scope — deliberately bounded</span>
+        <p><b>Not a full argument-mining system.</b> No annotated Algerian argument corpus exists; this is a lightweight structuring layer, validated indirectly through the registry and the faithfulness gates.</p>
+      </div>
+    </div>
+    <div class="col grow">
+      <div class="smallcaps" style="margin-bottom:14px">evidence state for — <i style="text-transform:none; letter-spacing:0; font-size:16px">&ldquo;must the driver compensate the victim?&rdquo;</i></div>
+      <div class="trip">
+        <div class="t-src"><b>Art. 124</b>Civil Code</div>
+        <div class="t-rel rel-supports"><span>supports</span></div>
+        <div class="t-stmt">&ldquo;fault that causes damage to another obliges reparation&rdquo;</div>
+        <div class="t-role">main rule</div>
+      </div>
+      <div class="trip">
+        <div class="t-src"><b>Art. 124</b>Civil Code</div>
+        <div class="t-rel rel-conditions"><span>conditions</span></div>
+        <div class="t-stmt">&ldquo;liability attaches only where fault, damage and causation are all present&rdquo;</div>
+        <div class="t-role">condition</div>
+      </div>
+      <div class="trip">
+        <div class="t-src"><b>Art. 127</b>Civil Code</div>
+        <div class="t-rel rel-limits"><span>limits</span></div>
+        <div class="t-stmt">&ldquo;no liability where the damage arises from force majeure&rdquo;</div>
+        <div class="t-role">exception</div>
+      </div>
+      <div class="footnote" style="margin-top:16px">after Toulmin 1958 · Walton 2008 · ASPIC&#8314; 2014 — borrowing the shared insight, not the full machinery.</div>
+    </div>
   </div>
-  <div class="takeaway"><span class="lead-word">Pillar IV</span>Toulmin, Walton, ASPIC&#8314; — legal reasoning should expose its structure, including where it can be defeated.</div>
 </section>
 
 <!-- ============ 15 · PILLAR V — RLM ============ -->
 <section class="slide" data-section="1">
   <div class="titleblock">
-    <div class="kicker">Pillar <b>V</b> of V · control</div>
+    <div class="kicker">Pillar <b>IV</b> of IV · control</div>
     <h1>Recursive Language Models — the <em>orchestration</em> layer</h1>
   </div>
   <div class="body cols" style="align-items:center; gap:48px">
@@ -536,7 +497,7 @@
       </ul>
     </div>
   </div>
-  <div class="takeaway"><span class="lead-word">Pillar V</span>Recursion buys the right to look again — under a budget, over infrastructure that cannot hallucinate.</div>
+  <div class="takeaway"><span class="lead-word">Pillar IV</span>Recursion buys the right to look again — under a budget, over infrastructure that cannot hallucinate.</div>
 </section>
 
 <!-- ============ 16 · PILLARS CONCLUSION ============ -->
@@ -548,13 +509,12 @@
   <div class="body" style="flex-direction:column; justify-content:center">
     <table class="ledger" style="max-width:1080px; align-self:center">
       <tr><th style="width:26%">Field</th><th style="width:34%">What it establishes</th><th>What it leaves open</th></tr>
-      <tr><td class="l-layer">Akoma Ntoso</td><td class="l-gives">a machine-readable model of legal documents</td><td class="l-without">no structured Algerian corpus exists</td></tr>
+      <tr><td class="l-layer">Arabic legal NLP</td><td class="l-gives">Arabic &amp; French encoders, generative models</td><td class="l-without">no Algerian legal coverage</td></tr>
       <tr><td class="l-layer">Retrieval &amp; RAG</td><td class="l-gives">grounded, evidence-based generation</td><td class="l-without">article correctness, temporal validity, claim-level support</td></tr>
       <tr><td class="l-layer">Knowledge graphs</td><td class="l-gives">relational structure, graph-guided expansion</td><td class="l-without">legal temporality; no Algerian legal KG</td></tr>
       <tr><td class="l-layer">Argument mining</td><td class="l-gives">inspectable reasoning structure</td><td class="l-without">not integrated into grounded verification</td></tr>
       <tr><td class="l-layer">Recursive LMs</td><td class="l-gives">bounded orchestration &amp; revision</td><td class="l-without">untested as controllers for legal reasoning</td></tr>
-      <tr><td class="l-layer">Arabic legal NLP</td><td class="l-gives">Arabic &amp; French encoders, generative models</td><td class="l-without">no Algerian legal coverage</td></tr>
-    </table>
+          </table>
   </div>
   <div class="takeaway">The pieces are mature in isolation — what is open is their unification for citation-faithful, low-resource legal QA.</div>
 </section>
@@ -638,6 +598,41 @@
     </svg>
   </div>
   <div class="takeaway">Deterministic outside, generative inside — the LLM proposes; the infrastructure disposes.</div>
+</section>
+
+<!-- ============ 11 · PILLAR I — AKN ============ -->
+<section class="slide" data-section="2">
+  <div class="titleblock">
+    <div class="kicker">The corpus standard</div>
+    <h1>Akoma Ntoso — giving law a <em>machine-readable body</em></h1>
+  </div>
+  <div class="body cols" style="align-items:center; gap:44px">
+    <div class="col grow">
+      <ul class="rule-list">
+        <li><span class="n">·</span><span>OASIS XML standard for legal documents: <b>hierarchy, metadata, cross-references, temporal versions</b>.</span></li>
+        <li><span class="n">·</span><span>Each article becomes a <b>stable, citable unit</b> (<span style="font-family:var(--mono); font-size:16px">eId</span>) — the anchor for retrieval, the KG, and citation checking.</span></li>
+        <li><span class="n">·</span><span>PDFs are readable by humans — they <b>hide</b> article boundaries, hierarchy, references, amendment history.</span></li>
+        <li><span class="n">·</span><span>In Algerian law, structuring is a <b>precondition</b>, not preprocessing — nothing downstream exists without it.</span></li>
+      </ul>
+    </div>
+    <div class="col" style="flex:0 0 520px">
+      <div class="codepane"><span class="cm">&lt;!-- Civil Code, Ordinance 75-58 --&gt;</span>
+<span class="tg">&lt;akomaNtoso&gt;</span><span class="tg">&lt;act</span> <span class="at">name</span>=<span class="vl">"code_civil"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;meta&gt;</span>
+    <span class="tg">&lt;FRBRWork</span> <span class="at">value</span>=<span class="vl">"/akn/dz/act/1975-09-26/75-58"</span><span class="tg">/&gt;</span>
+    <span class="cm">&lt;!-- lifecycle: amended by Law 05-10 (2005) --&gt;</span>
+  <span class="tg">&lt;/meta&gt;</span>
+  <span class="tg">&lt;body&gt;&lt;book</span> <span class="at">eId</span>=<span class="vl">"book_2"</span><span class="tg">&gt;&lt;chapter</span> <span class="at">eId</span>=<span class="vl">"chp_3"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;article</span> <span class="at">eId</span>=<span class="vl">"art_124"</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;num&gt;</span><span class="ar">المادة 124</span><span class="tg">&lt;/num&gt;</span>
+      <span class="tg">&lt;content&gt;</span><span class="ar">كل فعل أيّا كان يرتكبه الشخص بخطئه…</span><span class="tg">&lt;/content&gt;</span>
+      <span class="tg">&lt;ref</span> <span class="at">href</span>=<span class="vl">"#art_127"</span><span class="tg">/&gt;</span>
+    <span class="tg">&lt;/article&gt;</span>
+  <span class="tg">&lt;/chapter&gt;&lt;/book&gt;&lt;/body&gt;</span>
+<span class="tg">&lt;/act&gt;&lt;/akomaNtoso&gt;</span></div>
+    </div>
+  </div>
+  <div class="takeaway">Stable article identity — before anything can be retrieved, linked, or verified, it must be <i>addressable</i>.</div>
 </section>
 
 <!-- ============ 18 · DATA LAYER ============ -->
