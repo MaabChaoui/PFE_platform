@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON_BIN="$ROOT_DIR/.venv/bin/python"
+FRONTEND_DIR="$ROOT_DIR/frontend"
 BACKEND_PORT="${BACKEND_PORT:-8000}"
 FRONTEND_PORT="${FRONTEND_PORT:-3000}"
 
@@ -11,7 +12,7 @@ if [[ ! -x "$PYTHON_BIN" ]]; then
   exit 1
 fi
 
-if [[ ! -d "$ROOT_DIR/frontend/node_modules" ]]; then
+if [[ ! -d "$FRONTEND_DIR/node_modules" ]]; then
   echo "Missing frontend/node_modules. Run: cd frontend && npm install" >&2
   exit 1
 fi
@@ -49,6 +50,11 @@ export NEXT_PUBLIC_API_BASE="${NEXT_PUBLIC_API_BASE:-http://localhost:$BACKEND_P
 export KG_BUILD_ON_START="${KG_BUILD_ON_START:-false}"
 export WARM_DISPATCHER_ON_START="${WARM_DISPATCHER_ON_START:-true}"
 export LIVE_TF_CD="${LIVE_TF_CD:-replay}"
+
+if [[ -d "$FRONTEND_DIR/.next" ]]; then
+  echo "Clearing stale Next.js dev build cache at $FRONTEND_DIR/.next"
+  rm -rf -- "$FRONTEND_DIR/.next"
+fi
 
 pids=()
 
@@ -103,7 +109,7 @@ echo "Starting frontend on http://localhost:$FRONTEND_PORT"
 setsid bash -c '
   cd "$1"
   exec npm run dev -- -p "$2"
-' bash "$ROOT_DIR/frontend" "$FRONTEND_PORT" &
+' bash "$FRONTEND_DIR" "$FRONTEND_PORT" &
 pids+=("$!")
 
 cat <<EOF
