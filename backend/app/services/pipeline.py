@@ -9,6 +9,8 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Iterable
 
+from akn_rlm.config import SUB_LLM_MODEL
+
 from ..settings import Settings, settings
 
 if TYPE_CHECKING:  # avoid importing pydantic models at module load
@@ -392,6 +394,13 @@ class PipelineService:
             )
             if allow_models and options.sub_model:
                 kwargs["sub_model"] = options.sub_model
+                # Explicitly selecting the locked generator must reproduce the
+                # thesis pipeline exactly; only non-default generators cascade
+                # to auxiliary LLM calls.
+                if options.sub_model != SUB_LLM_MODEL:
+                    kwargs["hyde_model"] = options.sub_model
+                    kwargs["recursion_probe_model"] = options.sub_model
+                    kwargs["router_tiebreak_model"] = options.sub_model
             if allow_models and options.supervisor_model:
                 kwargs["supervisor_model"] = options.supervisor_model
 

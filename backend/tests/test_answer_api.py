@@ -8,6 +8,7 @@ import akn_rlm.rlm.dispatcher as dispatcher_mod
 import pytest
 from fastapi.testclient import TestClient
 
+from akn_rlm.config import SUB_LLM_MODEL
 from app.main import app
 from app.models.answer import AnswerOptions, EnhancerFlags
 from app.services.pipeline import PipelineLiveError, PipelineService, _options_key
@@ -176,6 +177,33 @@ def test_custom_options_map_to_kwargs_and_env(monkeypatch) -> None:
     assert env["AKN_E6_CONCEPT_KG"] == "1"
     assert env["AKN_E1_CONCEPT_AMENDMENT"] == "0"
     assert {key: os.environ.get(key) for key in MODEL_CHOICE_ENV_KEYS} == pre_model_env
+
+
+def test_generator_override_cascades_to_auxiliary_models(monkeypatch) -> None:
+    captured = _patch_build(monkeypatch)
+
+    service = _stubbed_service()
+    service.get_dispatcher(AnswerOptions(sub_model="google/gemma-4-31B"))
+    kwargs = captured["kwargs"]
+    assert kwargs["sub_model"] == "google/gemma-4-31B"
+    assert kwargs["hyde_model"] == "google/gemma-4-31B"
+    assert kwargs["recursion_probe_model"] == "google/gemma-4-31B"
+    assert kwargs["router_tiebreak_model"] == "google/gemma-4-31B"
+
+    service = _stubbed_service()
+    service.get_dispatcher(AnswerOptions())
+    kwargs = captured["kwargs"]
+    assert "hyde_model" not in kwargs
+    assert "recursion_probe_model" not in kwargs
+    assert "router_tiebreak_model" not in kwargs
+
+    service = _stubbed_service()
+    service.get_dispatcher(AnswerOptions(sub_model=SUB_LLM_MODEL))
+    kwargs = captured["kwargs"]
+    assert kwargs["sub_model"] == SUB_LLM_MODEL
+    assert "hyde_model" not in kwargs
+    assert "recursion_probe_model" not in kwargs
+    assert "router_tiebreak_model" not in kwargs
 
 
 def test_model_override_flag_ignores_model_fields(monkeypatch) -> None:

@@ -73,9 +73,13 @@ def test_pipeline_config_catalog_matches_locked_defaults() -> None:
     assert "root" not in models
     assert models["generator"][0] == {
         "id": "Qwen3-30B-A3B-Thinking",
-        "label": "Qwen3-30B-A3B-Thinking — locked sub-LM generator",
+        "label": (
+            "Qwen3-30B-A3B-Thinking — locked sub-LM generator; overrides also "
+            "route HyDE, gap probe, and router tie-breaker"
+        ),
         "default": True,
     }
+    assert "HyDE" in by_key["sub_model"]["help"]
     assert [m["id"] for m in models["classifier"]] == [
         "google/gemma-4-31B",
         "gpt-oss-120b",

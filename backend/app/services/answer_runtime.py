@@ -183,7 +183,7 @@ _DEFAULT_MODEL_CATALOG: dict[str, list[PipelineModelOption]] = {
     "generator": [
         PipelineModelOption(
             id="Qwen3-30B-A3B-Thinking",
-            label="Qwen3-30B-A3B-Thinking — locked sub-LM generator",
+            label="Qwen3-30B-A3B-Thinking — locked sub-LM generator; overrides also route HyDE, gap probe, and router tie-breaker",
             default=True,
         ),
         PipelineModelOption(id="gpt-oss-120b", label="gpt-oss-120b — AI Grid"),
@@ -345,7 +345,7 @@ def pipeline_config_options() -> list[PipelineOption]:
         PipelineOption(
             key="sub_model", type="string", default=d.sub_model,
             advanced=True, requires_live=True, label="Generator / sub-LM model",
-            help="Override the sub-LM model id (default = SUB_LLM_MODEL).",
+            help="Override the sub-LM model id. Non-default overrides also drive HyDE, recursion gap probe, and router tie-breaker calls.",
         ),
         PipelineOption(
             key="supervisor_model", type="string", default=d.supervisor_model,

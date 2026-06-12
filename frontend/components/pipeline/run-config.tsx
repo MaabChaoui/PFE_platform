@@ -483,6 +483,11 @@ export function RunConfig({ liveActive, overrides, onChange, className }: RunCon
                           disabled={modelsDisabled}
                           onChange={onChange}
                         />
+                        {role === 'generator' ? (
+                          <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
+                            Overriding the generator also routes auxiliary calls (HyDE, gap probe) to it.
+                          </p>
+                        ) : null}
                       </div>
                     ))}
 
