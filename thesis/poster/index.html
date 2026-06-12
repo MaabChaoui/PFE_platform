@@ -125,30 +125,77 @@
       </div>
     </section>
 
-    <!-- =================== CENTER · HOW =================== -->
+    <!-- =================== CENTER · HOW (the solution) =================== -->
     <section class="col">
       <div class="arch">
-        <div class="sec how"><div class="badge"><small>HOW</small>02</div><div class="t"><b>The AKN-RLM Architecture</b><span>Documents → structure → verified answer</span></div></div>
-        <p class="arch-sub">Four zones, each repairing a failure mode of the last — a controlled evidence pipeline, not one model.</p>
+        <div class="sec how"><div class="badge"><small>HOW</small>02</div><div class="t"><b>The Solution</b><span>Structured corpus → benchmark → AKN-RLM</span></div></div>
 
-        <div class="arch-flow">
+        <!-- ····· I · STRUCTURED LEGAL CORPUS ····· -->
+        <div class="zone">
+          <div class="part"><span class="pn">I</span><b>Structured legal corpus</b><span class="pd">the law, made machine-readable</span></div>
+          <div class="band b-corpus">
+            <p class="akn-def"><b>What is Akoma&nbsp;Ntoso?</b> The OASIS LegalDocML standard — an XML vocabulary for legal texts in which every law, article, amendment and cross-reference becomes an <b>addressable node</b> under a canonical FRBR URI: the article registry that every citation must resolve against.</p>
+            <div class="built">
+              <span class="glab">What we built</span>
+              <div class="bs"><b>171</b><span>source files<br>189&nbsp;MB</span></div>
+              <div class="bs"><b>45</b><span>laws &amp; codes<br>→ AKN XML</span></div>
+              <div class="bs"><b>46</b><span>RDF graphs<br>→ one legal KG</span></div>
+              <div class="bs"><b class="rng">1963–2025</b><span>coverage,<br>amendments in place</span></div>
+            </div>
+            <div class="codepane"><span class="cm">&lt;!-- Civil Code — Ordinance 75-58, as amended --&gt;</span>
+<span class="tg">&lt;act</span> <span class="at">name</span>=<span class="vl">"code_civil"</span><span class="tg">&gt;</span>
+  <span class="tg">&lt;FRBRWork</span> <span class="at">value</span>=<span class="vl">"/akn/dz/act/1975-09-26/75-58"</span><span class="tg">/&gt;</span>
+  <span class="tg">&lt;FRBRExpression</span> <span class="at">value</span>=<span class="vl">"…/ara@2005-06-20"</span><span class="tg">/&gt;</span>
+  <span class="tg">&lt;lifecycle&gt;</span>
+    <span class="tg">&lt;eventRef</span> <span class="at">date</span>=<span class="vl">"2005-06-20"</span> <span class="at">type</span>=<span class="vl">"amendment"</span>
+              <span class="at">source</span>=<span class="vl">"#law-05-10"</span><span class="tg">/&gt;</span>
+  <span class="tg">&lt;/lifecycle&gt;</span>
+  <span class="tg">&lt;article</span> <span class="at">eId</span>=<span class="vl">"art_124"</span><span class="tg">&gt;</span>
+    <span class="tg">&lt;num&gt;</span><span class="ar">المادة 124</span><span class="tg">&lt;/num&gt;</span>
+    <span class="tg">&lt;content&gt;</span><span class="ar">كل فعل أيّا كان يرتكبه الشخص بخطئه…</span><span class="tg">&lt;/content&gt;</span>
+    <span class="tg">&lt;ref</span> <span class="at">href</span>=<span class="vl">"#art_127"</span><span class="tg">/&gt;</span>
+  <span class="tg">&lt;/article&gt;</span>
+<span class="tg">&lt;/act&gt;</span></div>
+            <div class="valid-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg><span>Validated in <b>multiple manual passes</b> by two law students and a supervising senior legal expert — the structure is derived from the sources, never invented.</span></div>
+          </div>
+        </div>
 
-          <!-- BAND 1 -->
-          <div class="band b-struct">
-            <div class="band-tab"><div class="bn">1</div><b>Structure the law</b><div class="cap">171 files · 1963–2025<br>FRBR article registry</div></div>
-            <div class="flow">
-              <div class="fnode"><div class="fi c-grey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3h8l4 4v14H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M14 3v4h4"/></svg></div><b>Raw texts</b><span>PDF · TXT</span></div>
-              <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
-              <div class="fnode"><div class="fi c-navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5"/><line x1="13" y1="5" x2="11" y2="19"/></svg></div><b>Akoma Ntoso</b><span>XML · articles</span></div>
-              <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
-              <div class="fnode"><div class="fi c-teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="7" r="2.2"/><circle cx="12" cy="18" r="2.2"/><path d="M8 7l8 0M7.4 8L11 16M16.6 9L13 16"/></svg></div><b>Knowledge Graph</b><span>RDF · amend. chains</span></div>
+        <!-- ····· II · BENCHMARK ····· -->
+        <div class="zone">
+          <div class="part"><span class="pn">II</span><b>AlgerianLegalBench</b><span class="pd">the evaluation layer</span></div>
+          <div class="band b-bench">
+            <p class="bench-lead"><b>244 expert-annotated questions</b> across <b>23</b> legal categories — <b>177 answerable</b>, <b class="w">67 expecting abstention</b> · 232 Arabic / 12 French · each carries expected articles, a reference answer and a <b>four-step reasoning chain</b> · double-annotated, <b>κ&nbsp;=&nbsp;0.829</b>.</p>
+            <div class="bench-grid">
+              <div>
+                <span class="glab">Query types</span>
+                <div class="qt"><span class="ql">Rule application</span><div class="qtk"><div class="qf" style="width:100%"></div></div><span class="qv">66</span></div>
+                <div class="qt"><span class="ql">Exact article</span><div class="qtk"><div class="qf" style="width:89%"></div></div><span class="qv">59</span></div>
+                <div class="qt"><span class="ql">Unanswerable</span><div class="qtk"><div class="qf w" style="width:61%"></div></div><span class="qv">40</span></div>
+                <div class="qt"><span class="ql">Multi-hop</span><div class="qtk"><div class="qf" style="width:39%"></div></div><span class="qv">26</span></div>
+                <div class="qt"><span class="ql">Layman</span><div class="qtk"><div class="qf" style="width:26%"></div></div><span class="qv">17</span></div>
+                <div class="qt"><span class="ql">Long-context</span><div class="qtk"><div class="qf" style="width:26%"></div></div><span class="qv">17</span></div>
+                <div class="qt"><span class="ql">Conceptual</span><div class="qtk"><div class="qf" style="width:18%"></div></div><span class="qv">12</span></div>
+                <div class="qt"><span class="ql">Temporal</span><div class="qtk"><div class="qf" style="width:11%"></div></div><span class="qv">7</span></div>
+              </div>
+              <div class="bench-side">
+                <span class="glab">Difficulty</span>
+                <div class="diff">
+                  <div class="db"><div class="seg e" style="width:23%">23%</div><div class="seg m" style="width:35%">35%</div><div class="seg h" style="width:42%">42%</div></div>
+                  <div class="dl"><span>Easy</span><span>Medium</span><span>Hard</span></div>
+                </div>
+                <p class="trapnote"><b>40 jurisdictional-infection traps</b> — questions seeded with French, US, Egyptian, Tunisian &amp; Gulf canary doctrine the system must refuse to import.</p>
+              </div>
             </div>
           </div>
-          <div class="blink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+        </div>
 
-          <!-- BAND 2 -->
+        <!-- ····· III · AKN-RLM PIPELINE ····· -->
+        <div class="zone">
+          <div class="part"><span class="pn">III</span><b>AKN-RLM</b><span class="pd">retrieve → reason → verify</span></div>
+
+          <!-- BAND · RETRIEVE -->
           <div class="band b-retr">
-            <div class="band-tab"><div class="bn">2</div><b>Retrieve evidence</b><div class="cap">RRF( BM25 + Dense )</div></div>
+            <div class="band-tab"><div class="bn">1</div><b>Retrieve evidence</b><div class="cap">RRF( BM25 + Dense )</div></div>
             <div class="flow">
               <div class="fnode"><div class="fi c-grey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div><b>Legal question</b><span>AR · FR</span></div>
               <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
@@ -156,15 +203,12 @@
               <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
               <div class="fnode"><div class="fi c-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="18" cy="18" r="3"/></svg></div><b>Hybrid retrieval</b><span>typed handlers</span></div>
             </div>
-            <div class="types">
-              <span class="ty">exact-article</span><span class="ty">rule-application</span><span class="ty">multi-hop</span><span class="ty">temporal</span><span class="ty">conceptual</span><span class="ty">layman</span><span class="ty">long-context</span><span class="ty">unanswerable</span>
-            </div>
           </div>
           <div class="blink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
 
-          <!-- BAND 3 — RECURSION CYCLE (highlight) -->
+          <!-- BAND · RECURSION CYCLE (highlight) -->
           <div class="band b-rec">
-            <div class="band-tab"><div class="bn">3</div><b>Reason recursively</b><div class="cap">bounded · gap-driven<br>depth-limited</div></div>
+            <div class="band-tab"><div class="bn">2</div><b>Reason recursively</b><div class="cap">bounded · gap-driven<br>depth-limited</div></div>
             <div class="rec-wrap">
               <svg class="rec-svg" width="138" height="138" viewBox="0 0 200 200">
                 <defs>
@@ -203,9 +247,9 @@
           </div>
           <div class="blink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
 
-          <!-- BAND 4 -->
+          <!-- BAND · VERIFY -->
           <div class="band b-verify">
-            <div class="band-tab"><div class="bn">4</div><b>Verify &amp; answer</b><div class="cap">triple faithfulness gate</div></div>
+            <div class="band-tab"><div class="bn">3</div><b>Verify &amp; answer</b><div class="cap">triple faithfulness gate</div></div>
             <div class="gates">
               <div class="gate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg><b>Citation exists</b><span>vs registry</span></div>
               <div class="gate-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h12M12 6l6 6-6 6"/></svg></div>
@@ -218,8 +262,8 @@
               <div class="oc abs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg><div><b>Principled abstention</b><span>when the law is silent</span></div></div>
             </div>
           </div>
-
         </div>
+
       </div>
     </section>
 
@@ -265,23 +309,6 @@
           <div class="row"><div class="lb">Qwen 2<b>27 / 40 traps</b></div><div class="tk"><div class="fl bad" style="width:100%"></div></div><div class="vl bad">0.675</div></div>
         </div>
         <div class="faith-note">Only AKN-RLM holds <b>0.000</b> hallucinated-citation &amp; foreign-law rates. Reliability tracks <b>legal structure, not scale</b> — the largest baselines hallucinate most.</div>
-      </div>
-
-      <!-- benchmark summary -->
-      <div class="cc">
-        <div class="ct"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg>AlgerianLegalBench<span class="u">244 questions</span></div>
-        <div class="bstats">
-          <div class="s"><b>23</b><span>categories</span></div>
-          <div class="s"><b>8</b><span>query types</span></div>
-          <div class="s"><b>40</b><span>infection traps</span></div>
-          <div class="s"><b>232</b><span>Arabic Q</span></div>
-          <div class="s"><b>12</b><span>French Q</span></div>
-          <div class="s"><b>.829</b><span>κ agreement</span></div>
-        </div>
-        <div class="diff">
-          <div class="dl"><span>Difficulty mix</span><span>Easy · Medium · Hard</span></div>
-          <div class="db"><div class="seg e" style="width:23%">23%</div><div class="seg m" style="width:35%">35%</div><div class="seg h" style="width:42%">42%</div></div>
-        </div>
       </div>
 
       <!-- limitations / future -->

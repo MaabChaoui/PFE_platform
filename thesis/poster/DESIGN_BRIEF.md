@@ -22,22 +22,41 @@ the *problem* in under 30 seconds (left), follow the *pipeline* as the visual ce
 ## Layout (three bands, top→bottom)
 ```
 ┌──────────────────────────────────────────────────────────┐
-│ MASTHEAD  ENSIA logo · title · students · supervisors      │  ~45mm  navy
+│ MASTHEAD  ENSIA logo · title · students · supervisors      │  ~46mm  dark ink
 ├───────────────┬──────────────────────┬───────────────────┤
-│ 01 · WHY      │ 02 · HOW (money shot) │ 03 · PROOF        │
-│ problem stmt  │ ┌ Structure the law ┐ │ 0.305 headline    │
-│  + req chips  │ │ texts→AKN→KG       │ │ CitF1 bar chart   │
-│ 3 AR question │ ├ Retrieve evidence ─┤ │ JIR bar chart     │  ~340mm
-│  bubbles      │ │ Q→classifier→hybr. │ │ benchmark stats   │
-│ HCR bar chart │ ├ Reason recursively ┤ │  + difficulty bar │
-│  (per LLM)    │ │  ◉ RETRIEVE→INSPECT│ │ limits / next     │
-│ hard-case ×4  │ │    →REASON→REFINE  │ │                   │
-│ objectives ×4 │ ├ Verify & answer ───┤ │                   │
-│ significance×3│ │ 3 gates → ✓ / abst.│ │                   │
+│ 01 · WHY      │ 02 · HOW (solution)   │ 03 · PROOF        │
+│ problem stmt  │ Ⅰ Structured corpus   │ 0.305 headline    │
+│  + req chips  │   AKN def · stats ·   │ CitF1 bar chart   │
+│ 3 AR question │   XML codepane ·      │ JIR bar chart     │  ~340mm
+│  bubbles      │   expert validation   │ limits / next     │
+│ HCR bar chart │ Ⅱ AlgerianLegalBench  │                   │
+│  (per LLM)    │   lead · type bars ·  │                   │
+│ hard-case ×4  │   difficulty · traps  │                   │
+│ objectives ×4 │ Ⅲ AKN-RLM pipeline    │                   │
+│ significance×3│   retrieve→reason     │                   │
+│               │   (cycle)→3 gates     │                   │
 ├───────────────┴──────────────────────┴───────────────────┤
-│ TAKEAWAY  [sources]+[retrieval]+[recursion]+[citation] =  │  ~30mm  navy
+│ TAKEAWAY  [sources]+[retrieval]+[recursion]+[citation] =  │  ~30mm  dark ink
 └──────────────────────────────────────────────────────────┘
 ```
+
+## Center column (v4 "The Solution" — follows the author's sketch)
+Three parts on the dark panel, each a roman-numeral header (sage italic Cormorant)
+over a paper band:
+- **Ⅰ Structured legal corpus** — "What is Akoma Ntoso?" definition (OASIS LegalDocML,
+  FRBR article registry); "what we built" stat strip (171 source files / 189 MB ·
+  45 laws → AKN XML · 46 RDF graphs → one KG · 1963–2025); a **deck-style codepane on a
+  deep-green ground** with a richer AKN sample (FRBRWork + FRBRExpression + lifecycle
+  amendment eventRef (law 05-10, 2005) + art_124 with Arabic num/content + ref);
+  expert-validation note (two law students + supervising senior legal expert).
+- **Ⅱ AlgerianLegalBench** — lead sentence (244 Qs · 23 categories · 177 answerable /
+  67 expect abstention · 232 AR / 12 FR · four-step reasoning chain · κ = 0.829);
+  query-type mini bar chart (counts from Table 3.2, Unanswerable bar in wine);
+  difficulty stack (23/35/42 %) + 40-trap note. The former right-column benchmark
+  card was removed (it now lives here).
+- **Ⅲ AKN-RLM** — the pipeline compressed to three bands: Retrieve (Q → classifier →
+  hybrid RRF), Reason (recursion cycle, compact horizontal), Verify (triple gate →
+  answer / abstention). "Structure the law" band retired — part Ⅰ covers it.
 Column grid `0.9fr 1.34fr 0.9fr` — the **center is widest** and sits on a **dark ink
 panel** (the deck's stage colour, with a hairline sage inner frame) so the 4-zone
 architecture is the focal point.
