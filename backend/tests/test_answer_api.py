@@ -413,6 +413,180 @@ def test_no_hyde_step_when_hyde_option_off(monkeypatch) -> None:
     assert all(s["step"] != "hyde" for s in resp["trajectory"])
 
 
+# ---------------------------------------------------------------------------
+# SFIX-3 — KG retrieval enrichment of TF/CD trajectory steps + citation
+# kg_hit → kg_source lift (live path only; stubbed raw dicts, no KG, no LLM)
+# ---------------------------------------------------------------------------
+
+
+def _patch_raw_dispatcher(monkeypatch, raw: dict) -> None:
+    """build_dispatcher → a dispatcher whose run returns ``raw`` verbatim."""
+
+    def fake_build(**_kwargs):
+        class _Disp:
+            def run(self, query, query_type=None):
+                return raw
+
+        return _Disp()
+
+    monkeypatch.setattr(dispatcher_mod, "build_dispatcher", fake_build)
+
+
+def _tf_raw() -> dict:
+    chains = [
+        {
+            "doc_id": f"84-1{i}", "article_ref": str(i), "picked": "2005-06-20",
+            "source": "kg" if i % 2 else "fallback", "uri": f"http://akn/{i}",
+            "chain_len": 2, "chain_dates": ["1984-06-09", "2005-06-20"],
+            "internal_cursor": i,  # must be dropped by the reduction
+        }
+        for i in range(14)
+    ]
+    # Recursion re-verifies article 1: a duplicate fallback trace that must be
+    # deduped (the existing richer source="kg" trace wins).
+    chains.append({
+        "doc_id": "84-11", "article_ref": "1", "picked": None,
+        "source": "fallback", "uri": "http://akn/1", "chain_len": 0,
+        "chain_dates": [],
+    })
+    kg_first = [{
+        "depth": 1, "query": "q", "hybrid_count": 24, "kg_first_count": 6,
+        "kg_first_hits": [["84-11", "53"]], "merged_pool_size": 27,
+        "top_slice_size": 9, "kg_first_in_top_slice": 4,
+        "kg_first_uri_resolved": 3, "kg_first_in_verified": 2,
+    }]
+    return {
+        "answer_text": "نص الجواب",
+        "citations": [{"doc_id": "84-11", "article_ref": "53", "confidence": 0.9,
+                       "kg_source": "kg"}],
+        "trajectory": [
+            {"step": "extract_date", "depth": 0, "dates": [], "target": "2007-05-13"},
+            {"step": "kg_chain", "depth": 1, "candidates": 9, "verified": 2},
+        ],
+        "abstention": False,
+        "abstention_reason": None,
+        "_telemetry": {
+            "dispatched_handler": "temporal_factual",
+            "dispatched_query_type": "temporal_factual",
+            "sub_call_count": 1,
+            "target_date": "2007-05-13",
+            "amendment_chains": chains,
+            "tf_kg_first_telemetry": kg_first,
+        },
+    }
+
+
+def test_kg_chain_step_enriched_from_tf_telemetry(monkeypatch) -> None:
+    _patch_raw_dispatcher(monkeypatch, _tf_raw())
+    # LIVE_TF_CD="live": the default "replay" guard would redirect TF/CD before
+    # the (stubbed) dispatcher runs. No KG is loaded — run() is a stub.
+    service = _stubbed_service(Settings(LIVE_TF_CD="live"))
+
+    resp = service.answer("متى عُدلت المادة؟", AnswerOptions(query_type="temporal_factual"))
+
+    step = next(s for s in resp["trajectory"] if s["step"] == "kg_chain")
+    detail = step["detail"]
+    # Existing counts kept.
+    assert detail["candidates"] == 9 and detail["verified"] == 2
+    # Chains deduped per (doc_id, article_ref), capped at 12, reduced to the
+    # UI keys (incl. the version timeline).
+    assert len(detail["amendment_chains"]) == 12
+    assert set(detail["amendment_chains"][0]) == {
+        "doc_id", "article_ref", "picked", "source", "uri",
+        "chain_len", "chain_dates",
+    }
+    assert detail["amendment_chains"][0]["chain_dates"] == [
+        "1984-06-09", "2005-06-20",
+    ]
+    # The duplicate 84-11/1 trace collapsed into ONE entry; the richer
+    # source="kg" trace won over the recursion-depth fallback duplicate.
+    entries = [
+        c for c in detail["amendment_chains"]
+        if (c["doc_id"], c["article_ref"]) == ("84-11", "1")
+    ]
+    assert len(entries) == 1 and entries[0]["source"] == "kg"
+    # Reference date forwarded for the timeline rendering.
+    assert detail["kg_target_date"] == "2007-05-13"
+    # Funnel telemetry passed through as-is.
+    assert detail["kg_first"][0]["hybrid_count"] == 24
+    assert detail["kg_first"][0]["kg_first_hits"] == [["84-11", "53"]]
+    # TF's explicit kg_source survives untouched.
+    assert resp["citations"][0]["kg_source"] == "kg"
+
+
+def test_candidate_pool_step_enriched_from_cd_telemetry(monkeypatch) -> None:
+    hits = [{"doc_id": "84-11", "article_ref": "4", "phrase_matches": 2.0,
+             "span": "نص المادة"}]
+    raw = {
+        "answer_text": "نص",
+        "citations": [
+            {"doc_id": "84-11", "article_ref": "4", "confidence": 0.8, "kg_hit": True},
+            {"doc_id": "84-11", "article_ref": "5", "confidence": 0.7, "kg_hit": True,
+             "kg_source": "fallback"},
+            {"doc_id": "84-11", "article_ref": "6", "confidence": 0.6, "kg_hit": False},
+        ],
+        "trajectory": [
+            {"step": "candidate_pool", "depth": 1, "phrases": ["زواج"],
+             "kg_hits": 3, "verified": 2},
+        ],
+        "abstention": False,
+        "abstention_reason": None,
+        "_telemetry": {
+            "dispatched_handler": "conceptual_definitional",
+            "dispatched_query_type": "conceptual_definitional",
+            "sub_call_count": 1,
+            "kg_used": True,
+            "kg_hit_articles": hits,
+        },
+    }
+    _patch_raw_dispatcher(monkeypatch, raw)
+    service = _stubbed_service(Settings(LIVE_TF_CD="live"))
+
+    resp = service.answer(
+        "ما تعريف الزواج؟", AnswerOptions(query_type="conceptual_definitional")
+    )
+
+    step = next(s for s in resp["trajectory"] if s["step"] == "candidate_pool")
+    assert step["detail"]["kg_hits"] == 3  # existing count kept
+    assert step["detail"]["kg_used"] is True
+    assert step["detail"]["kg_hit_articles"] == hits
+    # kg_hit lifted into kg_source; explicit "fallback" preserved; False → none.
+    by_ref = {c["article_ref"]: c for c in resp["citations"]}
+    assert by_ref["4"]["kg_source"] == "kg"
+    assert by_ref["5"]["kg_source"] == "fallback"
+    assert by_ref["6"]["kg_source"] is None
+
+
+def test_kg_enrichment_noop_without_telemetry(monkeypatch) -> None:
+    raw = {
+        "answer_text": "نص",
+        "citations": [{"doc_id": "84-11", "article_ref": "7", "confidence": 0.5}],
+        "trajectory": [
+            {"step": "kg_chain", "depth": 1, "candidates": 3, "verified": 1},
+            {"step": "candidate_pool", "depth": 1, "kg_hits": 0, "verified": 1},
+        ],
+        "abstention": False,
+        "abstention_reason": None,
+        "_telemetry": {
+            "dispatched_handler": "temporal_factual",
+            "dispatched_query_type": "temporal_factual",
+            "sub_call_count": 0,
+        },
+    }
+    _patch_raw_dispatcher(monkeypatch, raw)
+    service = _stubbed_service(Settings(LIVE_TF_CD="live"))
+
+    resp = service.answer("سؤال", AnswerOptions(query_type="temporal_factual"))
+
+    kg_chain = next(s for s in resp["trajectory"] if s["step"] == "kg_chain")
+    pool = next(s for s in resp["trajectory"] if s["step"] == "candidate_pool")
+    assert "amendment_chains" not in kg_chain["detail"]
+    assert "kg_first" not in kg_chain["detail"]
+    assert "kg_used" not in pool["detail"]
+    assert "kg_hit_articles" not in pool["detail"]
+    assert resp["citations"][0]["kg_source"] is None
+
+
 def _parse_sse(text: str) -> list[tuple[str, str]]:
     """Parse an SSE wire body into a list of (event, data) pairs."""
     events: list[tuple[str, str]] = []

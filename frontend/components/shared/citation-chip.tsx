@@ -19,6 +19,9 @@ export interface CitationChipProps {
   index?: number
   /** When set, appends a small link to the node in the KG explorer. */
   kgNodeId?: string
+  /** Citation.kg_source — `"kg"` renders a small provenance badge
+   *  ("fallback"/null render nothing). SFIX-3. */
+  kgSource?: string | null
   className?: string
 }
 
@@ -37,6 +40,7 @@ export function CitationChip({
   versionDate,
   index,
   kgNodeId,
+  kgSource,
   className,
 }: CitationChipProps) {
   const corpusHref = `/corpus?doc=${encodeURIComponent(
@@ -79,6 +83,16 @@ export function CitationChip({
           </div>
         </TooltipContent>
       </Tooltip>
+      {kgSource === 'kg' ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="flex items-center gap-0.5 border-l border-foreground/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide text-info">
+              KG
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>Retrieved / confirmed via the knowledge graph</TooltipContent>
+        </Tooltip>
+      ) : null}
       {kgHref ? (
         <Link
           href={kgHref}

@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import Link from 'next/link'
 import { ArrowDown, BadgeCheck, ChevronDown, XCircle } from 'lucide-react'
 
 import { ArabicText } from '@/components/shared/arabic-text'
@@ -299,6 +300,326 @@ function SummarizeEnrichment({ answer }: { answer: AnswerResponse }) {
   )
 }
 
+// ─────────────── KG retrieval enrichment (SFIX-3, live runs only) ───────────────
+// The backend folds the rich TF/CD KG telemetry into the `kg_chain` /
+// `candidate_pool` step detail. These structured keys get dedicated sections
+// (the generic grid would render them as "N items") — absent in replay.
+
+const KG_STRUCT_KEYS = new Set([
+  'amendment_chains',
+  'kg_first',
+  'kg_hit_articles',
+  'kg_target_date',
+])
+
+interface AmendmentChainRow {
+  doc_id?: string
+  article_ref?: string
+  picked?: string | null
+  source?: string | null
+  uri?: string | null
+  chain_len?: number
+  chain_dates?: string[]
+}
+
+interface KgFirstDepth {
+  depth?: number
+  hybrid_count?: number
+  kg_first_count?: number
+  kg_first_hits?: [string, string][]
+  merged_pool_size?: number
+  kg_first_in_top_slice?: number
+  kg_first_uri_resolved?: number
+  kg_first_in_verified?: number
+}
+
+interface KgHitArticle {
+  doc_id?: string
+  article_ref?: string
+  phrase_matches?: number
+  span?: string
+}
+
+function asRows<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : []
+}
+
+/** Compact deep-linking article chip → `/corpus?doc=&article=`. */
+function KgChipLink({ docId, articleRef }: { docId: string; articleRef: string }) {
+  const lawNum = docId.split('_')[0] || docId
+  return (
+    <Link
+      href={`/corpus?doc=${encodeURIComponent(docId)}&article=${encodeURIComponent(articleRef)}`}
+      title={`${docId} — article ${articleRef}`}
+      className="shrink-0 rounded bg-foreground/[0.06] px-1.5 py-0.5 font-mono text-[10px] text-foreground/85 transition-colors hover:bg-foreground/[0.12] hover:text-primary"
+    >
+      art. {articleRef} · {lawNum}
+    </Link>
+  )
+}
+
+/** One version node on a chain timeline. */
+function ChainVersionNode({
+  date,
+  picked,
+  afterTarget,
+}: {
+  date: string
+  picked: boolean
+  afterTarget: boolean
+}) {
+  return (
+    <span
+      className={cn(
+        'inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[10px] transition-colors',
+        picked
+          ? 'border-primary/50 bg-primary/10 font-semibold text-primary'
+          : afterTarget
+            ? 'border-foreground/[0.06] text-muted-foreground/40'
+            : 'border-foreground/12 text-muted-foreground',
+      )}
+      title={
+        picked
+          ? 'Version the chain picked — in force at the reference date'
+          : afterTarget
+            ? 'Enacted after the reference date — skipped'
+            : 'Earlier version'
+      }
+    >
+      <span
+        className={cn(
+          'h-1.5 w-1.5 rounded-full',
+          picked ? 'bg-primary' : afterTarget ? 'bg-foreground/15' : 'bg-foreground/35',
+        )}
+      />
+      <span className="nums whitespace-nowrap">{date || '—'}</span>
+      {picked ? (
+        <span className="text-[8px] font-semibold uppercase tracking-wide">in force</span>
+      ) : null}
+    </span>
+  )
+}
+
+/** The walked version timeline: enactment → amendments, picked node lit. */
+function ChainTimeline({
+  dates,
+  picked,
+  targetDate,
+}: {
+  dates: string[]
+  picked: string | null
+  targetDate: string | null
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-y-1.5 pt-1.5">
+      {dates.map((d, i) => (
+        <React.Fragment key={`${d}-${i}`}>
+          {i > 0 ? (
+            <span className="mx-1 h-px w-3.5 shrink-0 bg-foreground/20" aria-hidden />
+          ) : null}
+          <ChainVersionNode
+            date={d}
+            picked={!!picked && d === picked}
+            afterTarget={!!targetDate && !!d && d > targetDate}
+          />
+        </React.Fragment>
+      ))}
+    </div>
+  )
+}
+
+/** One stage box of the KG-first funnel. */
+function FunnelStage({
+  value,
+  label,
+  accent,
+}: {
+  value: number
+  label: string
+  accent?: 'info' | 'success'
+}) {
+  return (
+    <span
+      className={cn(
+        'flex min-w-[3.25rem] flex-col items-center rounded-lg border px-2 py-1',
+        accent === 'info'
+          ? 'border-info/25 bg-info/[0.07]'
+          : accent === 'success'
+            ? 'border-success/25 bg-success/[0.07]'
+            : 'border-foreground/[0.08] bg-foreground/[0.02]',
+      )}
+    >
+      <span
+        className={cn(
+          'nums font-mono text-[13px] font-semibold leading-tight',
+          accent === 'info'
+            ? 'text-info'
+            : accent === 'success'
+              ? 'text-success'
+              : 'text-foreground/85',
+        )}
+      >
+        {value}
+      </span>
+      <span className="text-[8px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+        {label}
+      </span>
+    </span>
+  )
+}
+
+/** kg_chain (TF) → the amendment chains the KG walked (version timelines,
+ *  picked node lit against the reference date) + the per-depth KG-first
+ *  funnel as stage boxes. */
+function KgChainEnrichment({
+  chains,
+  funnel,
+  targetDate,
+}: {
+  chains: AmendmentChainRow[]
+  funnel: KgFirstDepth[]
+  targetDate: string | null
+}) {
+  return (
+    <div className="space-y-3">
+      {chains.length > 0 ? (
+        <div className="space-y-1.5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <Caption en="Amendment chains · KG" ar="سلاسل التعديل" />
+            {targetDate ? (
+              <span
+                className="nums rounded-full border border-primary/30 bg-primary/[0.07] px-2 py-0.5 font-mono text-[10px] text-primary"
+                title="Reference date resolved from the question — versions are picked against it"
+              >
+                as of {targetDate}
+              </span>
+            ) : null}
+          </div>
+          <ul className="space-y-1.5">
+            {chains.map((c, i) =>
+              c.doc_id && c.article_ref ? (
+                <li
+                  key={`${c.doc_id}-${c.article_ref}-${i}`}
+                  className="rounded-lg border border-foreground/[0.06] bg-foreground/[0.015] px-2.5 py-2"
+                  title={c.uri || undefined}
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <KgChipLink docId={c.doc_id} articleRef={c.article_ref} />
+                    {(c.chain_len ?? 0) > 0 ? (
+                      <span className="nums font-mono text-[10px] text-muted-foreground">
+                        {c.chain_len} version{(c.chain_len ?? 0) === 1 ? '' : 's'}
+                      </span>
+                    ) : null}
+                    <span
+                      className={cn(
+                        'ml-auto rounded-full px-1.5 py-0.5 text-[9px] font-semibold tracking-wide',
+                        c.source === 'kg'
+                          ? 'bg-info/15 text-info'
+                          : 'bg-foreground/[0.06] text-muted-foreground',
+                      )}
+                    >
+                      {c.source === 'kg'
+                        ? 'KG chain'
+                        : c.source === 'kg_no_match'
+                          ? 'no version at date'
+                          : 'fallback'}
+                    </span>
+                  </div>
+                  {(c.chain_dates ?? []).length > 0 ? (
+                    <ChainTimeline
+                      dates={c.chain_dates ?? []}
+                      picked={c.picked ?? null}
+                      targetDate={targetDate}
+                    />
+                  ) : c.source !== 'kg' ? (
+                    <p className="pt-1 text-[10px] leading-snug text-muted-foreground/70">
+                      No version chain in the KG — answered from the retrieved article text.
+                    </p>
+                  ) : null}
+                </li>
+              ) : null,
+            )}
+          </ul>
+        </div>
+      ) : null}
+
+      {funnel.length > 0 ? (
+        <div className="space-y-1.5">
+          <Caption en="KG-first funnel · per depth" />
+          {funnel.map((d, i) => (
+            <div key={i} className="space-y-1.5">
+              <div className="flex flex-wrap items-center gap-1">
+                <span className="mr-1 shrink-0 rounded-md bg-primary/15 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-primary">
+                  D{d.depth ?? i + 1}
+                </span>
+                <FunnelStage value={d.hybrid_count ?? 0} label="hybrid" />
+                <span className="text-muted-foreground/50" aria-hidden>+</span>
+                <FunnelStage value={d.kg_first_count ?? 0} label="KG-first" accent="info" />
+                <span className="text-muted-foreground/50" aria-hidden>→</span>
+                <FunnelStage value={d.merged_pool_size ?? 0} label="merged" />
+                <span className="text-muted-foreground/50" aria-hidden>→</span>
+                <FunnelStage value={d.kg_first_in_top_slice ?? 0} label="top-slice" />
+                <span className="text-muted-foreground/50" aria-hidden>→</span>
+                <FunnelStage value={d.kg_first_uri_resolved ?? 0} label="URI ok" />
+                <span className="text-muted-foreground/50" aria-hidden>→</span>
+                <FunnelStage
+                  value={d.kg_first_in_verified ?? 0}
+                  label="verified"
+                  accent="success"
+                />
+              </div>
+              {(d.kg_first_hits ?? []).length > 0 ? (
+                <span className="flex flex-wrap gap-1">
+                  {(d.kg_first_hits ?? []).map(([docId, ref], j) =>
+                    docId && ref ? (
+                      <KgChipLink key={`${docId}-${ref}-${j}`} docId={docId} articleRef={ref} />
+                    ) : null,
+                  )}
+                </span>
+              ) : null}
+            </div>
+          ))}
+          <p className="text-[10px] leading-relaxed text-muted-foreground/70">
+            How many KG-first hits survived merging, ranking, URI resolution, and
+            verification at each retrieval depth.
+          </p>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+/** candidate_pool (CD) → the articles the KG phrase search actually matched. */
+function KgConceptHitsEnrichment({ hits }: { hits: KgHitArticle[] }) {
+  return (
+    <div className="space-y-2">
+      <Caption en="KG concept hits" ar="مطابقات المفاهيم" />
+      <ul className="space-y-1.5">
+        {hits.map((h, i) =>
+          h.doc_id && h.article_ref ? (
+            <li
+              key={`${h.doc_id}-${h.article_ref}-${i}`}
+              className="rounded-lg border border-foreground/[0.06] bg-foreground/[0.015] px-2.5 py-2"
+            >
+              <div className="flex items-center gap-2">
+                <KgChipLink docId={h.doc_id} articleRef={h.article_ref} />
+                <span className="nums font-mono text-[10px] text-muted-foreground">
+                  {h.phrase_matches ?? 0} phrase{(h.phrase_matches ?? 0) === 1 ? '' : 's'}
+                </span>
+              </div>
+              {h.span ? (
+                <ArabicText className="mt-1.5 text-[12px] leading-relaxed text-foreground/80">
+                  {h.span}
+                </ArabicText>
+              ) : null}
+            </li>
+          ) : null,
+        )}
+      </ul>
+    </div>
+  )
+}
+
 type EnrichKind = 'retrieve' | 'verify' | 'argue' | 'route' | 'summarize' | null
 
 /** A one-line content preview shown on the COLLAPSED card so the station says
@@ -358,7 +679,20 @@ export function StepCard({
   const Icon = meta.icon
   const showSummary = !!event.summary && event.summary !== event.step
   const summaryRtl = showSummary && isArabic(event.summary)
-  const hasDetail = Object.keys(event.detail ?? {}).length > 0
+
+  // KG retrieval enrichment (SFIX-3): structured keys get dedicated sections
+  // below; keep them out of the generic grid. Absent in replay → no-op.
+  const detail = event.detail ?? {}
+  const kgChains =
+    event.step === 'kg_chain' ? asRows<AmendmentChainRow>(detail.amendment_chains) : []
+  const kgFunnel = event.step === 'kg_chain' ? asRows<KgFirstDepth>(detail.kg_first) : []
+  const kgHits =
+    event.step === 'candidate_pool' ? asRows<KgHitArticle>(detail.kg_hit_articles) : []
+  const hasKg = kgChains.length > 0 || kgFunnel.length > 0 || kgHits.length > 0
+  const gridDetail = hasKg
+    ? Object.fromEntries(Object.entries(detail).filter(([k]) => !KG_STRUCT_KEYS.has(k)))
+    : detail
+  const hasDetail = Object.keys(gridDetail).length > 0
 
   // Real-content enrichment for this station (layered on top of `detail`).
   const enr = useTraceEnrichment()
@@ -385,7 +719,7 @@ export function StepCard({
     arguedCount: arguedCitations.length,
     handler: answer ? humanize(answer.handler_used) : '',
   })
-  const hasBody = hasDetail || enrichKind !== null
+  const hasBody = hasDetail || enrichKind !== null || hasKg
 
   return (
     <div
@@ -472,7 +806,22 @@ export function StepCard({
       >
         <div className="overflow-hidden">
           <div className="space-y-3 border-t border-foreground/[0.07] bg-background/30 px-3.5 py-3">
-            {hasDetail ? <DetailGrid detail={event.detail} /> : null}
+            {hasDetail ? <DetailGrid detail={gridDetail} /> : null}
+
+            {/* KG retrieval enrichment (SFIX-3, live runs only) */}
+            {kgChains.length > 0 || kgFunnel.length > 0 ? (
+              <KgChainEnrichment
+                chains={kgChains}
+                funnel={kgFunnel}
+                targetDate={typeof detail.kg_target_date === 'string' ? detail.kg_target_date : null}
+              />
+            ) : null}
+            {kgHits.length > 0 ? <KgConceptHitsEnrichment hits={kgHits} /> : null}
+            {hasKg ? (
+              <p className="text-[10px] leading-relaxed text-muted-foreground/70">
+                Live runs only — the locked replay run recorded counts, not items.
+              </p>
+            ) : null}
 
             {/* hyde (live-only, backend-injected) — honest framing. The Arabic
                 hypothetical answer itself renders RTL via the detail grid. */}

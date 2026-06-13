@@ -42,14 +42,17 @@ export EVAL_RESULTS_DIR="$ROOT_DIR/akn_rlm/eval_results"
 export KG_INDEX_PATH="$ROOT_DIR/backend/data/kg_index.sqlite"
 
 # Live-mode backend config. OFFLINE_MODE must be false or /api/health reports
-# llm:"disabled" by design. LIVE_TF_CD=replay avoids the heavy live KG path.
+# llm:"disabled" by design. LIVE_TF_CD=live enables real KG-backed TF/CD runs
+# (SFIX-3 KG visibility): first such dispatch loads the 74 MB KG (~26 s,
+# multi-GB RAM). Pass LIVE_TF_CD=replay to restore the nearest-precomputed
+# redirect if memory is tight.
 export OFFLINE_MODE=false
 export AI_GRID_BASE_URL="${AI_GRID_BASE_URL:-http://app.ai-grid.io:4000/v1}"
 export CORS_ORIGINS="${CORS_ORIGINS:-http://localhost:$FRONTEND_PORT}"
 export NEXT_PUBLIC_API_BASE="${NEXT_PUBLIC_API_BASE:-http://localhost:$BACKEND_PORT/api}"
 export KG_BUILD_ON_START="${KG_BUILD_ON_START:-false}"
 export WARM_DISPATCHER_ON_START="${WARM_DISPATCHER_ON_START:-true}"
-export LIVE_TF_CD="${LIVE_TF_CD:-replay}"
+export LIVE_TF_CD="${LIVE_TF_CD:-live}"
 # SFIX-2: the demo AI-Grid key only unlocks gemma — default every live model
 # knob (classifier/generator/supervisor + generator cascade) to it. Explicitly
 # selecting a locked Phase E model in the UI still sends that model.

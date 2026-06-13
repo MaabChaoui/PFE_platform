@@ -38,6 +38,7 @@ function CitationItem({ citation, index }: { citation: Citation; index: number }
           articleRef={citation.article_ref}
           docTitle={citation.doc_title}
           versionDate={citation.version_date}
+          kgSource={citation.kg_source}
         />
         <span className="ml-auto flex items-center gap-2">
           {citation.verifier_relevant ? (

@@ -155,7 +155,12 @@ function PredictedCitation({ cit }: { cit: Record<string, unknown> }) {
     <div className="rounded-xl border border-foreground/[0.07] bg-card/40 p-3.5">
       <div className="mb-2 flex flex-wrap items-center gap-2">
         {docId && articleRef ? (
-          <CitationChip docId={docId} articleRef={articleRef} docTitle={docTitle} />
+          <CitationChip
+            docId={docId}
+            articleRef={articleRef}
+            docTitle={docTitle}
+            kgSource={asStr(cit.kg_source)}
+          />
         ) : (
           <span className="text-xs text-muted-foreground">{docTitle ?? 'Citation'}</span>
         )}

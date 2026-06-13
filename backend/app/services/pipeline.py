@@ -536,6 +536,11 @@ class PipelineService:
                 "live pipeline produced no answer (LLM keys/endpoint may be down)"
             )
 
+        # SFIX-3 — fold the rich KG telemetry (TF amendment chains / KG-first
+        # funnel, CD concept hits) into the existing trajectory steps and lift
+        # CD's raw `kg_hit` citation flag into the API's `kg_source` field.
+        # Live path only — replay/fallback never pass through here.
+        _enrich_kg_trajectory(raw)
         resp = build_answer_response(query, raw, latency).to_dict()
         # SFIX-2 — surface the HyDE generation recorded by the dispatcher's
         # observer as a synthetic trajectory step (live runs only; the akn_rlm
@@ -678,6 +683,88 @@ def _effective_models(
         options.sub_model or demo,
         options.supervisor_model or demo,
     )
+
+
+#: Amendment-chain trace fields surfaced to the UI (each trace also carries
+#: internal keys we drop) and the max number of chains shown.
+_CHAIN_KEYS: tuple[str, ...] = (
+    "doc_id", "article_ref", "picked", "source", "uri", "chain_len", "chain_dates",
+)
+_CHAIN_CAP = 12
+
+
+def _dedupe_chains(chains: list[Any]) -> list[dict[str, Any]]:
+    """Reduce + dedupe amendment-chain traces for the UI.
+
+    Recursion re-verifies the same articles at depth 2/3, so the raw trace
+    list repeats (doc_id, article_ref) entries. Keep one per article,
+    preferring the richer trace (a real KG pick over fallback/no-match),
+    preserving first-seen order.
+    """
+    by_key: dict[tuple[Any, Any], dict[str, Any]] = {}
+    for trace in chains:
+        if not isinstance(trace, dict):
+            continue
+        reduced = {key: trace.get(key) for key in _CHAIN_KEYS}
+        key = (reduced["doc_id"], reduced["article_ref"])
+        prior = by_key.get(key)
+        if prior is None:
+            by_key[key] = reduced
+        elif prior.get("source") != "kg" and reduced.get("source") == "kg":
+            prior.update(reduced)
+    return list(by_key.values())[:_CHAIN_CAP]
+
+
+def _enrich_kg_trajectory(raw: dict[str, Any]) -> None:
+    """SFIX-3 — mutate the raw dispatcher dict in place so the existing TF/CD
+    trajectory steps carry WHAT the KG retrieved, not just counts.
+
+    * first ``kg_chain`` step (TF): + ``kg_first`` (per-depth funnel telemetry,
+      as-is) and ``amendment_chains`` (capped, reduced to ``_CHAIN_KEYS``).
+    * first ``candidate_pool`` step (CD): + ``kg_used`` and ``kg_hit_articles``
+      (the additive CD telemetry key).
+    * citations: CD marks raw candidates with ``kg_hit`` but akn_rlm's
+      ``_to_citation`` only maps ``kg_source`` — lift the flag so the existing
+      API field carries CD provenance too (TF's explicit "kg"/"fallback" wins).
+
+    Missing steps/keys ⇒ no-op. Extra step keys flow to the UI automatically
+    (``_summarise_step`` keeps every key except step/depth).
+    """
+    telemetry = raw.get("_telemetry") or {}
+    enriched: set[str] = set()
+    for step in raw.get("trajectory") or []:
+        if not isinstance(step, dict):
+            continue
+        name = step.get("step")
+        if name in enriched:
+            continue
+        if name == "kg_chain":
+            kg_first = telemetry.get("tf_kg_first_telemetry")
+            if kg_first:
+                step["kg_first"] = kg_first
+            chains = telemetry.get("amendment_chains")
+            if chains:
+                step["amendment_chains"] = _dedupe_chains(chains)
+                # Lets the UI place the picked version against the
+                # question's resolved reference date.
+                if telemetry.get("target_date"):
+                    step["kg_target_date"] = telemetry["target_date"]
+            enriched.add(name)
+        elif name == "candidate_pool":
+            if "kg_used" in telemetry:
+                step["kg_used"] = telemetry.get("kg_used")
+            hits = telemetry.get("kg_hit_articles")
+            if hits:
+                step["kg_hit_articles"] = hits
+            enriched.add(name)
+
+    for citation in raw.get("citations") or []:
+        if (
+            isinstance(citation, dict)
+            and citation.get("kg_hit")
+            and not citation.get("kg_source")
+        ):
+            citation["kg_source"] = "kg"
 
 
 def _insert_hyde_step(resp: dict[str, Any], entry: dict[str, Any]) -> None:
