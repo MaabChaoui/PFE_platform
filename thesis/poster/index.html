@@ -258,17 +258,60 @@
       <div class="headline">
         <div class="top">
           <div class="big">0.305</div>
-          <div class="lab"><b>Citation F1</b><span>locked deployable</span></div>
+          <div class="lab"><b>Citation F1</b><span>article-level · locked</span></div>
           <div class="zeros">
             <div class="z"><svg viewBox="0 0 24 24" fill="none" stroke="#f5f0e4" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg><div><b>0.000</b> <span>HCR · JIR</span></div></div>
             <div class="z"><svg viewBox="0 0 24 24" fill="none" stroke="#f5f0e4" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg><div><b>0.703</b> <span>Abstention F1</span></div></div>
           </div>
         </div>
         <div class="strip">
-          <div class="st"><b>1.64×</b><span>vs direct LLM</span></div>
-          <div class="st"><b>2.9×</b><span>vs determ. retr.</span></div>
+          <div class="st"><b>1.64×</b><span>vs best direct LLM</span></div>
           <div class="st"><b>1.74×</b><span>vs minimal RAG</span></div>
+          <div class="st"><b>2.9×</b><span>vs determ. retrieval</span></div>
         </div>
+        <p class="sig">+0.199 over the strongest same-corpus baseline, <em>p</em><sub>Holm</sub>&nbsp;&lt;&nbsp;0.0001 &nbsp;·&nbsp; document-level F1 0.546</p>
+        <p class="prov">rlm_dispatched_full_phase_e_final · 2026-05-14 · depth ≤ 3 · NLI ≥ 0.55 · one retry → abstain</p>
+      </div>
+
+      <!-- the ablation ladder -->
+      <div class="cc">
+        <div class="ct"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h4v-4h4v-4h4V8h4V4h2"/></svg>The ablation ladder<span class="u">Citation F1 by phase</span></div>
+        <svg class="ladder" viewBox="0 0 260 140">
+          <line x1="6" y1="118" x2="254" y2="118" class="lx"/>
+          <path d="M8 99.5 H43 V60 H85 V19.7 H127 V18.7 H169 V18.3 H211 V17.4 H252" class="lpath"/>
+          <g class="lpt">
+            <circle cx="25.5" cy="99.5" r="2.8"/>
+            <circle cx="64"   cy="60"   r="2.8"/>
+            <circle cx="106"  cy="19.7" r="2.8"/>
+            <circle cx="148"  cy="18.7" r="2.8"/>
+            <circle cx="190"  cy="18.3" r="2.8"/>
+            <circle cx="231.5" cy="17.4" r="3.8"/>
+          </g>
+          <circle cx="231.5" cy="17.4" r="6.4" class="lring"/>
+          <g class="lval">
+            <text x="25.5" y="92">0.056</text>
+            <text x="64"   y="52.5">0.175</text>
+            <text x="106"  y="12.5">0.298</text>
+            <text x="148"  y="11.5">0.301</text>
+            <text x="190"  y="11">0.302</text>
+            <text x="231.5" y="9" class="win">0.305</text>
+          </g>
+          <g class="lxl">
+            <text x="25.5" y="129">raw LLM</text>
+            <text x="64"   y="129">+ retrieval</text>
+            <text x="106"  y="129">typed dispatch</text>
+            <text x="148"  y="129">+ ADUs</text>
+            <text x="190"  y="129">+ recursion</text>
+            <text x="231.5" y="129">locked</text>
+          </g>
+          <line x1="123" y1="80" x2="90" y2="42" class="lann-ln"/>
+          <text x="150" y="89" class="lann">retrieval + dispatch ≈ 97 % of the gain</text>
+          <g class="lnt">
+            <text x="180" y="42">the flat top buys abstention 0 → 0.703,</text>
+            <text x="180" y="51">ADU faithfulness 0.471 · audited telemetry</text>
+          </g>
+        </svg>
+        <div class="lnote">Each phase is an ablation in disguise — <b>every layer pays for itself</b>, though not always in F1.</div>
       </div>
 
       <!-- comparison bar chart -->
@@ -277,8 +320,8 @@
         <div class="chart">
           <div class="row"><div class="lb">Direct LLM<b>raw</b></div><div class="tk"><div class="fl" style="width:18%"></div></div><div class="vl">0.056</div></div>
           <div class="row"><div class="lb">Determ.<b>hybrid+rerank</b></div><div class="tk"><div class="fl" style="width:34%"></div></div><div class="vl">0.105</div></div>
-          <div class="row"><div class="lb">Minimal RAG<b>dense top-5</b></div><div class="tk"><div class="fl" style="width:57%"></div></div><div class="vl">0.175</div></div>
-          <div class="row"><div class="lb">Best LLM<b>Gemini 2.5</b></div><div class="tk"><div class="fl" style="width:61%"></div></div><div class="vl">0.186</div></div>
+          <div class="row"><div class="lb">Minimal RAG<b>top-5</b></div><div class="tk"><div class="fl" style="width:57%"></div></div><div class="vl">0.175</div></div>
+          <div class="row"><div class="lb">Best LLM<b>Gemini 2.5 Flash</b></div><div class="tk"><div class="fl" style="width:61%"></div></div><div class="vl">0.186</div></div>
           <div class="row"><div class="lb"><b style="color:var(--wine)">AKN-RLM</b>locked</div><div class="tk"><div class="fl win" style="width:100%"></div></div><div class="vl win">0.305</div></div>
         </div>
       </div>
@@ -292,6 +335,16 @@
           <div class="row"><div class="lb">Qwen 2<b>27 / 40 traps</b></div><div class="tk"><div class="fl bad" style="width:100%"></div></div><div class="vl bad">0.675</div></div>
         </div>
         <div class="faith-note">Only AKN-RLM holds <b>0.000</b> hallucinated-citation &amp; foreign-law rates. Reliability tracks <b>legal structure, not scale</b> — the largest baselines hallucinate most.</div>
+      </div>
+
+      <!-- reading the results -->
+      <div class="cc">
+        <div class="ct"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="2.6"/></svg>Reading the results<span class="u">interpretation</span></div>
+        <ul class="readl">
+          <li><span class="rn">i</span><div><b>The gain is architectural</b><span>identical corpus, registry &amp; indices as every tier-2 baseline — the layers, not the scale, earn the F1</span></div></li>
+          <li><span class="rn">ii</span><div><b>Strictness has a price</b><span>the gate over-rejects layman queries; wider evidence pools dilute citation discipline</span></div></li>
+          <li><span class="rn">iii</span><div><b>Refusal works</b><span>38 / 40 infection traps correctly refused — every baseline invents an answer</span></div></li>
+        </ul>
       </div>
 
       <!-- limitations / future -->

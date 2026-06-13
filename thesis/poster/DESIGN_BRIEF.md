@@ -103,8 +103,20 @@ a flowing journal-article read, *not* stacked outlined cards:
   is a grouped band with a horizontal mini-flow of icon nodes + arrows. The **recursion zone
   is a circular cycle** (Retrieve→Inspect→Reason→Refine around a Gap-probe hub) that flex-grows
   to dominate — the explicit "iteration", visually set apart from the linear zones.
-- **Right column = the proof, made visceral.** A giant `0.305` headline plus **two** charts:
-  Citation-F1 vs baselines, and a "lower = safer" **JIR** chart (AKN-RLM 0.000 vs baselines).
+- **Right column = the proof, made visceral (v5, content from the viva deck).**
+  Top to bottom: the wine `0.305` headline card (article-level Citation F1 · 0.000
+  HCR/JIR chip · 0.703 abstention chip · ×1.64/×1.74/×2.9 strip · significance line
+  "+0.199 over the strongest same-corpus baseline, p_Holm < 0.0001 · doc-level F1
+  0.546" · mono provenance line `rlm_dispatched_full_phase_e_final · 2026-05-14 ·
+  depth ≤ 3 · NLI ≥ 0.55 · one retry → abstain`); **the ablation ladder** — the deck's
+  phase staircase as an inline SVG (0.056 raw LLM → 0.175 + retrieval → 0.298 typed
+  dispatch → 0.301 + ADUs → 0.302 + recursion → 0.305 locked, wine step-path, green
+  annotation "retrieval + dispatch ≈ 97 % of the gain", italic note "the flat top buys
+  abstention 0 → 0.703, ADU faithfulness 0.471 · audited telemetry", footer takeaway
+  "every layer pays for itself, though not always in F1"); Citation-F1 vs baselines;
+  the "lower = safer" **JIR** chart + structure-not-scale note; **Reading the results**
+  (wine roman numerals: gain is architectural · strictness has a price · refusal works,
+  38/40 traps refused); Limits / Next. Card-title icons are wine throughout.
 - **Left column = the stakes, all visual.** Icon risk-tiles + a Generic-LLM ✗ / AKN-RLM ✓
   **capability-gap table** that states the research gap without a paragraph.
 
