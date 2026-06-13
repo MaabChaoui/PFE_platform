@@ -54,9 +54,17 @@ over a paper band:
   query-type mini bar chart (counts from Table 3.2, Unanswerable bar in wine);
   difficulty stack (23/35/42 %) + 40-trap note. The former right-column benchmark
   card was removed (it now lives here).
-- **Ⅲ AKN-RLM** — the pipeline compressed to three bands: Retrieve (Q → classifier →
-  hybrid RRF), Reason (recursion cycle, compact horizontal), Verify (triple gate →
-  answer / abstention). "Structure the law" band retired — part Ⅰ covers it.
+- **Ⅲ AKN-RLM** — a faithful poster rendition of **thesis Fig. 3.2**, drawn directly on
+  the dark panel as a 10-level flowchart: User query → Normalize / Classify intent
+  (gemma 4-31B) / Decompose (qwen3) → Doc-router → Typed-handler dispatch (1 of 8) →
+  BM25 / Dense (e5-small·FAISS) / HyDE [caption: *RRF fusion across active channels*] →
+  Amendment chain / Concept-at-date / Article registry [caption: *765k triples ·
+  8.9k articles*] → Verifier (qwen3-30B) / Pervasive Toulmin ADU / Gap-probe recursion
+  (gpt-oss-120b, depth ≤ 3) → Summarizer (qwen3-30B) → the three wine gates (citation
+  existence · jurisdiction · NLI ≥ 0.55) → bright paper **Answer + citations** box.
+  Colour roles: sage-bordered dark = orchestration/LLM steps, solid olive = retrieval/KG,
+  wine = gates, paper = output; two dashed wine feedback loops (left "recursion
+  (max depth 3)", right "corrective retry (once)") mirror the figure.
 Column grid `0.9fr 1.34fr 0.9fr` — the **center is widest** and sits on a **dark ink
 panel** (the deck's stage colour, with a hairline sage inner frame) so the 4-zone
 architecture is the focal point.

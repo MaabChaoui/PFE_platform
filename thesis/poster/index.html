@@ -189,78 +189,61 @@
           </div>
         </div>
 
-        <!-- ····· III · AKN-RLM PIPELINE ····· -->
+        <!-- ····· III · AKN-RLM PIPELINE (Fig. 3.2) ····· -->
         <div class="zone">
-          <div class="part"><span class="pn">III</span><b>AKN-RLM</b><span class="pd">retrieve → reason → verify</span></div>
+          <div class="part"><span class="pn">III</span><b>AKN-RLM</b><span class="pd">the answer pipeline — Fig.&nbsp;3.2</span></div>
+          <div class="fchart">
+            <div class="loop-rec"><span>recursion (max depth 3)</span></div>
+            <div class="loop-retry"><span>corrective retry (once)</span></div>
 
-          <!-- BAND · RETRIEVE -->
-          <div class="band b-retr">
-            <div class="band-tab"><div class="bn">1</div><b>Retrieve evidence</b><div class="cap">RRF( BM25 + Dense )</div></div>
-            <div class="flow">
-              <div class="fnode"><div class="fi c-grey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div><b>Legal question</b><span>AR · FR</span></div>
-              <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
-              <div class="fnode"><div class="fi c-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M6 8v3a2 2 0 002 2h8M18 8v0M16 18h0"/></svg></div><b>Classifier</b><span>routes 8 types</span></div>
-              <div class="fconn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
-              <div class="fnode"><div class="fi c-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="18" cy="18" r="3"/></svg></div><b>Hybrid retrieval</b><span>typed handlers</span></div>
-            </div>
-          </div>
-          <div class="blink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+            <div class="frow"><div class="fb q w-s"><b>User query</b><span>arabic · french · darja</span></div></div>
+            <div class="fdn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
 
-          <!-- BAND · RECURSION CYCLE (highlight) -->
-          <div class="band b-rec">
-            <div class="band-tab"><div class="bn">2</div><b>Reason recursively</b><div class="cap">bounded · gap-driven<br>depth-limited</div></div>
-            <div class="rec-wrap">
-              <svg class="rec-svg" width="138" height="138" viewBox="0 0 200 200">
-                <defs>
-                  <marker id="ah" markerWidth="7" markerHeight="7" refX="3.2" refY="3" orient="auto">
-                    <path d="M0 0L6 3L0 6z" fill="#38543f"/>
-                  </marker>
-                </defs>
-                <!-- rotating ring arcs (clockwise) -->
-                <g fill="none" stroke="#38543f" stroke-width="2.4" marker-end="url(#ah)">
-                  <path d="M100 26 A74 74 0 0 1 168 86"/>
-                  <path d="M174 100 A74 74 0 0 1 114 174"/>
-                  <path d="M100 174 A74 74 0 0 1 32 114"/>
-                  <path d="M26 100 A74 74 0 0 1 86 26"/>
-                </g>
-                <!-- center hub -->
-                <circle cx="100" cy="100" r="33" fill="#6e2433"/>
-                <circle cx="100" cy="100" r="29" fill="none" stroke="#f5f0e4" stroke-opacity=".4" stroke-width="1"/>
-                <text x="100" y="94" text-anchor="middle" fill="#f5f0e4" font-family="EB Garamond,Georgia,serif" font-size="13" font-weight="600">Gap-probe</text>
-                <text x="100" y="108" text-anchor="middle" fill="#f5f0e4" font-family="EB Garamond,Georgia,serif" font-size="13" font-weight="600">RLM</text>
-                <text x="100" y="121" text-anchor="middle" fill="#c9b8a8" font-family="EB Garamond,Georgia,serif" font-style="italic" font-size="9">depth ≤ k</text>
-                <!-- 4 cycle nodes -->
-                <g font-family="EB Garamond,Georgia,serif" font-weight="600" font-size="11.5" text-anchor="middle">
-                  <circle cx="100" cy="20" r="18" fill="#fbf8ef" stroke="#38543f" stroke-width="2"/><text x="100" y="24" fill="#1d1810">Retrieve</text>
-                  <circle cx="180" cy="100" r="18" fill="#fbf8ef" stroke="#38543f" stroke-width="2"/><text x="180" y="104" fill="#1d1810">Inspect</text>
-                  <circle cx="100" cy="180" r="18" fill="#fbf8ef" stroke="#38543f" stroke-width="2"/><text x="100" y="184" fill="#1d1810">Reason</text>
-                  <circle cx="20" cy="100" r="18" fill="#fbf8ef" stroke="#38543f" stroke-width="2"/><text x="20" y="104" fill="#1d1810">Refine</text>
-                </g>
-              </svg>
-              <div class="rec-side">
-                <div class="rs"><div class="d"></div><div><b>Detects evidence gaps</b><span>insufficient support → expand</span></div></div>
-                <div class="rs"><div class="d"></div><div><b>Toulmin ADU mining</b><span>on every cited article</span></div></div>
-                <div class="rs"><div class="d"></div><div><b>One corrective retry</b><span>then stops — no open recursion</span></div></div>
-                <div class="rec-exit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l4 4 10-10"/></svg><b>Evidence sufficient → verify &amp; answer</b></div>
-              </div>
+            <div class="frow c3">
+              <div class="fb o"><b>Normalize</b><span>NFC · hamza · diacritics</span></div>
+              <div class="fb o"><b>Classify intent</b><span>gemma 4-31B · 8 types</span></div>
+              <div class="fb o"><b>Decompose</b><span>qwen3 · MH / LC only</span></div>
             </div>
-          </div>
-          <div class="blink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+            <div class="fdn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
 
-          <!-- BAND · VERIFY -->
-          <div class="band b-verify">
-            <div class="band-tab"><div class="bn">3</div><b>Verify &amp; answer</b><div class="cap">triple faithfulness gate</div></div>
-            <div class="gates">
-              <div class="gate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg><b>Citation exists</b><span>vs registry</span></div>
-              <div class="gate-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h12M12 6l6 6-6 6"/></svg></div>
-              <div class="gate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.6 2.4 15.4 0 18"/></svg><b>Jurisdiction OK</b><span>canary check</span></div>
-              <div class="gate-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h12M12 6l6 6-6 6"/></svg></div>
-              <div class="gate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H7l-3 3V5z"/><path d="M8 10l2 2 4-4"/></svg><b>Claim supported</b><span>multiling. NLI</span></div>
+            <div class="frow"><div class="fb o w-l"><b>Doc-router</b><span>alias + numeric-id + BM25 aggregation → top-3 candidate codes</span></div></div>
+            <div class="fdn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+
+            <div class="frow"><div class="fb o w-l"><b>Typed-handler dispatch (1 of 8)</b><span>EA · RA · MH · TF · CD · UN · Layman · LC</span></div></div>
+            <div class="fdn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+
+            <div class="frow c3">
+              <div class="fb r"><b>BM25</b><span>legal-id tokenizer</span></div>
+              <div class="fb r"><b>Dense retrieval</b><span>e5-small · FAISS</span></div>
+              <div class="fb r"><b>HyDE</b><span>qwen3 · off for TF, CD</span></div>
             </div>
-            <div class="outcomes">
-              <div class="oc ans"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><div><b>Verifiable answer</b><span>every claim → a registered article</span></div></div>
-              <div class="oc abs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg><div><b>Principled abstention</b><span>when the law is silent</span></div></div>
+            <div class="fcap">RRF fusion across active channels</div>
+
+            <div class="frow c3">
+              <div class="fb r"><b>Amendment chain</b><span>sparql · CD / MH</span></div>
+              <div class="fb r"><b>Concept-at-date</b><span>sparql · TF</span></div>
+              <div class="fb r"><b>Article registry</b><span>corpus-boundary check</span></div>
             </div>
+            <div class="fcap">765k triples · 8.9k articles</div>
+
+            <div class="frow c3">
+              <div class="fb o"><b>Verifier</b><span>qwen3-30B · per-candidate</span></div>
+              <div class="fb o"><b>Pervasive Toulmin ADU</b><span>gemma · claim / ground / warrant</span></div>
+              <div class="fb o"><b>Gap-probe recursion</b><span>gpt-oss-120b · max depth 3</span></div>
+            </div>
+            <div class="fdn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+
+            <div class="frow"><div class="fb o w-m"><b>Summarizer (qwen3-30B)</b><span>arabic answer over verified citations</span></div></div>
+            <div class="fdn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+
+            <div class="frow c3">
+              <div class="fb g"><b>Citation existence</b><span>akn registry check</span></div>
+              <div class="fb g"><b>Jurisdiction gate</b><span>canary detector · 40 anchors</span></div>
+              <div class="fb g"><b>Faithfulness NLI</b><span>mDeBERTa · per-citation ≥ 0.55</span></div>
+            </div>
+            <div class="fdn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 4v14M6 13l6 6 6-6"/></svg></div>
+
+            <div class="frow"><div class="fb a w-l"><b>Answer + citations</b><span>4-step toulmin chain · trajectory · abstention path</span></div></div>
           </div>
         </div>
 
