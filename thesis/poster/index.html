@@ -28,34 +28,89 @@
     </div>
   </header>
 
-  <!-- ============================ PEDIMENT (court of law) ============================ -->
+  <!-- ============================ PEDIMENT (temple front, on the colonnade) ============================ -->
+  <!-- viewBox is 1 unit = 1 mm (297x30), preserveAspectRatio="none" so the entablature
+       and its modillion brackets land exactly over the four pillars (x = 5.2 / 88.7 / 208.3 / 291.8 mm). -->
   <div class="pediment">
-    <svg class="ped-svg" viewBox="0 0 1100 118" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Scales of justice within a classical pediment">
-      <defs><linearGradient id="pedwine" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#8d3a4a"/><stop offset="1" stop-color="#511a26"/></linearGradient></defs>
-      <path d="M28 104 L550 14 L1072 104 Z" fill="url(#pedwine)"/>
-      <path d="M14 110 L550 6 L1086 110" fill="none" stroke="#b89a55" stroke-width="4" stroke-linejoin="round"/>
-      <path d="M42 104 L550 20 L1058 104" fill="none" stroke="#b89a55" stroke-width="1.1" opacity="0.5"/>
-      <rect x="14" y="104" width="1072" height="9" fill="#efe8d6"/>
-      <rect x="14" y="104" width="1072" height="1.8" fill="#b89a55"/>
-      <rect x="6" y="113" width="1088" height="5" fill="#d8cdb4"/>
-      <circle cx="550" cy="8" r="4.5" fill="#b89a55"/>
-      <path d="M543 10 Q550 -3 557 10" fill="none" stroke="#b89a55" stroke-width="2"/>
-      <rect x="26" y="95" width="15" height="11" fill="#b89a55"/>
-      <rect x="1059" y="95" width="15" height="11" fill="#b89a55"/>
-      <g stroke="#ecd9a4" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="550" y1="42" x2="550" y2="86"/>
-        <line x1="533" y1="88" x2="567" y2="88"/>
-        <line x1="539" y1="92" x2="561" y2="92"/>
-        <line x1="495" y1="50" x2="605" y2="50"/>
-        <line x1="495" y1="50" x2="485" y2="62"/>
-        <line x1="495" y1="50" x2="505" y2="62"/>
-        <path d="M479 62 Q495 79 511 62"/>
-        <line x1="605" y1="50" x2="595" y2="62"/>
-        <line x1="605" y1="50" x2="615" y2="62"/>
-        <path d="M589 62 Q605 79 621 62"/>
+    <svg class="ped-svg" viewBox="0 0 297 33" preserveAspectRatio="none" role="img" aria-label="Scales of justice within a classical temple pediment">
+      <defs>
+        <linearGradient id="pCorona" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fdfaf2"/><stop offset=".55" stop-color="#efe6d1"/><stop offset="1" stop-color="#cdbf9d"/>
+        </linearGradient>
+        <linearGradient id="pTymp" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e7ddc6"/><stop offset="1" stop-color="#d2c7ab"/>
+        </linearGradient>
+        <linearGradient id="pBand" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fbf8ef"/><stop offset="1" stop-color="#d6cbb1"/>
+        </linearGradient>
+        <linearGradient id="pMod" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f6efe0"/><stop offset="1" stop-color="#bdac80"/>
+        </linearGradient>
+        <pattern id="pDent" x="0" y="0" width="3.4" height="1.3" patternUnits="userSpaceOnUse">
+          <rect width="3.4" height="1.3" fill="#a89a70"/>
+          <rect x=".75" width="1.95" height="1.3" fill="#f1e8d5"/>
+        </pattern>
+      </defs>
+
+      <!-- ===== gable: raking cornice band + recessed tympanum =====
+           base corners reach the exact ends of the horizontal cornice (full colonnade width). -->
+      <path d="M148.5 2.2 L297 23.2 L0 23.2 Z" fill="#f1e9da"/>
+      <path d="M148.5 5.4 L286 22.4 L11 22.4 Z" fill="url(#pTymp)"/>
+      <!-- stacked raking mouldings (bold) -->
+      <path d="M0 23.2 L148.5 2.2 L297 23.2" fill="none" stroke="#9c7c35" stroke-width=".85" stroke-linejoin="round"/>
+      <path d="M5 23.25 L148.5 3.35 L292 23.25" fill="none" stroke="#fffdf7" stroke-width=".5" stroke-opacity=".85" stroke-linejoin="round"/>
+      <path d="M11 22.4 L148.5 5.4 L286 22.4" fill="none" stroke="#b89a55" stroke-width=".62" stroke-linejoin="round"/>
+      <path d="M13 22.1 L148.5 6.3 L284 22.1" fill="none" stroke="#4a3614" stroke-opacity=".34" stroke-width=".5" stroke-linejoin="round"/>
+
+      <!-- apex acroterion (palmette finial) -->
+      <g fill="#b89a55" stroke="#9c7c35" stroke-width=".18" stroke-linejoin="round">
+        <path d="M148.5 3 C147.1 1.9 147.1 .6 148.5 .1 C149.9 .6 149.9 1.9 148.5 3 Z"/>
+        <path d="M148.5 2.8 C146.4 2.3 145.4 1.2 145.6 .4 C147.1 .8 148.1 1.7 148.5 2.8 Z"/>
+        <path d="M148.5 2.8 C150.6 2.3 151.6 1.2 151.4 .4 C149.9 .8 148.9 1.7 148.5 2.8 Z"/>
       </g>
-      <circle cx="550" cy="45" r="4" fill="#ecd9a4"/>
+      <circle cx="148.5" cy="2.9" r=".7" fill="#9c7c35"/>
+
+      <!-- scales of justice (wine emblem, on the stone tympanum) -->
+      <g fill="none" stroke="#6e2433" stroke-width=".72" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="148.5" y1="10" x2="148.5" y2="17.9"/>
+        <line x1="145" y1="18.5" x2="152" y2="18.5"/>
+        <line x1="146.7" y1="19.2" x2="150.3" y2="19.2"/>
+        <line x1="141.5" y1="11.1" x2="155.5" y2="11.1"/>
+        <line x1="141.5" y1="11.1" x2="141.5" y2="12.7"/>
+        <line x1="141.5" y1="12.7" x2="137.4" y2="14.2"/>
+        <line x1="141.5" y1="12.7" x2="145.6" y2="14.2"/>
+        <path d="M137.4 14.2 Q141.5 17 145.6 14.2"/>
+        <line x1="155.5" y1="11.1" x2="155.5" y2="12.7"/>
+        <line x1="155.5" y1="12.7" x2="151.4" y2="14.2"/>
+        <line x1="155.5" y1="12.7" x2="159.6" y2="14.2"/>
+        <path d="M151.4 14.2 Q155.5 17 159.6 14.2"/>
+      </g>
+      <circle cx="148.5" cy="9.6" r=".9" fill="#6e2433"/>
+
+      <!-- ===== entablature (spans the full colonnade — rests on all four pillars) ===== -->
+      <!-- corona: bold projecting horizontal cornice, overhangs the architrave -->
+      <rect x="0" y="23.2" width="297" height="2.5" fill="url(#pCorona)"/>
+      <rect x="0" y="23.2" width="297" height=".4" fill="#9c7c35"/>
+      <rect x="0" y="25.35" width="297" height=".35" fill="#4a3614" fill-opacity=".45"/>
+      <!-- frieze (recessed) -->
+      <rect x="1" y="27.1" width="295" height="2.1" fill="#d0c4a6"/>
+      <!-- dentil course -->
+      <rect x="2" y="25.75" width="293" height="1.35" fill="url(#pDent)"/>
+      <rect x="2" y="27.1" width="293" height=".3" fill="#4a3614" fill-opacity=".4"/>
+      <!-- modillion brackets, one above each of the four pillars -->
+      <g fill="url(#pMod)" stroke="#9c7c35" stroke-width=".2" stroke-linejoin="round">
+        <path d="M2.4 27.25 h5.6 l-1.1 2 h-3.4 Z"/>
+        <path d="M85.89 27.25 h5.6 l-1.1 2 h-3.4 Z"/>
+        <path d="M205.5 27.25 h5.6 l-1.1 2 h-3.4 Z"/>
+        <path d="M288.99 27.25 h5.6 l-1.1 2 h-3.4 Z"/>
+      </g>
+      <!-- architrave: stepped fasciae, covers the full pillar width -->
+      <rect x="1" y="29.2" width="295" height="3.8" fill="url(#pBand)"/>
+      <rect x="1" y="29.2" width="295" height=".34" fill="#fdfaf2" fill-opacity=".7"/>
+      <rect x="4" y="30.5" width="289" height=".36" fill="#b89a55"/>
+      <rect x="4" y="31.8" width="289" height=".36" fill="#b89a55"/>
+      <rect x="1" y="32.55" width="295" height=".42" fill="#9c7c35"/>
+      <rect x="1" y="32.97" width="295" height=".18" fill="#4a3614" fill-opacity=".4"/>
     </svg>
   </div>
   <!-- ============================ BODY ============================ -->

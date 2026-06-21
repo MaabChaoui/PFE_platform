@@ -24,7 +24,7 @@ the *problem* in under 30 seconds (left), follow the *pipeline* as the visual ce
 ┌──────────────────────────────────────────────────────────┐
 │ MASTHEAD  ENSIA logo · title · students · supervisors      │  ~46mm  dark ink (title header)
 ├──────────────────────────────────────────────────────────┤
-│            ◣  PEDIMENT + scales of justice  ◢             │  ~30mm  wine/gold (rests on columns)
+│            ◣  PEDIMENT + scales of justice  ◢             │  ~33mm  stone/gold temple front (on columns)
 ├──╥───────────╥──────────────────────╥───────────────╥──┤
 │  ║ 01 · WHY  ║ 02 · HOW (solution)  ║ 03 · PROOF    ║  │  ║ = full-height
 │  ║           │                      │               ║  │  fluted columns
@@ -151,12 +151,24 @@ a flowing journal-article read, *not* stacked outlined cards:
 framed as a classical **court-of-law facade**, top to bottom:
 - **Masthead = title header** (top, unchanged content) — flows seamlessly (no border) into
   the pediment band below it; both dark, blended gradients.
-- **Pediment** (`.pediment`, 30 mm, inline `.ped-svg`) sits **directly below the title and
-  on top of the colonnade** (author's call): a low wine **tympanum** spanning the full
-  colonnade width, gold **double raking cornice**, apex finial + corner **acroteria**, large
-  gold **scales of justice** centred (courthouse reference), and a gold horizontal **geison**
-  at its base that **rests on the column capitals** (`margin-bottom:-1mm` tucks the capitals
-  under it) — columns visibly supporting the pediment.
+- **Pediment** (`.pediment`, 33 mm, inline `.ped-svg`) sits **directly below the title and
+  on top of the colonnade** (author's call): a **carved stone-and-gold temple front** in the
+  same parchment/gold palette as the columns (no more wine fill — wine survives only as the
+  scales **emblem**, the author's "white frame / red content" call). The SVG uses
+  `viewBox="0 0 297 33"` + `preserveAspectRatio="none"` → **1 unit = 1 mm**, so the
+  entablature and its brackets land exactly over the pillars. The **gable base spans the full
+  poster width** (corners at x = 0 and 297) so the raking cornice terminates **exactly at the
+  ends of the horizontal cornice** (no flat stub past the rake), and the whole **entablature
+  spans the full colonnade** (corona x 0→297, architrave x 1→296) so it visibly **rests on all
+  four pillars** rather than hovering. Top→bottom: an apex **palmette acroterion**; a
+  **recessed tympanum** (`url(#pTymp)`, darker stone) inside a **bold four-line raking cornice**
+  (thick gold edge · cream highlight · inner gold · inner shadow); centred wine **scales of
+  justice**; then the **entablature** — a bold projecting **corona** (gold top fillet + shadow
+  underside), a **dentil course** (`<pattern id="pDent">`), four **modillion brackets** at the
+  pillar centres (x = 5.2 / 88.7 / 208.3 / 291.8 mm), and a stepped **architrave** (two gold
+  fasciae) that **rests on the column capitals** (`margin-bottom:-1mm` tucks the capitals under
+  it). The outer gable triangle is a flat cream fill (`#f1e9da`), not a gradient, so its base
+  edge meets the bright corona top with no seam.
 - **Colonnade** — **four full-height fluted columns** (`.pillar` = `.cap`/`.shaft`/`.base`,
   pure CSS so they scale to any height) woven into a **7-track body grid**
   (`8mm 0.9fr 8mm 1.34fr 8mm 0.9fr 8mm`): a column at each edge + each gutter, framing the
@@ -172,8 +184,10 @@ framed as a classical **court-of-law facade**, top to bottom:
 **Cost & fit:** the colonnade narrows the content bays ~10 % (centre 119→~108 mm); the
 centre Fig-3.2 flowchart was re-tightened to fit (`.fchart` side padding 6.5→1.5 mm, row
 gaps 1.8→1.2 mm, `.fb` padding trimmed) — *verify the "Answer + citations" box clears the
-stylobate after any centre edit.* Vertically the v6 footer (47 mm) shrank to the 30 mm
-pediment + 24 mm stylobate, so the body net-changed only ~−5 mm. Lots of wine, by request.
+stylobate after any centre edit.* Vertically the v6 footer (47 mm) shrank to the 33 mm
+pediment + 24 mm stylobate. The pediment grew 30→33 mm (taller, more pronounced gable);
+the body absorbed the −3 mm via its `space-between` gaps — verified the "Answer + citations"
+box still clears. The tympanum is now stone, not wine — wine is reserved for the scales.
 
 ## Honesty / accuracy rules baked into the design
 - Every printed number is in `EXTRACTED_FACTS.md` with a line reference.
