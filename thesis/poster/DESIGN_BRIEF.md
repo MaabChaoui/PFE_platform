@@ -22,9 +22,9 @@ the *problem* in under 30 seconds (left), follow the *pipeline* as the visual ce
 ## Layout (three bands, top→bottom)
 ```
 ┌──────────────────────────────────────────────────────────┐
-│            ◣  PEDIMENT + scales of justice  ◢             │  ~30mm  wine/gold
+│ MASTHEAD  ENSIA logo · title · students · supervisors      │  ~46mm  dark ink (title header)
 ├──────────────────────────────────────────────────────────┤
-│ MASTHEAD  ENSIA logo · title · students · supervisors      │  ~46mm  dark ink (entablature)
+│            ◣  PEDIMENT + scales of justice  ◢             │  ~30mm  wine/gold (rests on columns)
 ├──╥───────────╥──────────────────────╥───────────────╥──┤
 │  ║ 01 · WHY  ║ 02 · HOW (solution)  ║ 03 · PROOF    ║  │  ║ = full-height
 │  ║           │                      │               ║  │  fluted columns
@@ -149,13 +149,14 @@ a flowing journal-article read, *not* stacked outlined cards:
 ## Courthouse facade (v7 — the WHOLE poster is a temple of justice)
 *Supersedes the v6 footer-temple.* Per the author's second sketch, the entire poster is
 framed as a classical **court-of-law facade**, top to bottom:
-- **Pediment** (`.pediment`, 30 mm, inline `.ped-svg`) crowning the poster above the
-  masthead: a low wine **tympanum** with a gold **double raking cornice**, apex finial +
-  corner **acroteria**, a gold horizontal **geison**, and large gold **scales of justice**
-  centred in the tympanum (courthouse reference). Sits on the masthead.
-- **Masthead = entablature** — unchanged content; its bottom border is now **gold**
-  (`--gold-2`) so it reads as the architrave the columns support (geison above, architrave
-  below frame it).
+- **Masthead = title header** (top, unchanged content) — flows seamlessly (no border) into
+  the pediment band below it; both dark, blended gradients.
+- **Pediment** (`.pediment`, 30 mm, inline `.ped-svg`) sits **directly below the title and
+  on top of the colonnade** (author's call): a low wine **tympanum** spanning the full
+  colonnade width, gold **double raking cornice**, apex finial + corner **acroteria**, large
+  gold **scales of justice** centred (courthouse reference), and a gold horizontal **geison**
+  at its base that **rests on the column capitals** (`margin-bottom:-1mm` tucks the capitals
+  under it) — columns visibly supporting the pediment.
 - **Colonnade** — **four full-height fluted columns** (`.pillar` = `.cap`/`.shaft`/`.base`,
   pure CSS so they scale to any height) woven into a **7-track body grid**
   (`8mm 0.9fr 8mm 1.34fr 8mm 0.9fr 8mm`): a column at each edge + each gutter, framing the
