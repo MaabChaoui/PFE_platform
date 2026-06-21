@@ -36,7 +36,7 @@ the *problem* in under 30 seconds (left), follow the *pipeline* as the visual ce
 │ significance×3│   retrieve→reason     │                   │
 │               │   (cycle)→3 gates     │                   │
 ├───────────────┴──────────────────────┴───────────────────┤
-│ TAKEAWAY  [sources]+[retrieval]+[recursion]+[citation] =  │  ~30mm  dark ink
+│ THE TEMPLE  4 fluted pillars → entablature → foundation   │  ~47mm  dark ink
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -142,6 +142,20 @@ a flowing journal-article read, *not* stacked outlined cards:
   graph, magnifier, recursion, shield-check). No raster images except the ENSIA logo.
 - Deck motifs reused: the rotated wine **"Abstain" rubber stamp** on the trap question,
   the drop cap, italic olive ordinals, the small-caps keyword line.
+
+## Footer (v6 "the temple" — replaces the equation strip)
+The footer is a classical **portico** rendered as one inline SVG (`.temple-svg`), the
+poster's closing synthesis: the four methods are **four fluted columns** holding up an
+**entablature** inscribed *TRUSTWORTHY LEGAL AI* (wine on parchment), crowned by a low
+**pediment** (wine tympanum, gold raking cornice + acroterion) housing **gold scales of
+justice**; the colonnade stands on a **stylobate** inscribed *BUILT ON A STRUCTURED
+ALGERIAN LEGAL CORPUS · AKOMA NTOSO XML + KNOWLEDGE GRAPH* (the foundation). Each column
+is labelled with a gold italic numeral i–iv + method (Structured sources · Controlled
+retrieval · Recursive reasoning · Citation verification) and carries a wine necking line.
+The two **QR plaques** (thesis / CVs) flank the temple symmetrically (`.qr-l` / `.qr-r`,
+absolutely positioned). Footer grew 30 → 47 mm (slack absorbed from the body; center
+column verified un-clipped). Echoes the deck's "Foundations" pillars slide + the
+author's temple sketch (pediment + scales). Lots of wine, by request.
 
 ## Honesty / accuracy rules baked into the design
 - Every printed number is in `EXTRACTED_FACTS.md` with a line reference.

@@ -403,25 +403,24 @@ body{
 .lf li::before{content:"";position:absolute;left:0;top:1.4mm;width:1.3mm;height:1.3mm;border-radius:50%}
 .lf.l li::before{background:var(--wine)} .lf.f li::before{background:var(--green)}
 
-/* ============================ FOOTER (equation) ============================ */
-.footer{height:30mm;background:linear-gradient(100deg,#121409,var(--dark-2) 72%);
+/* ============================ FOOTER (the temple) ============================ */
+.footer{height:47mm;background:linear-gradient(180deg,#10120b,var(--dark-2) 58%,#10120b);
   color:var(--paper);border-top:.5mm solid var(--green);padding:0 9mm;
-  display:flex;align-items:center;gap:5mm;position:relative}
+  display:flex;align-items:center;justify-content:center;position:relative}
 .footer::before{content:'';position:absolute;left:0;right:0;top:1mm;height:0;
   border-top:.15mm solid rgba(168,184,154,.45)}
 .footer::after{content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 50% 100% at 88% 50%, rgba(110,36,51,.2), transparent 65%)}
+  background:radial-gradient(ellipse 52% 138% at 50% 56%, rgba(110,36,51,.34), transparent 70%)}
 .footer>*{position:relative;z-index:1}
-.eq{display:flex;align-items:center;gap:2.6mm;flex:1}
-.eq .term{display:flex;flex-direction:column;align-items:center;gap:1.1mm;text-align:center}
-.eq .term .ec{width:9.5mm;height:9.5mm;border-radius:.9mm;background:rgba(56,84,63,.22);
-  border:1px solid rgba(168,184,154,.45);display:flex;align-items:center;justify-content:center;color:var(--sage)}
-.eq .term .ec svg{width:5.4mm;height:5.4mm}
-.eq .term b{font-size:7.3pt;font-weight:500;color:#d3d2bd;line-height:1.1;max-width:24mm}
-.eq .op{font-family:var(--display);font-style:italic;font-size:14pt;font-weight:400;color:var(--sage)}
-.eq .result{display:flex;flex-direction:column;justify-content:center;margin-left:2mm}
-.eq .result .lab{font-size:6.6pt;letter-spacing:.24em;color:var(--sage);text-transform:uppercase}
-.eq .result b{font-family:var(--display);font-style:italic;font-size:17pt;font-weight:600;
-  line-height:1.1;color:var(--paper)}
-.eq .result span{font-size:7.8pt;color:#aea995}
-.eq .result span em{color:var(--sage);font-style:italic}
+
+/* the classical portico — four pillars holding up the result */
+.temple{width:65%;display:flex;justify-content:center}
+.temple-svg{display:block;width:100%;height:auto}
+
+/* flanking QR plaques (thesis | CVs) */
+.qr{position:absolute;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:1.5mm}
+.qr-l{left:13mm} .qr-r{right:13mm}
+.qr img{width:15mm;height:15mm;display:block;background:var(--paper-2);
+  padding:1mm;border-radius:.8mm;box-shadow:0 1mm 3.5mm rgba(0,0,0,.3)}
+.qr figcaption{font-size:6pt;letter-spacing:.16em;text-transform:uppercase;color:var(--sage)}

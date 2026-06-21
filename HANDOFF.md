@@ -479,3 +479,37 @@ Demo for the ENSIA viva on **13/06/2026**. Goal: a polished, interactive web dem
 - **Verify (offline):** `cd thesis/poster && /home/maab/Documents/pfe/methodology/PFE_locally/.venv/bin/python build_poster.py` ⇒ `Pages: 1 OK`, A3 OK; inspect `poster_preview.png`.
 - **Gotchas:** ladder SVG is a fixed 260×140 viewBox with hand-placed coordinates — changing phase values means recomputing y = 118 − 330·F1 and the annotation/note anchors; `.cc .ct .u` labels must stay short or the display title wraps (hit this with "Reading the results").
 - **Next:** poster is submission-ready; print-proof poster.pdf at 100 % zoom. Numbers all trace to the deck/EXTRACTED_FACTS (staircase + 38/40 + p_Holm from slides 26–27).
+
+## SLIDES Viva deck v5.7 — conclusion slides reworked (2026-06-13)
+
+- **Status:** done. `thesis/slides/index.html` (34 slides).
+- **Shipped:** (1) Conclusion ledger now lists the thesis's contributions in five single-line rows: structured corpus (45 legal texts, AKN, eIds, registry) · legal KG (765k triples / 8.9k articles) · AlgerianLegalBench (244 q · 23 cat · 8 types · 67 unanswerable) · AKN-RLM architecture · empirical evidence (CitF1 0.305 above every tier, 0.000/0.000, 0.703); label column 28%. (2) Limitations slide reframed as a single future-work roadmap ("Future work — where to push next", kicker "Limitations, read forward"): enlarge corpus → deepen KG → raise retrieval ceiling (Recall@10 < 0.30 named as the binding constraint) → fully multilingual (French + Darja) → legal experts in the loop. Gate-ablations item removed per author. Takeaway: "The limits are measured, not suspected…".
+- **Verify:** slides 32–33 screenshot-verified.
+
+## SLIDES Viva deck v5.8 — KG pillar graph redesigned (2026-06-13)
+
+- **Status:** done. `thesis/slides/index.html` (34 slides).
+- **Shipped:** Pillar-II (Legal Knowledge Graphs) diagram rebuilt. The single "Civil Code (act)" node is now a 4-step structural-ancestry chain (القانون المدني → الكتاب الثاني → الفصل الثالث → القسم الأول) feeding the central article via "contains" edges. All example nodes now Arabic/Amiri: central المادة 124 (القانون المدني); relations cites→المادة 119 (المسؤولية العقدية), defined by→المادة 78 (تعرّف الخطأ), **exception→المادة 127 (القوة القاهرة, wine)**, **condition→المادة 125 (انعدام التمييز, gold)**, version of→المادة 124 — 1975 (نسخة سابقة, gold), amended by→القانون 05-10 (سنة 2005, dashed wine). Edge captions stay English (slide convention). Takeaway updated to list the seven typed-edge kinds. SVG widened to 580×432, right column flex 0 0 580.
+- **Verify:** slide 12 screenshot-verified — no label collisions.
+
+## SLIDES Viva deck v5.8.1 — KG label drift fix (2026-06-13)
+
+- **Status:** done. `thesis/slides/index.html` (slide 12 only).
+- **Fixed:** "exception" and "amended by" edge labels were detached from their edges. Pushed the المادة 127 (exception) pill right (x 448→474, w 122→98) to lengthen its edge, recentred the EXCEPTION label on it (anchor-middle, just above); moved AMENDED BY down/left (x 372→361, y 320→330) to ride its dashed edge and clear the CONDITION label. Screenshot-verified.
+
+## POSTER-A0 Ceremony A0 build + QR codes (2026-06-21)
+
+- **Status:** done. `thesis/poster/` only; no git, no network. Ceremony submission (due 2026-06-21): A0 portrait, ≥200 DPI, ≥6622×9929 px.
+- **Key fact:** A0 ≡ A3 aspect ratio (ISO-216, √2), so the poster is authored once at A3 (297×420 mm) and the A0 build just scales the fixed box ×2.8284 (√8) via a CSS transform injected at build time — **zero layout/content re-flow.** index.html stays the single source of truth.
+- **Shipped:** (1) `build_poster.py` rewritten with `--a0` mode → emits true **A0 vector PDF** (`poster_A0.pdf`, 2383.9×3370.1 pts = 841×1189 mm, rendered straight from Chrome, fonts/SVG clean — NOT via the gs round-trip, which mangled ICC/Type-3 and broke pdftoppm) + **`poster_A0.png`** at `--a0-dpi` (default 220) = **7285×10298 px, eff 220 DPI on A0**, clears the minimum with margin. A3 proof path (`poster.pdf`/`poster_preview.png`) unchanged. (2) Two **QR codes** added to the footer (right of the takeaway equation): `assets/qr_thesis.svg` (Drive thesis PDF) + `assets/qr_cvs.svg` (Drive CVs folder), generated offline with `qrencode -t SVG -m2 -lM`, shown as white pills with sage labels "READ THE THESIS" / "OUR CVS". CSS: `.qr-block/.qr` in styles.css.
+- **Verify (offline):** `cd thesis/poster && /home/maab/Documents/pfe/methodology/PFE_locally/.venv/bin/python build_poster.py --a0` ⇒ Pages 1, A0 OK, 7285×10298 OK. QR scan-tested from the 220-DPI raster with `zbarimg` — both decode to the correct Drive URLs. Spec note: the email's 6622×9929 is 3:2, not A0's √2; height was the binding constraint, so 220 DPI (≥213) is used to clear both pixel floors on a true-A0 canvas.
+- **Gotchas:** A0 raster is memory-heavy (~7285×10298) — `build_poster.py --a0` runs it once, alone; avoid concurrent heavy procs (OOM box). If the Drive URLs change, regenerate the two SVGs with the same qrencode flags and rebuild. `qrencode`/`zbarimg` are system CLIs (not venv).
+- **Next:** submit `poster_A0.pdf` (preferred by print shops) with `poster_A0.png` as the pixel-spec backup. Print-proof at 100%.
+
+## POSTER-TEMPLE Footer reborn as a classical portico (2026-06-21)
+
+- **Status:** done. `thesis/poster/` only; no git/network. A3 + A0 deliverables rebuilt.
+- **Shipped:** the footer equation strip is replaced by a **classical temple** (inline SVG `.temple-svg`, generated in index.html): 4 fluted parchment columns (capital/echinus/abacus + Attic base + 5 gold flutes + wine necking) on a 2-step **stylobate**, holding an **entablature** inscribed *TRUSTWORTHY LEGAL AI* (wine), under a low **pediment** (wine tympanum + gold raking cornice + acroterion finial) containing **gold scales of justice**. Stylobate inscription = the foundation (*BUILT ON A STRUCTURED ALGERIAN LEGAL CORPUS · AKOMA NTOSO XML + KNOWLEDGE GRAPH*); columns labelled gold-italic i–iv + Structured sources / Controlled retrieval / Recursive reasoning / Citation verification. The two QR plaques now **flank** the temple (`.qr-l`/`.qr-r`, absolute). Footer 30→47 mm; the freed-up equation height + body slack absorbed it (center flowchart verified un-clipped). CSS: removed `.eq*`/`.qr-block`, added `.temple`/`.temple-svg`/`.qr`/`.qr-l`/`.qr-r`; footer `::after` wine glow strengthened + centered. Concept mirrors the deck's Foundations pillars slide + the author's hand sketch (pediment + scales of justice).
+- **Verify (offline):** `build_poster.py` (A3) + `build_poster.py --a0` ⇒ both 1 page, A0 7285×10298 @ 220 DPI OK; both QR re-decoded with zbarimg from the rebuilt A0 (thesis + CVs URLs correct) after the position change.
+- **Gotchas:** temple SVG viewBox 1100×240, hand-placed coords; column centers 205/435/665/895 (spacing 230 about x=550); changing footer height or temple `width` (65%) shifts the QR flank spacing — re-check both. Pediment fill is wine .20 but reads near-solid over the dark footer + wine glow (intended). Footer height is now the body's tightest neighbor — don't grow it further without re-checking the center flowchart.
+- **Next:** submission-ready. `poster_A0.pdf` + `poster_A0.png` are the ceremony files; print-proof at 100%.
