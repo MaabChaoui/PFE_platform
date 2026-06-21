@@ -102,14 +102,17 @@ body{
   background:
     repeating-linear-gradient(90deg, transparent 0 .8mm, rgba(90,68,26,.26) .8mm 1.0mm, transparent 1.0mm 1.85mm),
     linear-gradient(90deg,#9c8a62 0%,#cdbf9f 10%,#fbf8ef 48%,#e6ddc8 70%,#bdac80 88%,#917f59 100%);
-  border-top:.7mm solid #8d3a4a}
-.pillar .base{width:100%;flex:none;height:4.8mm;position:relative}
-.pillar .base::before{content:'';position:absolute;left:0;right:0;top:0;height:2.7mm;
-  background:linear-gradient(90deg,#bdac80,#f3ecdd 50%,#bdac80);
+  border-top:.7mm solid #8d3a4a;border-bottom:.7mm solid #8d3a4a}
+/* base mirrors the capital: a torus that flares out toward the ground + a plinth slab
+   that sits directly on the dark footer (abacus/echinus of the cap, upside-down) */
+.pillar .base{width:100%;flex:none;height:5.4mm;position:relative}
+.pillar .base::before{content:'';position:absolute;left:0;right:0;top:0;height:3.4mm;
+  background:linear-gradient(90deg,#c4b489,#f3ecdd 50%,#bdac80);
   clip-path:polygon(22% 0,78% 0,100% 100%,0 100%)}
-.pillar .base::after{content:'';position:absolute;left:0;right:0;top:2.7mm;bottom:0;
+.pillar .base::after{content:'';position:absolute;left:0;right:0;top:3.4mm;bottom:0;
   background:linear-gradient(90deg,#bdac80,#fbf8ef 26%,#fbf8ef 74%,#bdac80);
-  border-bottom:.4mm solid #9c7c35}
+  border-bottom:.4mm solid #9c7c35;border-radius:0 0 .5mm .5mm;
+  box-shadow:0 .7mm 1.6mm rgba(0,0,0,.4)}
 
 /* ============================ BODY GRID ============================ */
 .body{ flex:1; display:grid;
@@ -432,22 +435,17 @@ body{
 .lf.l li::before{background:var(--wine)} .lf.f li::before{background:var(--green)}
 
 /* ============================ STYLOBATE (the base the colonnade stands on) ============================ */
-.stylobate{height:24mm;background:linear-gradient(180deg,#171a10,#0e110a);
-  color:var(--paper);position:relative;display:flex;align-items:flex-end;
-  justify-content:center;padding:0 9mm 3.2mm}
-/* the crepidoma — stepped platform the columns land on */
-.crepidoma{position:absolute;top:0;left:0;right:0;height:8mm;
-  background:linear-gradient(180deg,
-    #fbf8ef 0 2.7mm, #b89a55 2.7mm 2.95mm,
-    #f1ead9 2.95mm 5.4mm, #c4b489 5.4mm 5.65mm,
-    #e9e0cc 5.65mm 8mm);
-  box-shadow:0 .6mm 2.4mm rgba(0,0,0,.35)}
+/* the colonnade stands directly on this dark plinth — no light platform bar */
+.stylobate{height:18mm;background:linear-gradient(180deg,#1c1f15,#0d0f09);
+  color:var(--paper);position:relative;display:flex;align-items:center;
+  justify-content:center;padding:0 9mm}
 .foundation{position:relative;z-index:1;font-family:var(--display);font-style:italic;
   font-size:11pt;color:#e8dfc8;text-align:center;line-height:1.2;max-width:56%}
 .foundation b{font-style:normal;font-weight:600;color:var(--sage);letter-spacing:.2pt}
-/* QR plaques mounted on the base */
-.qr{position:absolute;bottom:2.6mm;display:flex;flex-direction:column;align-items:center;gap:1mm}
+/* QR plaques mounted on the dark plinth */
+.qr{position:absolute;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.8mm}
 .qr-l{left:12mm} .qr-r{right:12mm}
-.qr img{width:13mm;height:13mm;display:block;background:var(--paper-2);
-  padding:.9mm;border-radius:.8mm;box-shadow:0 1mm 3mm rgba(0,0,0,.4)}
-.qr figcaption{font-size:6pt;letter-spacing:.16em;text-transform:uppercase;color:var(--sage)}
+.qr img{width:12.5mm;height:12.5mm;display:block;background:var(--paper-2);
+  padding:.8mm;border-radius:.8mm;box-shadow:0 1mm 3mm rgba(0,0,0,.4)}
+.qr figcaption{font-size:5.7pt;letter-spacing:.14em;text-transform:uppercase;color:var(--sage)}

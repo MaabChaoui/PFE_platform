@@ -39,7 +39,7 @@ the *problem* in under 30 seconds (left), follow the *pipeline* as the visual ce
 │ significance×3│   retrieve→reason     │                   │
 │               │   (cycle)→3 gates     │                   │
 ├──╨───────────╨──────────────────────╨───────────────╨──┤
-│ STYLOBATE  crepidoma · foundation inscription · QR ×2     │  ~24mm  dark ink (base)
+│ STYLOBATE  foundation inscription · QR ×2 (dark plinth)   │  ~18mm  dark ink (base)
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -173,21 +173,26 @@ framed as a classical **court-of-law facade**, top to bottom:
   pure CSS so they scale to any height) woven into a **7-track body grid**
   (`8mm 0.9fr 8mm 1.34fr 8mm 0.9fr 8mm`): a column at each edge + each gutter, framing the
   three content **bays** (Problem / Solution / Results). Each column has an abacus+echinus
-  capital, a cylinder-shaded shaft with gold **flutes** + a wine **necking** ring, and a
-  torus+plinth base. Strong drop-shadows give 3-D depth (pops against the dark centre panel,
-  defined by shadow against the parchment side bays).
-- **Stylobate** (`.stylobate`, 24 mm) — the base the columns stand on: a parchment
-  **crepidoma** (stepped platform, full width) + the foundation inscription *Built on a
-  structured Algerian legal corpus — Akoma Ntoso XML + Knowledge Graph* + the two **QR
-  plaques** (thesis / CVs) flanking.
+  capital, a cylinder-shaded shaft with a wine **necking** ring at **both** ends, and a base
+  that **mirrors the capital** (torus flaring to a gold-bordered **plinth** that sits directly
+  on the dark footer, with a small cast shadow). Strong drop-shadows give 3-D depth (pops
+  against the dark centre panel, defined by shadow against the parchment side bays).
+- **Stylobate** (`.stylobate`, 18 mm) — the **dark plinth** the columns stand directly on
+  (no light platform bar): the foundation inscription *Built on a structured Algerian legal
+  corpus — Akoma Ntoso XML + Knowledge Graph* (vertically centred) + the two **QR plaques**
+  (thesis / CVs, 12.5 mm, centred) flanking. *The parchment `.crepidoma` step-platform was
+  removed* — it read as a stray light bar and clipped the side columns' last lines.
 
 **Cost & fit:** the colonnade narrows the content bays ~10 % (centre 119→~108 mm); the
 centre Fig-3.2 flowchart was re-tightened to fit (`.fchart` side padding 6.5→1.5 mm, row
 gaps 1.8→1.2 mm, `.fb` padding trimmed) — *verify the "Answer + citations" box clears the
-stylobate after any centre edit.* Vertically the v6 footer (47 mm) shrank to the 33 mm
-pediment + 24 mm stylobate. The pediment grew 30→33 mm (taller, more pronounced gable);
-the body absorbed the −3 mm via its `space-between` gaps — verified the "Answer + citations"
-box still clears. The tympanum is now stone, not wine — wine is reserved for the scales.
+stylobate after any centre edit.* Vertically the layout is **46 masthead + 33 pediment +
+323 body + 18 stylobate**. The pediment grew 30→33 mm (taller gable); the stylobate then
+shrank **24→18 mm** (dropping the 8 mm crepidoma) so the body **regained +6 mm** — which
+un-clipped the side columns (their last lines were being cut). After any vertical change,
+re-verify **all three** columns' bottoms clear (left significance §1.6, centre "Answer +
+citations", right Limits/Next) and that **both QR codes still decode** (`zbarimg`). The
+tympanum is stone, not wine — wine is reserved for the scales.
 
 ## Honesty / accuracy rules baked into the design
 - Every printed number is in `EXTRACTED_FACTS.md` with a line reference.
