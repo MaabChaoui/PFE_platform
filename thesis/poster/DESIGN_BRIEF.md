@@ -22,9 +22,12 @@ the *problem* in under 30 seconds (left), follow the *pipeline* as the visual ce
 ## Layout (three bands, top→bottom)
 ```
 ┌──────────────────────────────────────────────────────────┐
-│ MASTHEAD  ENSIA logo · title · students · supervisors      │  ~46mm  dark ink
-├───────────────┬──────────────────────┬───────────────────┤
-│ 01 · WHY      │ 02 · HOW (solution)   │ 03 · PROOF        │
+│            ◣  PEDIMENT + scales of justice  ◢             │  ~30mm  wine/gold
+├──────────────────────────────────────────────────────────┤
+│ MASTHEAD  ENSIA logo · title · students · supervisors      │  ~46mm  dark ink (entablature)
+├──╥───────────╥──────────────────────╥───────────────╥──┤
+│  ║ 01 · WHY  ║ 02 · HOW (solution)  ║ 03 · PROOF    ║  │  ║ = full-height
+│  ║           │                      │               ║  │  fluted columns
 │ problem stmt  │ Ⅰ Structured corpus   │ 0.305 headline    │
 │  + req chips  │   AKN def · stats ·   │ CitF1 bar chart   │
 │ 3 AR question │   XML codepane ·      │ JIR bar chart     │  ~340mm
@@ -35,8 +38,8 @@ the *problem* in under 30 seconds (left), follow the *pipeline* as the visual ce
 │ objectives ×4 │ Ⅲ AKN-RLM pipeline    │                   │
 │ significance×3│   retrieve→reason     │                   │
 │               │   (cycle)→3 gates     │                   │
-├───────────────┴──────────────────────┴───────────────────┤
-│ THE TEMPLE  4 fluted pillars → entablature → foundation   │  ~47mm  dark ink
+├──╨───────────╨──────────────────────╨───────────────╨──┤
+│ STYLOBATE  crepidoma · foundation inscription · QR ×2     │  ~24mm  dark ink (base)
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -143,19 +146,33 @@ a flowing journal-article read, *not* stacked outlined cards:
 - Deck motifs reused: the rotated wine **"Abstain" rubber stamp** on the trap question,
   the drop cap, italic olive ordinals, the small-caps keyword line.
 
-## Footer (v6 "the temple" — replaces the equation strip)
-The footer is a classical **portico** rendered as one inline SVG (`.temple-svg`), the
-poster's closing synthesis: the four methods are **four fluted columns** holding up an
-**entablature** inscribed *TRUSTWORTHY LEGAL AI* (wine on parchment), crowned by a low
-**pediment** (wine tympanum, gold raking cornice + acroterion) housing **gold scales of
-justice**; the colonnade stands on a **stylobate** inscribed *BUILT ON A STRUCTURED
-ALGERIAN LEGAL CORPUS · AKOMA NTOSO XML + KNOWLEDGE GRAPH* (the foundation). Each column
-is labelled with a gold italic numeral i–iv + method (Structured sources · Controlled
-retrieval · Recursive reasoning · Citation verification) and carries a wine necking line.
-The two **QR plaques** (thesis / CVs) flank the temple symmetrically (`.qr-l` / `.qr-r`,
-absolutely positioned). Footer grew 30 → 47 mm (slack absorbed from the body; center
-column verified un-clipped). Echoes the deck's "Foundations" pillars slide + the
-author's temple sketch (pediment + scales). Lots of wine, by request.
+## Courthouse facade (v7 — the WHOLE poster is a temple of justice)
+*Supersedes the v6 footer-temple.* Per the author's second sketch, the entire poster is
+framed as a classical **court-of-law facade**, top to bottom:
+- **Pediment** (`.pediment`, 30 mm, inline `.ped-svg`) crowning the poster above the
+  masthead: a low wine **tympanum** with a gold **double raking cornice**, apex finial +
+  corner **acroteria**, a gold horizontal **geison**, and large gold **scales of justice**
+  centred in the tympanum (courthouse reference). Sits on the masthead.
+- **Masthead = entablature** — unchanged content; its bottom border is now **gold**
+  (`--gold-2`) so it reads as the architrave the columns support (geison above, architrave
+  below frame it).
+- **Colonnade** — **four full-height fluted columns** (`.pillar` = `.cap`/`.shaft`/`.base`,
+  pure CSS so they scale to any height) woven into a **7-track body grid**
+  (`8mm 0.9fr 8mm 1.34fr 8mm 0.9fr 8mm`): a column at each edge + each gutter, framing the
+  three content **bays** (Problem / Solution / Results). Each column has an abacus+echinus
+  capital, a cylinder-shaded shaft with gold **flutes** + a wine **necking** ring, and a
+  torus+plinth base. Strong drop-shadows give 3-D depth (pops against the dark centre panel,
+  defined by shadow against the parchment side bays).
+- **Stylobate** (`.stylobate`, 24 mm) — the base the columns stand on: a parchment
+  **crepidoma** (stepped platform, full width) + the foundation inscription *Built on a
+  structured Algerian legal corpus — Akoma Ntoso XML + Knowledge Graph* + the two **QR
+  plaques** (thesis / CVs) flanking.
+
+**Cost & fit:** the colonnade narrows the content bays ~10 % (centre 119→~108 mm); the
+centre Fig-3.2 flowchart was re-tightened to fit (`.fchart` side padding 6.5→1.5 mm, row
+gaps 1.8→1.2 mm, `.fb` padding trimmed) — *verify the "Answer + citations" box clears the
+stylobate after any centre edit.* Vertically the v6 footer (47 mm) shrank to the 30 mm
+pediment + 24 mm stylobate, so the body net-changed only ~−5 mm. Lots of wine, by request.
 
 ## Honesty / accuracy rules baked into the design
 - Every printed number is in `EXTRACTED_FACTS.md` with a line reference.
